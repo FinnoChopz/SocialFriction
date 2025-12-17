@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ParticleCanvas } from "@/components/shared/ParticleCanvas";
 import { useWalkthroughStatus } from "@/hooks/useWalkthroughStatus";
 
 import { Slide1Welcome } from "@/components/walkthrough/slides/Slide1Welcome";
@@ -85,6 +86,7 @@ export default function WalkthroughPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
+      <ParticleCanvas className="fixed inset-0 z-[2] opacity-80 mix-blend-screen" density={1.1} />
       {/* Subtle background */}
       <div className="absolute inset-0 grid-pattern opacity-30" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />

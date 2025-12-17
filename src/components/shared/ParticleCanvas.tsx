@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface Particle {
   x: number;
@@ -17,55 +18,79 @@ interface FloatingBadge {
   x: number;
   y: number;
   text: string;
+  color: string;
   opacity: number;
   life: number;
   maxLife: number;
 }
 
+interface ParticleCanvasProps {
+  className?: string;
+  density?: number;
+}
+
+const GROUP_COLORS = ["#60a5fa", "#a855f7", "#34d399", "#f59e0b", "#38bdf8"];
+const BADGE_COLORS = ["#60a5fa", "#a855f7", "#34d399", "#f59e0b", "#38bdf8"];
 const BADGE_TEXTS = [
-  "reward ≈ 0.83",
-  "p(agree) 0.71",
-  "friction ↓",
-  "comfort ↑",
-  "p(truth) 0.42",
-  "alignment: 0.89",
-  "satisfaction ↑",
-  "challenge ↓",
+  "P(reward)=0.82",
+  "agreeableness ↑",
+  "p(truth)=0.41",
+  "comfort bias",
+  "entropy 1.7",
+  "logits → softness",
+  "grad⋅d = 0.42",
+  "p(critique)=0.12",
 ];
 
-export function ParticleCanvas() {
+function hexToRgba(hex: string, alpha: number) {
+  const clean = hex.replace("#", "");
+  const num = parseInt(clean, 16);
+  const r = (num >> 16) & 255;
+  const g = (num >> 8) & 255;
+  const b = num & 255;
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const badgesRef = useRef<FloatingBadge[]>([]);
   const animationRef = useRef<number | null>(null);
   const timeRef = useRef(0);
+  const dprRef = useRef(1);
 
-  const initParticles = useCallback((width: number, height: number) => {
-    const particles: Particle[] = [];
-    const numParticles = Math.min(80, Math.floor((width * height) / 15000));
+  const initParticles = useCallback(
+    (width: number, height: number) => {
+      const particles: Particle[] = [];
+      const baseCount = Math.floor((width * height) / 9000 * density);
+      const numParticles = Math.max(60, Math.min(140, baseCount));
 
-    for (let i = 0; i < numParticles; i++) {
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        radius: Math.random() * 2 + 1,
-        opacity: Math.random() * 0.5 + 0.2,
-        group: Math.floor(Math.random() * 5),
-      });
-    }
-    return particles;
-  }, []);
+      for (let i = 0; i < numParticles; i++) {
+        particles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          vx: (Math.random() - 0.5) * 0.6,
+          vy: (Math.random() - 0.5) * 0.6,
+          radius: Math.random() * 1.5 + 1.2,
+          opacity: Math.random() * 0.5 + 0.35,
+          group: Math.floor(Math.random() * GROUP_COLORS.length),
+        });
+      }
+      return particles;
+    },
+    [density]
+  );
 
   const spawnBadge = useCallback((width: number, height: number) => {
+    const color = BADGE_COLORS[Math.floor(Math.random() * BADGE_COLORS.length)];
     const badge: FloatingBadge = {
       x: Math.random() * (width - 150) + 75,
-      y: Math.random() * (height - 100) + 50,
+      y: Math.random() * (height - 120) + 60,
       text: BADGE_TEXTS[Math.floor(Math.random() * BADGE_TEXTS.length)],
+      color,
       opacity: 0,
       life: 0,
-      maxLife: 180,
+      maxLife: 200,
     };
     return badge;
   }, []);
@@ -79,10 +104,11 @@ export function ParticleCanvas() {
 
     const resizeCanvas = () => {
       const dpr = window.devicePixelRatio || 1;
+      dprRef.current = dpr;
       const rect = canvas.getBoundingClientRect();
       canvas.width = rect.width * dpr;
       canvas.height = rect.height * dpr;
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       canvas.style.width = `${rect.width}px`;
       canvas.style.height = `${rect.height}px`;
       particlesRef.current = initParticles(rect.width, rect.height);
@@ -93,21 +119,35 @@ export function ParticleCanvas() {
 
     const animate = () => {
       const rect = canvas.getBoundingClientRect();
+      const dpr = dprRef.current;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.globalCompositeOperation = "screen";
 
       timeRef.current++;
 
+      const bondCycle = (Math.sin(timeRef.current * 0.008) + 1) / 2;
+      const connectionDistance = 70 + bondCycle * 60;
+      const cohesionStrength = 0.012 + bondCycle * 0.01;
+      const separationStrength = 0.008 + (1 - bondCycle) * 0.008;
+
+      if (timeRef.current % 260 === 0 && particlesRef.current.length > 0) {
+        const idx = Math.floor(Math.random() * particlesRef.current.length);
+        particlesRef.current[idx].group = Math.floor(Math.random() * GROUP_COLORS.length);
+      }
+
       // Spawn new badges occasionally
-      if (timeRef.current % 120 === 0 && badgesRef.current.length < 3) {
+      if (timeRef.current % 110 === 0 && badgesRef.current.length < 3) {
         badgesRef.current.push(spawnBadge(rect.width, rect.height));
       }
 
       // Update and draw particles
-      const groupCenters: { x: number; y: number; count: number }[] = Array(5)
-        .fill(null)
-        .map(() => ({ x: 0, y: 0, count: 0 }));
+      const groupCenters: { x: number; y: number; count: number }[] = GROUP_COLORS.map(() => ({
+        x: 0,
+        y: 0,
+        count: 0,
+      }));
 
-      // Calculate group centers
       particlesRef.current.forEach((p) => {
         groupCenters[p.group].x += p.x;
         groupCenters[p.group].y += p.y;
@@ -121,69 +161,69 @@ export function ParticleCanvas() {
         }
       });
 
-      // Update particles
       particlesRef.current.forEach((p) => {
-        // Subtle attraction to group center
         const center = groupCenters[p.group];
         const dx = center.x - p.x;
         const dy = center.y - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
 
-        if (dist > 100) {
-          p.vx += (dx / dist) * 0.01;
-          p.vy += (dy / dist) * 0.01;
-        } else if (dist < 30) {
-          p.vx -= (dx / dist) * 0.005;
-          p.vy -= (dy / dist) * 0.005;
+        if (dist > 90) {
+          p.vx += (dx / dist) * cohesionStrength;
+          p.vy += (dy / dist) * cohesionStrength;
+        } else if (dist < 28) {
+          p.vx -= (dx / dist) * separationStrength;
+          p.vy -= (dy / dist) * separationStrength;
         }
 
-        // Apply velocity
-        p.x += p.vx;
-        p.y += p.vy;
+        p.x += p.vx + (Math.random() - 0.5) * 0.12;
+        p.y += p.vy + (Math.random() - 0.5) * 0.12;
 
-        // Damping
-        p.vx *= 0.99;
-        p.vy *= 0.99;
+        p.vx *= 0.988;
+        p.vy *= 0.988;
 
-        // Bounce off edges
         if (p.x < 0 || p.x > rect.width) p.vx *= -1;
         if (p.y < 0 || p.y > rect.height) p.vy *= -1;
 
-        // Keep in bounds
         p.x = Math.max(0, Math.min(rect.width, p.x));
         p.y = Math.max(0, Math.min(rect.height, p.y));
 
-        // Draw particle
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+        const sparkle = Math.random() < 0.04;
+        const color = sparkle
+          ? hexToRgba(GROUP_COLORS[p.group], 0.9)
+          : `rgba(255, 255, 255, ${0.55 + bondCycle * 0.35})`;
+        ctx.fillStyle = color;
         ctx.fill();
       });
 
-      // Draw connections between nearby particles in same group
       particlesRef.current.forEach((p1, i) => {
         particlesRef.current.slice(i + 1).forEach((p2) => {
-          if (p1.group !== p2.group) return;
           const dx = p2.x - p1.x;
           const dy = p2.y - p1.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
+          const sameGroup = p1.group === p2.group;
+          const maxDistance = sameGroup ? connectionDistance : connectionDistance * 0.75;
 
-          if (dist < 80) {
+          if (dist < maxDistance) {
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 80)})`;
-            ctx.lineWidth = 0.5;
+            const baseAlpha = 0.18 + bondCycle * 0.22;
+            const alpha = baseAlpha * (1 - dist / maxDistance);
+            const color = sameGroup
+              ? hexToRgba(GROUP_COLORS[p1.group], alpha)
+              : `rgba(255, 255, 255, ${alpha * 0.7})`;
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 0.6 + bondCycle * 0.5;
             ctx.stroke();
           }
         });
       });
 
-      // Update and draw badges
       badgesRef.current = badgesRef.current.filter((badge) => {
         badge.life++;
 
-        // Fade in/out
         if (badge.life < 30) {
           badge.opacity = badge.life / 30;
         } else if (badge.life > badge.maxLife - 30) {
@@ -192,11 +232,11 @@ export function ParticleCanvas() {
           badge.opacity = 1;
         }
 
-        // Float upward slightly
-        badge.y -= 0.2;
+        badge.y -= 0.22;
 
-        // Draw badge
         ctx.save();
+        ctx.shadowColor = hexToRgba(badge.color, 0.25 * badge.opacity);
+        ctx.shadowBlur = 12;
         ctx.font = "12px var(--font-jetbrains), monospace";
 
         const metrics = ctx.measureText(badge.text);
@@ -204,19 +244,16 @@ export function ParticleCanvas() {
         const width = metrics.width + padding * 2;
         const height = 24;
 
-        // Background
-        ctx.fillStyle = `rgba(30, 30, 30, ${badge.opacity * 0.8})`;
+        ctx.fillStyle = hexToRgba(badge.color, 0.12 * badge.opacity + 0.04);
         ctx.beginPath();
-        ctx.roundRect(badge.x - width / 2, badge.y - height / 2, width, height, 4);
+        ctx.roundRect(badge.x - width / 2, badge.y - height / 2, width, height, 6);
         ctx.fill();
 
-        // Border
-        ctx.strokeStyle = `rgba(255, 255, 255, ${badge.opacity * 0.2})`;
+        ctx.strokeStyle = hexToRgba(badge.color, 0.55 * badge.opacity + 0.08);
         ctx.lineWidth = 1;
         ctx.stroke();
 
-        // Text
-        ctx.fillStyle = `rgba(180, 180, 180, ${badge.opacity})`;
+        ctx.fillStyle = hexToRgba("#e5e7eb", 0.9 * badge.opacity);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(badge.text, badge.x, badge.y);
@@ -229,14 +266,15 @@ export function ParticleCanvas() {
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (!prefersReducedMotion) {
       animate();
     } else {
-      // Draw static particles once
       const rect = canvas.getBoundingClientRect();
+      const dpr = dprRef.current;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, rect.width, rect.height);
       particlesRef.current.forEach((p) => {
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
@@ -259,7 +297,12 @@ export function ParticleCanvas() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
-      className="absolute inset-0 w-full h-full"
+      className={cn(
+        className?.match(/\b(static|fixed|absolute|relative|sticky)\b/)
+          ? "inset-0 w-full h-full pointer-events-none mix-blend-screen opacity-80"
+          : "absolute inset-0 w-full h-full pointer-events-none mix-blend-screen opacity-80",
+        className
+      )}
       aria-hidden="true"
     />
   );

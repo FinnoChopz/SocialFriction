@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { readingGroups } from "@/content/readings";
+import { ParticleCanvas } from "@/components/shared/ParticleCanvas";
 import { cn } from "@/lib/utils";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { ArrowRight, BookOpen, FileText, Play, RotateCcw } from "lucide-react";
@@ -35,6 +36,7 @@ export default function HomePage() {
     <>
       <Navigation />
       <main className="bg-transparent">
+        <ParticleCanvas className="fixed inset-0 z-[2] opacity-75 mix-blend-screen" density={1.05} />
         {/* Section indicator */}
         <div className="fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col gap-3 text-muted-foreground/50">
           {homeSections.map((section) => (

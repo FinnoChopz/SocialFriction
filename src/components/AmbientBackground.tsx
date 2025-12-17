@@ -336,7 +336,7 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 w-full h-full opacity-50 pointer-events-none"
+      className="fixed inset-0 w-full h-full opacity-75 mix-blend-screen pointer-events-none"
       aria-hidden
     />
   );
@@ -391,7 +391,7 @@ export function AmbientBackground({ activeSection = "hero", className }: Ambient
   return (
     <div
       className={cn(
-        "fixed inset-0 z-0 pointer-events-none overflow-hidden ambient-root",
+        "fixed inset-0 z-9 pointer-events-none overflow-hidden ambient-root",
         className
       )}
       data-ambient={key}

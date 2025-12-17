@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Card } from "@/components/ui/card";
+import { ParticleCanvas } from "@/components/shared/ParticleCanvas";
 import { ArrowRight, Play } from "lucide-react";
 
 const demos = [
@@ -45,6 +46,7 @@ export default function DemosPage() {
     <>
       <Navigation />
       <main className="bg-transparent min-h-screen pt-24">
+        <ParticleCanvas className="fixed inset-0 z-[2] opacity-75 mix-blend-screen" density={0.95} />
         {/* Header */}
         <section className="relative py-16 overflow-hidden" data-bg="demos">
           <div className="absolute inset-0 grid-pattern opacity-20" />
