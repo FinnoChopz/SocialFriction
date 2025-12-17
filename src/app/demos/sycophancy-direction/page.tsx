@@ -144,7 +144,7 @@ export default function SycophancyDirectionDemo() {
                   </div>
                 )}
                 <iframe
-                  src="https://huggingface.co/spaces/Theoretical-Paladin/Persona?embed=true"
+                  src="https://theoretical-paladin-persona.hf.space/?__theme=dark"
                   className={`w-full h-[700px] rounded-lg border border-border ${
                     !loaded ? "hidden" : ""
                   }`}

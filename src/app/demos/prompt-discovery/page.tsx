@@ -122,7 +122,7 @@ export default function PromptDiscoveryDemo() {
                   </div>
                 )}
                 <iframe
-                  src="https://huggingface.co/spaces/Theoretical-Paladin/PromptDiscover?embed=true"
+                  src="https://theoretical-paladin-promptdiscover.hf.space/?__theme=dark"
                   className={`w-full h-[700px] rounded-lg border border-border ${
                     !loaded ? "hidden" : ""
                   }`}
