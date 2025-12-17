@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Menu, X, RotateCcw } from "lucide-react";
 import { useState } from "react";
+import { AmbientAudioToggle } from "./AmbientAudioToggle";
 
 const navItems = [
   { href: "/home", label: "Home" },
@@ -71,6 +72,7 @@ export function Navigation() {
                 Redo Walkthrough
               </Button>
             </Link>
+            <AmbientAudioToggle />
           </div>
 
           {/* Mobile menu button */}
@@ -114,6 +116,9 @@ export function Navigation() {
                   Redo Walkthrough
                 </Button>
               </Link>
+              <div className="pt-2">
+                <AmbientAudioToggle />
+              </div>
             </div>
           </motion.div>
         )}

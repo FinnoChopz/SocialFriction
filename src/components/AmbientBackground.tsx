@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import type { SectionKey } from "@/hooks/useActiveSection";
 
-type AmbientVariant = "hero" | "readings" | "paper" | "demos";
+type AmbientKey = "hero" | "readings" | "paper" | "demos" | "footer";
 
 interface AmbientBackgroundProps {
-  variant?: AmbientVariant;
+  activeSection?: SectionKey;
   className?: string;
 }
 
@@ -15,115 +16,281 @@ interface Node {
   y: number;
   vx: number;
   vy: number;
-  pulseUntil: number;
 }
 
-const accentByVariant: Record<AmbientVariant, string> = {
-  hero: "rgba(96, 165, 250, 0.4)", // blue
-  readings: "rgba(125, 211, 252, 0.35)", // sky
-  paper: "rgba(226, 232, 240, 0.22)", // slate-light
-  demos: "rgba(192, 132, 252, 0.35)", // purple
+interface Disruptor {
+  x: number;
+  y: number;
+  radius: number;
+  angle: number;
+  speed: number;
+}
+
+interface AmbientConfig {
+  accent: string;
+  accent2?: string;
+  gridOpacity: number;
+  nodeDensity: number;
+  lineDistance: number;
+  lineOpacity: number;
+  gatherStrength: number;
+  disruptorStrength: number;
+  breathing: number;
+  showGrid?: boolean;
+  showDiagonals?: boolean;
+  showPaper?: boolean;
+  showBadges?: boolean;
+}
+
+const sectionConfigs: Record<AmbientKey, AmbientConfig> = {
+  hero: {
+    accent: "rgba(96, 165, 250, 0.6)",
+    accent2: "rgba(59, 130, 246, 0.35)",
+    gridOpacity: 0.06,
+    nodeDensity: 1,
+    lineDistance: 170,
+    lineOpacity: 0.35,
+    gatherStrength: 0.08,
+    disruptorStrength: 0.5,
+    breathing: 1,
+    showBadges: true,
+  },
+  readings: {
+    accent: "rgba(125, 211, 252, 0.45)",
+    accent2: "rgba(59, 130, 246, 0.3)",
+    gridOpacity: 0.12,
+    nodeDensity: 0.95,
+    lineDistance: 190,
+    lineOpacity: 0.32,
+    gatherStrength: 0.1,
+    disruptorStrength: 0.25,
+    breathing: 1.1,
+    showGrid: true,
+  },
+  paper: {
+    accent: "rgba(226, 232, 240, 0.25)",
+    accent2: "rgba(148, 163, 184, 0.2)",
+    gridOpacity: 0.04,
+    nodeDensity: 0.75,
+    lineDistance: 140,
+    lineOpacity: 0.18,
+    gatherStrength: 0.035,
+    disruptorStrength: 0.18,
+    breathing: 0.45,
+    showPaper: true,
+  },
+  demos: {
+    accent: "rgba(192, 132, 252, 0.45)",
+    accent2: "rgba(52, 211, 153, 0.2)",
+    gridOpacity: 0.08,
+    nodeDensity: 1,
+    lineDistance: 175,
+    lineOpacity: 0.34,
+    gatherStrength: 0.085,
+    disruptorStrength: 0.7,
+    breathing: 1,
+    showDiagonals: true,
+    showBadges: true,
+  },
+  footer: {
+    accent: "rgba(148, 163, 184, 0.35)",
+    accent2: "rgba(96, 165, 250, 0.18)",
+    gridOpacity: 0.03,
+    nodeDensity: 0.6,
+    lineDistance: 130,
+    lineOpacity: 0.14,
+    gatherStrength: 0.03,
+    disruptorStrength: 0.1,
+    breathing: 0.35,
+  },
 };
 
-const lineDistanceByVariant: Record<AmbientVariant, number> = {
-  hero: 160,
-  readings: 180,
-  paper: 150,
-  demos: 170,
-};
+const badges = ["p(agree)=0.71", "reward=+0.12", "loss↓", "entropy=1.7", "grad·d=0.42"];
 
 function usePrefersReducedMotion() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-
   useEffect(() => {
-    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mediaQuery.matches);
-    const handleChange = () => setPrefersReducedMotion(mediaQuery.matches);
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    const onChange = () => setPrefersReducedMotion(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
   }, []);
-
   return prefersReducedMotion;
 }
 
-function ConstellationCanvas({ variant }: { variant: AmbientVariant }) {
+function lerp(current: number, target: number, factor: number) {
+  return current + (target - current) * factor;
+}
+
+function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
   const [isMounted, setIsMounted] = useState(false);
+  const currentConfigRef = useRef<AmbientConfig>(sectionConfigs[configKey]);
+  const targetConfigRef = useRef<AmbientConfig>(sectionConfigs[configKey]);
+
+  useEffect(() => setIsMounted(true), []);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    targetConfigRef.current = sectionConfigs[configKey] ?? sectionConfigs.hero;
+  }, [configKey]);
 
   useEffect(() => {
     if (!isMounted || prefersReducedMotion) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animationFrameId: number;
-    const nodes: Node[] = [];
-    const isMobile = window.innerWidth < 768;
-    const maxNodes = isMobile ? 70 : 130;
+    const isMobile = () => window.innerWidth < 768;
+    const maxNodes = () => Math.floor((isMobile() ? 90 : 150) * targetConfigRef.current.nodeDensity);
+    let nodes: Node[] = [];
+    let disruptor: Disruptor = {
+      x: 0,
+      y: 0,
+      radius: 180,
+      angle: Math.random() * Math.PI * 2,
+      speed: 0.0006,
+    };
+    let lastTime = performance.now();
+    let animationFrame: number;
+    const period = 14000; // ms for gather/repel cycle
+    const damping = 0.985;
+    const maxSpeed = 0.4;
 
     const init = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      nodes.length = 0;
-      for (let i = 0; i < maxNodes; i++) {
+      nodes = [];
+      for (let i = 0; i < maxNodes(); i++) {
         nodes.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.12,
-          vy: (Math.random() - 0.5) * 0.12,
-          pulseUntil: 0,
+          vx: (Math.random() - 0.5) * 0.2,
+          vy: (Math.random() - 0.5) * 0.2,
         });
       }
     };
 
-    const resize = () => {
-      init();
-    };
-
+    const resize = () => init();
     init();
     window.addEventListener("resize", resize);
 
-    const accent = accentByVariant[variant];
-    const lineDistance = lineDistanceByVariant[variant];
+    const updateConfig = (dt: number) => {
+      const current = currentConfigRef.current;
+      const target = targetConfigRef.current;
+      const factor = Math.min(1, dt * 4); // ~250ms smoothing
+      currentConfigRef.current = {
+        accent: target.accent,
+        gridOpacity: lerp(current.gridOpacity, target.gridOpacity, factor),
+        nodeDensity: lerp(current.nodeDensity, target.nodeDensity, factor),
+        lineDistance: lerp(current.lineDistance, target.lineDistance, factor),
+        lineOpacity: lerp(current.lineOpacity, target.lineOpacity, factor),
+        gatherStrength: lerp(current.gatherStrength, target.gatherStrength, factor),
+        disruptorStrength: lerp(current.disruptorStrength, target.disruptorStrength, factor),
+        breathing: lerp(current.breathing, target.breathing, factor),
+        showGrid: target.showGrid,
+        showDiagonals: target.showDiagonals,
+        showPaper: target.showPaper,
+        showBadges: target.showBadges,
+      };
+    };
 
     const draw = () => {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const now = performance.now();
+      const dt = Math.min((now - lastTime) / 1000, 0.05);
+      lastTime = now;
 
-      // Update nodes
-      for (const node of nodes) {
-        node.x += node.vx;
-        node.y += node.vy;
+      const config = currentConfigRef.current;
+      const w = canvas.width;
+      const h = canvas.height;
 
-        // Wrap around edges
-        if (node.x < -20) node.x = canvas.width + 20;
-        if (node.x > canvas.width + 20) node.x = -20;
-        if (node.y < -20) node.y = canvas.height + 20;
-        if (node.y > canvas.height + 20) node.y = -20;
+      updateConfig(dt);
 
-        // Occasional pulse
-        if (Math.random() < 0.002 && node.pulseUntil < performance.now()) {
-          node.pulseUntil = performance.now() + 800;
+       // adjust node count toward target smoothly
+      const desired = Math.floor((isMobile() ? 90 : 150) * targetConfigRef.current.nodeDensity);
+      if (nodes.length < desired) {
+        const toAdd = Math.min(desired - nodes.length, 5);
+        for (let i = 0; i < toAdd; i++) {
+          nodes.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.2,
+            vy: (Math.random() - 0.5) * 0.2,
+          });
         }
+      } else if (nodes.length > desired) {
+        nodes.length = desired;
       }
 
-      // Draw connections
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      const phase = Math.sin((now % period) / period * Math.PI * 2);
+      const k = config.gatherStrength * config.breathing * phase;
+      const cx = w / 2;
+      const cy = h / 2;
+
+      // move disruptor along a slow lemniscate-like path
+      disruptor.angle += config.disruptorStrength * 0.0015;
+      disruptor.x = cx + Math.cos(disruptor.angle) * (w * 0.2);
+      disruptor.y = cy + Math.sin(disruptor.angle * 0.9) * (h * 0.18);
+      disruptor.radius = isMobile() ? 120 : 180;
+      const ux = Math.cos(disruptor.angle);
+      const uy = Math.sin(disruptor.angle);
+
+      for (const node of nodes) {
+        // breathing force toward/away from center
+        const dx = cx - node.x;
+        const dy = cy - node.y;
+        node.vx += dx * k * dt;
+        node.vy += dy * k * dt;
+
+        // disruptor steering
+        const ddx = disruptor.x - node.x;
+        const ddy = disruptor.y - node.y;
+        const dist = Math.hypot(ddx, ddy);
+        if (dist < disruptor.radius) {
+          const strength = config.disruptorStrength * Math.pow(1 - dist / disruptor.radius, 2);
+          node.vx += ux * strength * dt;
+          node.vy += uy * strength * dt;
+          // subtle perpendicular swirl
+          const perpX = -uy;
+          const perpY = ux;
+          node.vx += perpX * strength * 0.25 * Math.sin(now * 0.0007);
+          node.vy += perpY * strength * 0.25 * Math.cos(now * 0.0007);
+        }
+
+        // damping and clamp
+        node.vx *= damping;
+        node.vy *= damping;
+        const speed = Math.hypot(node.vx, node.vy);
+        if (speed > maxSpeed) {
+          node.vx = (node.vx / speed) * maxSpeed;
+          node.vy = (node.vy / speed) * maxSpeed;
+        }
+
+        node.x += node.vx + (Math.random() - 0.5) * 0.02;
+        node.y += node.vy + (Math.random() - 0.5) * 0.02;
+
+        // wrap edges
+        if (node.x < 0) node.x += w;
+        if (node.x > w) node.x -= w;
+        if (node.y < 0) node.y += h;
+        if (node.y > h) node.y -= h;
+      }
+
+      // connections
+      ctx.lineWidth = 1;
       for (let i = 0; i < nodes.length; i++) {
         for (let j = i + 1; j < nodes.length; j++) {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < lineDistance) {
-            const alpha = (1 - dist / lineDistance) * 0.25;
-            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.4})`;
-            ctx.lineWidth = 1;
+          const dist = Math.hypot(dx, dy);
+          if (dist < config.lineDistance) {
+            const alpha = (1 - dist / config.lineDistance) * config.lineOpacity;
+            ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
@@ -132,102 +299,118 @@ function ConstellationCanvas({ variant }: { variant: AmbientVariant }) {
         }
       }
 
-      // Draw nodes
+      // nodes
       for (const node of nodes) {
-        const pulsing = node.pulseUntil > performance.now();
-        const baseRadius = isMobile ? 1.2 : 1.6;
-        const radius = pulsing ? baseRadius + 1.2 : baseRadius;
-        const alpha = pulsing ? 0.8 : 0.45;
-        ctx.fillStyle = pulsing ? accent : "rgba(255,255,255,0.35)";
+        ctx.fillStyle = Math.random() < 0.02 ? config.accent : "rgba(255,255,255,0.38)";
         ctx.beginPath();
-        ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+        ctx.arc(node.x, node.y, isMobile() ? 1.2 : 1.6, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      animationFrameId = requestAnimationFrame(draw);
+      // disruptor ring
+      ctx.strokeStyle = `${config.accent.replace("0.", "0.2")}`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.arc(disruptor.x, disruptor.y, disruptor.radius, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = config.accent;
+      ctx.beginPath();
+      ctx.arc(disruptor.x, disruptor.y, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255,255,255,0.35)";
+      ctx.font = "10px var(--font-jetbrains, monospace)";
+      ctx.textAlign = "center";
+      ctx.fillText("model", disruptor.x, disruptor.y - 12);
+
+      animationFrame = requestAnimationFrame(draw);
     };
 
-    animationFrameId = requestAnimationFrame(draw);
-
+    animationFrame = requestAnimationFrame(draw);
     return () => {
       window.removeEventListener("resize", resize);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(animationFrame);
     };
-  }, [isMounted, prefersReducedMotion, variant]);
+  }, [configKey, isMounted, prefersReducedMotion]);
 
-  if (!isMounted || prefersReducedMotion) {
-    return null;
-  }
-
+  if (!isMounted || prefersReducedMotion) return null;
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full opacity-50 pointer-events-none"
+      className="fixed inset-0 w-full h-full opacity-50 pointer-events-none"
       aria-hidden
     />
   );
 }
 
-function FloatingBadges() {
+function NumbersWhisper({ active }: { active: AmbientKey }) {
   const prefersReducedMotion = usePrefersReducedMotion();
-  const [isMounted, setIsMounted] = useState(false);
-  useEffect(() => setIsMounted(true), []);
-  const badges = useMemo(
-    () => [
-      "p(agree)=0.71",
-      "reward=+0.12",
-      "loss ↓",
-      "entropy=1.7",
-      "p(disagree)=0.09",
-      "grad · d = 0.42",
-    ],
-    []
-  );
+  const [badge, setBadge] = useState<string | null>(null);
 
-  if (!isMounted || prefersReducedMotion) return null;
+  useEffect(() => {
+    if (prefersReducedMotion || (active !== "hero" && active !== "demos")) {
+      setBadge(null);
+      return;
+    }
+    let timeout: number;
+    const schedule = () => {
+      const delay = 8000 + Math.random() * 4000;
+      timeout = window.setTimeout(() => {
+        setBadge(badges[Math.floor(Math.random() * badges.length)]);
+        schedule();
+      }, delay);
+    };
+    schedule();
+    return () => clearTimeout(timeout);
+  }, [active, prefersReducedMotion]);
 
+  useEffect(() => {
+    if (!badge) return;
+    const timer = window.setTimeout(() => setBadge(null), 4500);
+    return () => clearTimeout(timer);
+  }, [badge]);
+
+  if (!badge) return null;
   return (
-    <div className="absolute inset-0 pointer-events-none">
-      {badges.map((text, i) => {
-        const left = 5 + (i * 17) % 80;
-        const top = 15 + (i * 23) % 60;
-        const delay = i * 1.4;
-        return (
-          <span
-            key={text + i}
-            className="ambient-badge"
-            style={{
-              left: `${left}%`,
-              top: `${top}%`,
-              animationDelay: `${delay}s`,
-            }}
-          >
-            {text}
-          </span>
-        );
-      })}
-    </div>
+    <span
+      className="ambient-badge"
+      style={{
+        left: `${15 + Math.random() * 70}%`,
+        top: `${20 + Math.random() * 50}%`,
+      }}
+    >
+      {badge}
+    </span>
   );
 }
 
-export function AmbientBackground({ variant = "hero", className }: AmbientBackgroundProps) {
+export function AmbientBackground({ activeSection = "hero", className }: AmbientBackgroundProps) {
+  const key: AmbientKey = (["hero", "readings", "paper", "demos", "footer"].includes(activeSection)
+    ? activeSection
+    : "hero") as AmbientKey;
+
   return (
     <div
       className={cn(
-        "absolute inset-0 -z-10 pointer-events-none overflow-hidden ambient-root",
+        "fixed inset-0 -z-20 pointer-events-none overflow-hidden ambient-root",
         className
       )}
-      data-ambient={variant}
+      data-ambient={key}
+      style={
+        {
+          "--ambient-accent": sectionConfigs[key].accent,
+          "--ambient-accent-2": sectionConfigs[key].accent2 ?? sectionConfigs[key].accent,
+        } as React.CSSProperties
+      }
     >
       <div className="ambient-gradient" />
       <div className="ambient-vignette" />
-      {variant === "readings" && <div className="ambient-grid" />}
-      {variant === "paper" && <div className="ambient-paper" />}
-      {variant === "demos" && <div className="ambient-diagonals" />}
+      {sectionConfigs[key].showGrid && <div className="ambient-grid" style={{ opacity: sectionConfigs[key].gridOpacity }} />}
+      {sectionConfigs[key].showDiagonals && <div className="ambient-diagonals" />}
+      {sectionConfigs[key].showPaper && <div className="ambient-paper" />}
       <div className="ambient-noise" />
       <div className="ambient-scanlines" />
-      <ConstellationCanvas variant={variant} />
-      {variant === "hero" && <FloatingBadges />}
+      <ConstellationCanvas configKey={key} />
+      {sectionConfigs[key].showBadges && <NumbersWhisper active={key} />}
     </div>
   );
 }

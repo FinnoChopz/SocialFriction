@@ -421,6 +421,44 @@
   pointer-events: none;
 }
 
+.premium-card {
+  position: relative;
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+
+.premium-card::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(96, 165, 250, 0.25), rgba(192, 132, 252, 0.25));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+
+.premium-card:hover,
+.premium-card:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px -35px rgba(96, 165, 250, 0.8);
+  border-color: rgba(255, 255, 255, 0.16);
+  outline: 2px solid rgba(96, 165, 250, 0.25);
+  outline-offset: 2px;
+}
+
+.premium-card:hover::after,
+.premium-card:focus-visible::after {
+  opacity: 0.25;
+}
+
+.premium-card .shine-effect::before {
+  transition: left 0.5s ease;
+}
+
+.premium-card:hover .shine-effect::before {
+  left: 100%;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ambient-gradient {
     animation: none;
