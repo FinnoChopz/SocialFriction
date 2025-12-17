@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
+import { WriteupEmbed } from "@/components/shared/WriteupEmbed";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -147,6 +148,20 @@ export default function PromptDiscoveryDemo() {
                 </div>
               </motion.div>
             )}
+          </div>
+        </section>
+
+        <Separator />
+
+        {/* Writeup Section */}
+        <section className="py-12">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <WriteupEmbed
+              title="Companion writeup"
+              description="Want the full story behind this Hugging Face Space? Preview or open the PDF writeup."
+              pdfHref="/writeups/bad_joke_writeup.pdf"
+              accent="blue"
+            />
           </div>
         </section>
 

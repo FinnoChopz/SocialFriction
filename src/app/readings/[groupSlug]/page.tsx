@@ -126,7 +126,7 @@ export default function GroupPage() {
                       <div className="flex flex-row sm:flex-col gap-2">
                         {(reading.externalLinks.doi || reading.externalLinks.url || reading.externalLinks.pdf) && (
                           <a
-                            href={reading.externalLinks.doi || reading.externalLinks.url || reading.externalLinks.pdf}
+                            href={(reading.externalLinks.doi || reading.externalLinks.url || reading.externalLinks.pdf) ?? undefined}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="inline-flex"

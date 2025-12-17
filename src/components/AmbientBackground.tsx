@@ -391,7 +391,7 @@ export function AmbientBackground({ activeSection = "hero", className }: Ambient
   return (
     <div
       className={cn(
-        "fixed inset-0 -z-20 pointer-events-none overflow-hidden ambient-root",
+        "fixed inset-0 z-0 pointer-events-none overflow-hidden ambient-root",
         className
       )}
       data-ambient={key}

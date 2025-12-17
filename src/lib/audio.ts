@@ -3,13 +3,13 @@ export function fadeAudio(
   targetVolume: number,
   durationMs: number,
   onDone?: () => void
-) {
+): () => void {
   const start = audio.volume;
   const delta = targetVolume - start;
   if (durationMs <= 0) {
     audio.volume = targetVolume;
     if (onDone) onDone();
-    return;
+    return () => {};
   }
 
   const startTime = performance.now();
