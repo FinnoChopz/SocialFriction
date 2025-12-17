@@ -145,7 +145,14 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
 
     const isMobile = () => window.innerWidth < 768;
     const maxNodes = () => Math.floor((isMobile() ? 90 : 150) * targetConfigRef.current.nodeDensity);
+    const pointer = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+      active: false,
+      lastMove: performance.now(),
+    };
     let nodes: Node[] = [];
+    let burst = { x: 0, y: 0, timeLeft: 0, duration: 1100 };
     let disruptor: Disruptor = {
       x: 0,
       y: 0,
@@ -156,8 +163,10 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
     let lastTime = performance.now();
     let animationFrame: number;
     const period = 14000; // ms for gather/repel cycle
-    const damping = 0.985;
-    const maxSpeed = 0.4;
+    const damping = 0.992;
+    const gatherSlowdown = 0.32;
+    const baseMaxSpeed = 0.16;
+    const burstMaxSpeed = 1.05;
 
     const init = () => {
       canvas.width = window.innerWidth;
@@ -176,6 +185,27 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
     const resize = () => init();
     init();
     window.addEventListener("resize", resize);
+
+    const handlePointerMove = (event: PointerEvent) => {
+      pointer.active = true;
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+      pointer.lastMove = performance.now();
+    };
+
+    const handlePointerLeave = () => {
+      pointer.active = false;
+    };
+
+    const handleClick = (event: MouseEvent) => {
+      burst = { ...burst, x: event.clientX, y: event.clientY, timeLeft: burst.duration };
+      pointer.active = true;
+      pointer.lastMove = performance.now();
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerleave", handlePointerLeave);
+    window.addEventListener("click", handleClick);
 
     const updateConfig = (dt: number) => {
       const current = currentConfigRef.current;
@@ -227,13 +257,20 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.clearRect(0, 0, w, h);
 
-      const phase = Math.sin((now % period) / period * Math.PI * 2);
-      const k = config.gatherStrength * config.breathing * phase;
+      if (pointer.active && now - pointer.lastMove > 2400) {
+        pointer.active = false;
+      }
+
+      const phase = Math.sin(((now % period) / period) * Math.PI * 2);
+      const k = config.gatherStrength * gatherSlowdown * config.breathing * phase;
       const cx = w / 2;
       const cy = h / 2;
+      const speedLimit = burst.timeLeft > 0 ? burstMaxSpeed : baseMaxSpeed;
+      const cursorRadius = isMobile() ? 160 : 220;
+      const burstFalloff = isMobile() ? 190 : 260;
 
       // move disruptor along a slow lemniscate-like path
-      disruptor.angle += config.disruptorStrength * 0.0015;
+      disruptor.angle += config.disruptorStrength * 0.001;
       disruptor.x = cx + Math.cos(disruptor.angle) * (w * 0.2);
       disruptor.y = cy + Math.sin(disruptor.angle * 0.9) * (h * 0.18);
       disruptor.radius = isMobile() ? 120 : 180;
@@ -262,23 +299,50 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
           node.vy += perpY * strength * 0.25 * Math.cos(now * 0.0007);
         }
 
+        if (pointer.active) {
+          const pdx = pointer.x - node.x;
+          const pdy = pointer.y - node.y;
+          const pdist = Math.hypot(pdx, pdy) || 1;
+          const pull = Math.max(0, 1 - pdist / cursorRadius);
+          if (pull > 0) {
+            const influence = 0.34 * pull * pull + 0.05 * pull;
+            node.vx += pdx * influence * dt;
+            node.vy += pdy * influence * dt;
+          }
+        }
+
+        if (burst.timeLeft > 0) {
+          const bdx = node.x - burst.x;
+          const bdy = node.y - burst.y;
+          const bdist = Math.hypot(bdx, bdy) || 1;
+          const wave = burst.timeLeft / burst.duration;
+          const falloff = Math.exp(-bdist / burstFalloff);
+          const impulse = 150 * wave * falloff * dt;
+          node.vx += (bdx / bdist) * impulse;
+          node.vy += (bdy / bdist) * impulse;
+        }
+
         // damping and clamp
         node.vx *= damping;
         node.vy *= damping;
         const speed = Math.hypot(node.vx, node.vy);
-        if (speed > maxSpeed) {
-          node.vx = (node.vx / speed) * maxSpeed;
-          node.vy = (node.vy / speed) * maxSpeed;
+        if (speed > speedLimit) {
+          node.vx = (node.vx / speed) * speedLimit;
+          node.vy = (node.vy / speed) * speedLimit;
         }
 
-        node.x += node.vx + (Math.random() - 0.5) * 0.02;
-        node.y += node.vy + (Math.random() - 0.5) * 0.02;
+        node.x += node.vx + (Math.random() - 0.5) * 0.01;
+        node.y += node.vy + (Math.random() - 0.5) * 0.01;
 
         // wrap edges
         if (node.x < 0) node.x += w;
         if (node.x > w) node.x -= w;
         if (node.y < 0) node.y += h;
         if (node.y > h) node.y -= h;
+      }
+
+      if (burst.timeLeft > 0) {
+        burst.timeLeft = Math.max(0, burst.timeLeft - dt * 1000);
       }
 
       // connections
@@ -307,6 +371,25 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
         ctx.fill();
       }
 
+      if (pointer.active) {
+        ctx.strokeStyle = `${config.accent.replace("0.", "0.28")}`;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        const halo = (isMobile() ? 80 : 100) + Math.sin(now * 0.006) * 6;
+        ctx.arc(pointer.x, pointer.y, halo, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      if (burst.timeLeft > 0) {
+        const life = burst.timeLeft / burst.duration;
+        ctx.strokeStyle = `rgba(255,255,255,${0.25 * life})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        const rippleRadius = (1 - life) * (isMobile() ? 140 : 200) + 35;
+        ctx.arc(burst.x, burst.y, rippleRadius, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
       // disruptor ring
       ctx.strokeStyle = `${config.accent.replace("0.", "0.2")}`;
       ctx.lineWidth = 0.5;
@@ -328,6 +411,9 @@ function ConstellationCanvas({ configKey }: { configKey: AmbientKey }) {
     animationFrame = requestAnimationFrame(draw);
     return () => {
       window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerleave", handlePointerLeave);
+      window.removeEventListener("click", handleClick);
       cancelAnimationFrame(animationFrame);
     };
   }, [configKey, isMounted, prefersReducedMotion]);

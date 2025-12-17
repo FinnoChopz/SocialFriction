@@ -50,6 +50,13 @@ export default function WelcomePage() {
         <ParticleCanvas />
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/60 to-background" />
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 50%, rgba(0,0,0,0.42) 0%, rgba(0,0,0,0.32) 34%, rgba(0,0,0,0.18) 56%, rgba(0,0,0,0.08) 72%, transparent 86%)",
+        }}
+      />
       <div className="absolute inset-0 grid-pattern opacity-20" />
 
       {/* Content */}
@@ -69,7 +76,7 @@ export default function WelcomePage() {
           >
             <div className="inline-flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center">
-                <span className="text-xl font-bold text-white/90">SF</span>
+                <span className="text-xl font-bold text-white/10">SF</span>
               </div>
               <div className="text-left">
                 <div className="font-semibold text-lg">Social Friction Lab</div>
@@ -93,7 +100,7 @@ export default function WelcomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-lg sm:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto"
+            className="text-lg sm:text-xl text-white/90 drop-shadow-[0_8px_22px_rgba(0,0,0,0.55)] mb-12 max-w-2xl mx-auto leading-relaxed"
           >
             AI companions feel social. Under the hood, they&apos;re probability engines trained to keep
             you comfortable. This project explores what that optimization does to truth, feedback,

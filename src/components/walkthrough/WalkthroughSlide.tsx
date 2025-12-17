@@ -15,7 +15,7 @@ export function WalkthroughSlide({ children, className = "" }: WalkthroughSlideP
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className={`min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 relative ${className}`}
+      className={`min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 relative z-20 ${className}`}
     >
       {children}
     </motion.div>

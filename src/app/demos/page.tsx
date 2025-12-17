@@ -157,7 +157,7 @@ export default function DemosPage() {
 
         {/* Note */}
         <section className="py-8 border-t border-border/50">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
             <p className="text-sm text-muted-foreground">
               Demos are hosted on Hugging Face Spaces and load in an iframe. They may take a
               moment to start if the Space has been idle.
