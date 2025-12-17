@@ -1,7 +1,7 @@
-Processing Section 1: Foundations of Social Friction & Face-to-Face
-Interaction
-Warning: No URL found for reading 18
-Warning: No URL found for reading 32
+// Processing Section 1: Foundations of Social Friction & Face-to-Face
+// Interaction
+// Warning: No URL found for reading 18
+// Warning: No URL found for reading 32
 import { Reading, ReadingGroup } from "./readings";
 
 export const readings: Reading[] = [

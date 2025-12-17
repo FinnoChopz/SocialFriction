@@ -34,7 +34,7 @@ export default function ReadingPage() {
     return (
       <>
         <Navigation />
-        <main className="bg-background min-h-screen pt-24">
+        <main className="bg-transparent min-h-screen pt-24">
           <div className="max-w-4xl mx-auto px-4 py-20 text-center">
             <h1 className="text-2xl font-bold mb-4">Reading not found</h1>
             <Link href="/readings">
@@ -49,7 +49,7 @@ export default function ReadingPage() {
   return (
     <>
       <Navigation />
-      <main className="bg-background min-h-screen pt-24">
+      <main className="bg-transparent min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-12 overflow-hidden">
           <div className="absolute inset-0 grid-pattern opacity-10" />

@@ -34,7 +34,7 @@ export default function HomePage() {
   return (
     <>
       <Navigation />
-      <main className="bg-background">
+      <main className="bg-transparent">
         {/* Section indicator */}
         <div className="fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col gap-3 text-muted-foreground/50">
           {homeSections.map((section) => (

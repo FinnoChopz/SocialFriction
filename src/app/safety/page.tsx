@@ -12,7 +12,7 @@ export default function SafetyPage() {
   return (
     <>
       <Navigation />
-      <main className="bg-background min-h-screen pt-24">
+      <main className="bg-transparent min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-16 overflow-hidden">
           <div className="absolute inset-0 grid-pattern opacity-20" />

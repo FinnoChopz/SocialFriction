@@ -38,6 +38,7 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
         <AmbientBackgroundRoot />
+        <div className="fixed inset-0 -z-10 bg-background/70 pointer-events-none" />
         {children}
       </body>
     </html>

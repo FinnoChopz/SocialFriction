@@ -38,7 +38,7 @@ export default function SycophancyDirectionDemo() {
   return (
     <>
       <Navigation />
-      <main className="bg-background min-h-screen pt-24">
+      <main className="bg-transparent min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-12 overflow-hidden">
           <div className="absolute inset-0 grid-pattern opacity-10" />
@@ -140,7 +140,7 @@ export default function SycophancyDirectionDemo() {
                 {!loaded && (
                   <div className="flex flex-col items-center justify-center py-20">
                     <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-4" />
-                    <p className="text-sm text-muted-foreground">Loading Hugging Face Space...</p>
+                    <p className="text-sm text-muted-foreground">Loading Hugging Face Space...This model uses cloud NVIDIA chips, so it may take 2-3 minutes to warm up...</p>
                   </div>
                 )}
                 <iframe

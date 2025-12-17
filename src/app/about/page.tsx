@@ -12,7 +12,7 @@ export default function AboutPage() {
   return (
     <>
       <Navigation />
-      <main className="bg-background min-h-screen pt-24">
+      <main className="bg-transparent min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-16 overflow-hidden" data-bg="paper">
           <div className="absolute inset-0 grid-pattern opacity-20" />
