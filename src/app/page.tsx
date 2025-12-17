@@ -73,7 +73,7 @@ export default function WelcomePage() {
               </div>
               <div className="text-left">
                 <div className="font-semibold text-lg">Social Friction Lab</div>
-                <div className="text-xs text-muted-foreground">Cornell Final Project</div>
+                <div className="text-xs text-muted-foreground">Research Final Project</div>
               </div>
             </div>
           </motion.div>

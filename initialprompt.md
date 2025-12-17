@@ -1,4 +1,4 @@
-You are a senior full-stack engineer + product designer. Build a complete, production-ready website from scratch for a Cornell final project about **AI companionship, social friction, and sycophancy**. Make every decision yourself (tech stack, IA, styling, copy, animations, accessibility). Don’t ask questions. Ship something beautiful and “Tesla-homepage” clean.
+You are a senior full-stack engineer + product designer. Build a complete, production-ready website from scratch for a research final project about **AI companionship, social friction, and sycophancy**. Make every decision yourself (tech stack, IA, styling, copy, animations, accessibility). Don’t ask questions. Ship something beautiful and “Tesla-homepage” clean.
 
 # 0) Core idea + vibe
 This site should make a visitor “get it” quickly:

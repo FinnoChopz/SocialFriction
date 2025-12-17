@@ -27,7 +27,7 @@ export function Slide7Thesis({ onComplete }: SlideProps) {
           transition={{ delay: 0.5 }}
           className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto"
         >
-          This site collects 44 readings, a paper, and two demos showing how &quot;helpful&quot;
+          This site collects 46 readings, a paper, and two demos showing how &quot;helpful&quot;
           optimization can become sycophancy—and why friction matters.
         </motion.p>
 
@@ -49,7 +49,7 @@ export function Slide7Thesis({ onComplete }: SlideProps) {
           className="mt-16 flex items-center justify-center gap-8"
         >
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-400">44</div>
+            <div className="text-3xl font-bold text-blue-400">46</div>
             <div className="text-xs text-muted-foreground">readings</div>
           </div>
           <div className="w-px h-12 bg-border" />

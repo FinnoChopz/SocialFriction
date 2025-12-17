@@ -76,7 +76,7 @@ export default function ReadingsPage() {
                 <BookOpen className="w-5 h-5 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">Reading Library</span>
               </div>
-              <h1 className="text-4xl sm:text-5xl font-bold mb-4">44 Readings</h1>
+              <h1 className="text-4xl sm:text-5xl font-bold mb-4">46 Readings</h1>
               <p className="text-lg text-muted-foreground">
                 Academic literature organized into 9 thematic clusters. Each reading includes
                 a citation, source links, and my notes on why it matters for understanding

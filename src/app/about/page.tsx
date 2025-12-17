@@ -32,8 +32,9 @@ export default function AboutPage() {
               <h1 className="text-4xl sm:text-5xl font-bold mb-4">About This Project</h1>
 
               <p className="text-lg text-muted-foreground">
-                Social Friction Lab is a Cornell final project exploring the intersection of AI
-                companionship, sycophancy, and human social learning.
+                Social Friction Lab is a research final project exploring the intersection of AI
+                companionship, sycophancy, and human social learning. Created by Finn McCooe and
+                advised by Dr. Anthony Ong.
               </p>
             </motion.div>
           </div>
@@ -81,7 +82,7 @@ export default function AboutPage() {
                   </p>
                   <ul className="text-muted-foreground space-y-2 mt-4">
                     <li>
-                      <strong className="text-foreground">Literature review:</strong> 44 readings
+                      <strong className="text-foreground">Literature review:</strong> 46 readings
                       spanning sociology, neuroscience, linguistics, and machine learning were
                       analyzed for insights relevant to social learning and AI interaction.
                     </li>
@@ -111,7 +112,7 @@ export default function AboutPage() {
                   <Card className="p-4 bg-card/50 border-border">
                     <div className="flex items-center gap-3 mb-2">
                       <BookOpen className="w-5 h-5 text-blue-400" />
-                      <span className="font-medium">44 Readings</span>
+                      <span className="font-medium">46 Readings</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
                       Academic sources organized into 9 thematic clusters, each with citation,
@@ -160,9 +161,7 @@ export default function AboutPage() {
                 <h2 className="text-2xl font-semibold mb-4">Acknowledgements</h2>
                 <div className="prose prose-invert max-w-none">
                   <p className="text-muted-foreground">
-                    Thank you to the course instructors and TAs for feedback throughout the project.
-                    The interactive demos are built on Hugging Face infrastructure. This website
-                    uses Next.js, Tailwind CSS, shadcn/ui, and Framer Motion.
+                    Thank you to Dr. Anthony Ong for being my project advisor!
                   </p>
                 </div>
               </motion.div>
@@ -219,7 +218,7 @@ export default function AboutPage() {
                   Contact
                 </h2>
                 <p className="text-muted-foreground">
-                  For questions about this project, please contact via Cornell email.
+                  For questions about this project, please contact via email.
                 </p>
               </motion.div>
             </div>

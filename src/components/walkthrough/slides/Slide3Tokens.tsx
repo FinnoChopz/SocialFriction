@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { WalkthroughSlide } from "../WalkthroughSlide";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 
 interface SlideProps {
   onNext: () => void;
@@ -60,8 +61,11 @@ export function Slide3Tokens({ onNext }: SlideProps) {
           transition={{ delay: 0.6 }}
           className="bg-card/50 border border-border rounded-xl p-6 sm:p-8 mb-6"
         >
-          <div className="text-left mb-4 text-sm text-muted-foreground">
-            Hover over words to see tokenization:
+          <div className="text-left mb-4 text-sm font-semibold text-foreground flex items-center gap-2">
+            <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-blue-500/15 text-[11px] font-bold text-blue-200">
+              ?
+            </span>
+            Hover any word to see its token id and embedding (example)
           </div>
           <TooltipProvider delayDuration={0}>
             <div className="flex flex-wrap items-center gap-0.5 font-mono text-lg">
@@ -110,15 +114,16 @@ export function Slide3Tokens({ onNext }: SlideProps) {
           (example values—not from a real model)
         </motion.p>
 
-        <motion.button
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          onClick={onNext}
-          className="text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
+          className="mt-6 inline-flex"
         >
-          Click to continue →
-        </motion.button>
+          <Button variant="secondary" size="lg" onClick={onNext} className="shadow-md">
+            Continue
+          </Button>
+        </motion.div>
       </div>
     </WalkthroughSlide>
   );

@@ -1,91 +1,8 @@
+Processing Section 1: Foundations of Social Friction & Face-to-Face
+Interaction
+Warning: No URL found for reading 18
+Warning: No URL found for reading 32
 import { Reading, ReadingGroup } from "./readings";
-
-export const readingGroups: ReadingGroup[] = [
-  {
-    slug: "foundations",
-    title: "Foundations of Social Friction",
-    subtitle: "Face-to-Face Interaction & Social Physics",
-    longDescription: "Core theories establishing why friction, irreversibility, and risk are essential features of human sociality, not bugs to be removed.",
-    themeTags: ["Sociology", "Interaction", "Face-work"]
-  },
-  {
-    slug: "neural-plasticity",
-    title: "Neural Plasticity & Social Learning",
-    subtitle: "How Experience Wires the Social Brain",
-    longDescription: "Neuroscientific evidence that social circuits require specific, intense, and often challenging inputs to develop and maintain function.",
-    themeTags: ["Neuroscience", "Plasticity", "Development"]
-  },
-  {
-    slug: "variable-reinforcement",
-    title: "Variable Reinforcement",
-    subtitle: "Social Calibration & Reward Systems",
-    longDescription: "Why the brain learns best from unpredictable, mixed-valence feedback (carrots and sticks) rather than constant validation.",
-    themeTags: ["Reinforcement Learning", "Dopamine", "Calibration"]
-  },
-  {
-    slug: "theory-of-mind",
-    title: "Theory of Mind",
-    subtitle: "Communication Tailoring & Mentalizing",
-    longDescription: "How we learn to model other minds through the friction of misunderstanding, repair, and audience design.",
-    themeTags: ["Psychology", "Communication", "Cognition"]
-  },
-  {
-    slug: "ai-architectures",
-    title: "AI Architectures & RLHF",
-    subtitle: "The Engineering of Frictionlessness",
-    longDescription: "Technical analysis of how LLMs and RLHF are optimized for smoothness, deference, and conflict avoidance.",
-    themeTags: ["AI Safety", "RLHF", "LLMs"]
-  },
-  {
-    slug: "ai-companionship",
-    title: "AI Companionship",
-    subtitle: "Current Usage & Dynamics",
-    longDescription: "Empirical data on how people are actually using AI companions and the relational dynamics that emerge.",
-    themeTags: ["HCI", "Companions", "Usage Trends"]
-  },
-  {
-    slug: "ai-risks",
-    title: "Where AI Companionship Goes Wrong",
-    subtitle: "Sycophancy, Dependence & Epistemic Bubbles",
-    longDescription: "Evidence of the downsides: how friction-free interaction leads to lower well-being, sycophancy, and reduced social capacity.",
-    themeTags: ["Risks", "Mental Health", "Sycophancy"]
-  },
-  {
-    slug: "developmental-impact",
-    title: "Developmental Impact",
-    subtitle: "Critical Periods & Adolescence",
-    longDescription: "Why adolescence is a sensitive period for social learning and how AI might interfere with normative development.",
-    themeTags: ["Development", "Adolescence", "Critical Periods"]
-  },
-  {
-    slug: "societal-implications",
-    title: "Societal Implications",
-    subtitle: "Long-term & Macro Effects",
-    longDescription: "Broader consequences for social capital, trust, and economic growth if social friction is systematically removed.",
-    themeTags: ["Economics", "Society", "Policy"]
-  }
-];
-
-// Helper functions for lookups used across the app
-export function getGroup(slug: string): ReadingGroup | undefined {
-  return readingGroups.find((g) => g.slug === slug);
-}
-
-export function getReadingsByGroup(groupSlug: string): Reading[] {
-  return readings.filter((r) => r.groupSlug === groupSlug);
-}
-
-export function getReading(slug: string): Reading | undefined {
-  return readings.find((r) => r.slug === slug);
-}
-
-export function getAllTags(): string[] {
-  const tagSet = new Set<string>();
-  readingGroups.forEach((g) => {
-    g.themeTags.forEach((tag) => tagSet.add(tag));
-  });
-  return Array.from(tagSet).sort();
-}
 
 export const readings: Reading[] = [
   {
@@ -100,11 +17,11 @@ export const readings: Reading[] = [
       "doi": "https://doi.org/10.1080/00332747.1955.11023008",
       "url": null
     },
-    "oneLineSummary": "Establishes irreversibility of social actions and face maintenance as core social friction",
+    "oneLineSummary": "Establishes irreversibility of social actions and face maintenance as core social",
     "discussion": {
-      "coreIdea": "Goffman argues that everyday interaction is organized around \u201cface\u201d \u2013 the positive social value a person claims \u2013 and the ongoing \u201cface-work\u201d people do to maintain it. In any encounter, you put forward a \u201cline\u201d about who you are and where you stand; once it\u2019s in play, you and others are morally bound to sustain it. Social life is thus full of tiny, ritualized maneuvers (apologies, joking, tact, avoidance) that repair threatened face and keep interaction flowing. Under the surface, there\u2019s a surprisingly strict moral order: people are expected both to respect their own face and to protect others\u2019, and much of the anxiety and drama in social life comes from possible losses of face that can\u2019t easily be undone.\nThe core question is: what invisible rules and rituals make ordinary interaction hang together without constant breakdown? Goffman answers by treating interaction as a kind of secular religion of face, in which individuals are simultaneously actors and audience. By carefully analyzing small events\u2014slights, gaffes, rescues\u2014he shows that people orient to face as a sacred object: they anticipate threats, work to prevent them, and rush to repair them when they occur. The article doesn\u2019t rely on experiments or formal models; instead, it builds a phenomenological-analytic case that these moral expectations are what keep conversations from flying apart.\nFor my project, this paper is basically the \u201corigin story\u201d of social friction. Goffman insists that interaction is inherently risky, irreversible, and emotionally loaded: once a remark lands, you can\u2019t un-say it, and everyone must cope with its impact on face. That is exactly the kind of variable, high-stakes feedback I\u2019m arguing is essential for social learning \u2013 the mix of smiles, winces, silence, and pushback that trains our behavior over time. In contrast, AI companionship offers a world where face is almost never seriously threatened: you can edit your message before sending, reset the chat, and count on the model to be tactful and forgiving. My broader claim is that if people increasingly practice social life in this low-friction environment, they will do less face-work, experience fewer real losses of face, and therefore get weaker training in how to navigate messy, high-stakes human encounters. Goffman gives me the conceptual language \u2013 face, line, ritual repair \u2013 to describe what exactly gets flattened when we outsource our social practice to friction-free AI companions.",
-      "questionAnswered": "",
-      "whyItMatters": ""
+      "coreIdea": "friction",
+      "questionAnswered": "Goffman argues that everyday interaction is organized around \u201cface\u201d \u2013 the positive social value a person claims \u2013 and the ongoing \u201cface-work\u201d people do to maintain it. In any encounter, you put forward a \u201cline\u201d about who you are and where you stand; once it\u2019s in play, you and others are morally bound to sustain it. Social life is thus full of tiny, ritualized maneuvers (apologies, joking, tact, avoidance) that repair threatened face and keep interaction flowing. Under the surface, there\u2019s a surprisingly strict moral order: people are expected both to respect their own face and to protect others\u2019, and much of the anxiety and drama in social life comes from possible losses of face that can\u2019t easily be undone.",
+      "whyItMatters": "The core question is: what invisible rules and rituals make ordinary interaction hang together without constant breakdown? Goffman answers by treating interaction as a kind of secular religion of face, in which individuals are simultaneously actors and audience. By carefully analyzing small events\u2014slights, gaffes, rescues\u2014he shows that people orient to face as a sacred object: they anticipate threats, work to prevent them, and rush to repair them when they occur. The article doesn\u2019t rely on experiments or formal models; instead, it builds a phenomenological-analytic case that these moral expectations are what keep conversations from flying apart.\nFor my project, this paper is basically the \u201corigin story\u201d of social friction. Goffman insists that interaction is inherently risky, irreversible, and emotionally loaded: once a remark lands, you can\u2019t un-say it, and everyone must cope with its impact on face. That is exactly the kind of variable, high-stakes feedback I\u2019m arguing is essential for social learning \u2013 the mix of smiles, winces, silence, and pushback that trains our behavior over time. In contrast, AI companionship offers a world where face is almost never seriously threatened: you can edit your message before sending, reset the chat, and count on the model to be tactful and forgiving. My broader claim is that if people increasingly practice social life in this low-friction environment, they will do less face-work, experience fewer real losses of face, and therefore get weaker training in how to navigate messy, high-stakes human encounters. Goffman gives me the conceptual language \u2013 face, line, ritual repair \u2013 to describe what exactly gets flattened when we outsource our social practice to friction-free AI companions."
     }
   },
   {
@@ -121,9 +38,9 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "Comprehensive overview of mechanisms unique to face-to-face interaction",
     "discussion": {
-      "coreIdea": "Hadley, Naylor and Hamilton treat face-to-face interaction as a rich, multimodal, cognitive problem rather than just \u201ctalk plus body language.\u201d They argue we can organize interaction behavior three ways: by modality (gaze, gesture, speech, posture), by underlying cognitive processes (perception, prediction, control), or by social meaning (e.g., turn-taking, dominance, affiliation). They then map three families of theories onto this: (1) social-meaning theories that describe what behaviors do in interaction, (2) simple behavior-rule theories (like flocking rules) that show how complex coordination can emerge from local rules, and (3) rich cognition theories where people maintain detailed internal models of others\u2019 minds. Finally, they review new methods\u2014high-resolution motion capture, dual eye-tracking, hyperscanning, VR/artificial agents\u2014that let us actually test these theories in naturalistic settings, instead of only in stripped-down lab tasks. \nThe core question is: how should we theorize and measure face-to-face interaction so that we can move beyond vague talk of \u201csocial skills\u201d to actual testable models? The authors answer by laying out a kind of coordinate system: one axis for how we organize behavior (modality vs cognition vs meaning), another for what kind of theory we\u2019re using (social meaning, behavior rules, rich cognition), and a toolkit of methods that can discriminate among them. Their answer is explicitly pluralistic: no single framework wins; progress comes from matching theory type to the right behavioral measures and experimental setups.\nThis paper gives me a vocabulary and toolkit for talking about \u201cfriction\u201d in a non-hand-wavy way. My core claim is that real-world social learning depends on messy, irreversible, multimodal feedback\u2014raised eyebrows, hesitations, interruptions\u2014while AI companionship strips much of that away. Hadley et al. show that face-to-face interaction is exactly this dense, coordinated coupling of modalities and cognitive processes; it\u2019s not just text with extra steps. In my final report, I can lean on their tripartite theory structure: AI companions mostly simulate social meaning with language, but they don\u2019t expose users to the full behavior-rule dynamics or the demand to maintain rich, up-to-date models of specific others\u2019 minds. That gap helps explain why friction-free AI practice may fail to generalize: it trains users in a thinned-out slice of the interaction space, where many of the cues and contingencies that normally drive social learning are simply missing.",
-      "questionAnswered": "",
-      "whyItMatters": ""
+      "coreIdea": "Hadley, Naylor and Hamilton treat face-to-face interaction as a rich, multimodal, cognitive problem rather than just \u201ctalk plus body language.\u201d They argue we can organize interaction behavior three ways: by modality (gaze, gesture, speech, posture), by underlying cognitive processes (perception, prediction, control), or by social meaning (e.g., turn-taking, dominance, affiliation). They then map three families of theories onto this: (1) social-meaning theories that describe what behaviors do in interaction, (2) simple behavior-rule theories (like flocking rules) that show how complex coordination can emerge from local rules, and (3) rich cognition theories where people maintain detailed internal models of others\u2019 minds. Finally, they review new methods\u2014high-resolution motion capture, dual eye-tracking, hyperscanning, VR/artificial agents\u2014that let us actually test these theories in naturalistic settings, instead of only in stripped-down lab tasks.",
+      "questionAnswered": "The core question is: how should we theorize and measure face-to-face interaction so that we can move beyond vague talk of \u201csocial skills\u201d to actual testable models? The authors answer by laying out a kind of coordinate system: one axis for how we organize behavior (modality vs cognition vs meaning), another for what kind of theory we\u2019re using (social meaning, behavior rules, rich cognition), and a toolkit of methods that can discriminate among them. Their answer is explicitly pluralistic: no single framework wins; progress comes from matching theory type to the right behavioral measures and experimental setups.",
+      "whyItMatters": "This paper gives me a vocabulary and toolkit for talking about \u201cfriction\u201d in a non-hand-wavy way. My core claim is that real-world social learning depends on messy, irreversible, multimodal feedback\u2014raised eyebrows, hesitations, interruptions\u2014while AI companionship strips much of that away. Hadley et al. show that face-to-face interaction is exactly this dense, coordinated coupling of modalities and cognitive processes; it\u2019s not just text with extra steps. In my final report, I can lean on their tripartite theory structure: AI companions mostly simulate social meaning with language, but they don\u2019t expose users to the full behavior-rule dynamics or the demand to maintain rich, up-to-date models of specific others\u2019 minds. That gap helps explain why friction-free AI practice may fail to generalize: it trains users in a thinned-out slice of the interaction space, where many of the cues and contingencies that normally drive social learning are simply missing."
     }
   },
   {
@@ -160,26 +77,7 @@ export const readings: Reading[] = [
     "oneLineSummary": "How social friction leads to social norms",
     "discussion": {
       "coreIdea": "Ward\u2019s core move is to reinterpret \u201cethics\u201d as a byproduct of the social machine\u2014not a lofty realm of principles, but the way society manages the collisions that happen when individuals pursue their own ends. Moral rules, in his view, grow out of the system: people are literally compelled to behave \u201cmorally\u201d by social sanctions\u2014ostracism, loss of livelihood, imprisonment\u2014rather than by pure conscience. Ethics is about conduct, not action: it doesn\u2019t generate productive activity, it regulates and restrains it, much like mechanical friction. Social friction is thus both necessary (to keep the machine from tearing itself apart) and costly (it slows progress), and the task of \u201csocial intellect\u201d is to remove all friction that isn\u2019t strictly required.\nThe central question of the chapter is: what is the real domain and function of ethics within social life? Ward answers by sharply limiting ethics to cases where pursuits of ends conflict\u2014where my action obstructs yours. He argues that moral codes are self-enforcing products of social evolution, not things we create by preaching. Teaching ethics has little power to improve character; it mostly produces timidity and egotism in teachers and students obsessed with guarding reputations. Even seemingly private vices (intemperance, self-harm) matter morally only once they re-enter society and increase \u201cfriction\u201d in the social machinery. Even charity, which looks purely altruistic, is explained as an attempt to relieve pressure caused by deeper obstructions that prevent the poor from pursuing normal action.\nWard gives me a nineteenth-century blueprint for thinking about \u201calignment\u201d as something that emerges from lived constraint and conflict. Social norms bite because violations carry real costs; the moral code is felt in the frictions of everyday life. AI companionship, by contrast, offers moral interaction with almost no friction: no ostracism, no lost opportunities, no real penalties for being selfish, evasive, or untruthful. In Ward\u2019s terms, it\u2019s like a form of perpetual charity that eases local discomfort without touching the structural barriers underneath. That suggests a concrete risk: as more social practice shifts into these low-friction spaces, we may blunt exactly the social forces that historically produced moral alignment in the first place.",
-      "questionAnswered": "",
-      "whyItMatters": ""
-    }
-  },
-  {
-    "slug": "the-emergence-of-social-norms",
-    "groupSlug": "foundations",
-    "title": "The Emergence of Social Norms and Conventions",
-    "authors": "Hawkins, R. X. D., Goodman, N. D., & Goldstone, R. L",
-    "year": 2019,
-    "venue": "Trends in Cognitive Sciences, 23(2), 158\u2013169.",
-    "fullCitation": "Hawkins, R. X. D., Goodman, N. D., & Goldstone, R. L. (2019). The Emergence of Social Norms and Conventions. Trends in Cognitive Sciences, 23(2), 158\u2013169. https://doi.org/10.1016/j.tics.2018.11.003",
-    "externalLinks": {
-      "doi": "https://doi.org/10.1016/j.tics.2018.11.003",
-      "url": null
-    },
-    "oneLineSummary": "How social friction leads to social norms",
-    "discussion": {
-      "coreIdea": "Hawkins and colleagues treat norms and conventions as solutions that emerge from many small, local coordination problems. Rather than assuming norms are just \u201cout there,\u201d they show how repeated interactions, limited information, and simple learning rules can gradually stabilize into shared expectations. They review work where agents\u2014human or simulated\u2014face tasks like naming objects, dividing resources, or coordinating on signals. Across methods, the same story shows up: people start out noisy and idiosyncratic, but through feedback, adaptation, and mutual prediction, they converge on conventions that reduce uncertainty about what others will do. Norms then become both constraints (limiting options) and scaffolds (making the social world more predictable and efficient).\nThe central question is: how do shared social norms arise from the messy, decentralized behavior of individuals who are just trying to get by in local interactions? The paper\u2019s answer is multi-level. At the micro level, individuals learn from reinforcement and social inference in specific encounters\u2014updating expectations when others reward or punish certain behaviors. At the meso level, network structure and patterns of interaction (who meets whom, how often, under what information) shape which conventions win out. At the macro level, cultural evolution and population turnover help stabilize or shift norms over generations. Norms are therefore not imposed from above so much as they crystallize from countless episodes of friction and adjustment.\nThis gives a mechanistic backbone to the idea that social friction is a training signal. Norms don\u2019t emerge in a vacuum; they are carved out by trial and error, misunderstandings, mild conflicts, and the pressure to coordinate with actual, sometimes stubborn, other people. AI companionship environments, by contrast, are typically designed to minimize friction: the model adapts quickly to the user, avoids harsh negative feedback, and often \u201cmeets you where you are\u201d instead of forcing you to adapt. That means fewer genuine coordination failures, fewer moments where you experience the cost of misalignment and have to update. In the final report, this article will help me argue that if we increasingly practice interaction in artificially forgiving, one-sided systems, we may get worse at the very multi-level learning processes that produce and maintain real-world social norms.",
-      "questionAnswered": "",
+      "questionAnswered": "Hawkins, R. X. D., Goodman, N. D., & Goldstone, R. L. (2019). The Emergence of Social Norms and Conventions. Trends in Cognitive Sciences, 23(2), 158\u2013169. https://doi.org/10.1016/j.tics.2018.11.003\nHow social friction leads to social norms\nHawkins and colleagues treat norms and conventions as solutions that emerge from many small, local coordination problems. Rather than assuming norms are just \u201cout there,\u201d they show how repeated interactions, limited information, and simple learning rules can gradually stabilize into shared expectations. They review work where agents\u2014human or simulated\u2014face tasks like naming objects, dividing resources, or coordinating on signals. Across methods, the same story shows up: people start out noisy and idiosyncratic, but through feedback, adaptation, and mutual prediction, they converge on conventions that reduce uncertainty about what others will do. Norms then become both constraints (limiting options) and scaffolds (making the social world more predictable and efficient).\nThe central question is: how do shared social norms arise from the messy, decentralized behavior of individuals who are just trying to get by in local interactions? The paper\u2019s answer is multi-level. At the micro level, individuals learn from reinforcement and social inference in specific encounters\u2014updating expectations when others reward or punish certain behaviors. At the meso level, network structure and patterns of interaction (who meets whom, how often, under what information) shape which conventions win out. At the macro level, cultural evolution and population turnover help stabilize or shift norms over generations. Norms are therefore not imposed from above so much as they crystallize from countless episodes of friction and adjustment.\nThis gives a mechanistic backbone to the idea that social friction is a training signal. Norms don\u2019t emerge in a vacuum; they are carved out by trial and error, misunderstandings, mild conflicts, and the pressure to coordinate with actual, sometimes stubborn, other people. AI companionship environments, by contrast, are typically designed to minimize friction: the model adapts quickly to the user, avoids harsh negative feedback, and often \u201cmeets you where you are\u201d instead of forcing you to adapt. That means fewer genuine coordination failures, fewer moments where you experience the cost of misalignment and have to update. In the final report, this article will help me argue that if we increasingly practice interaction in artificially forgiving, one-sided systems, we may get worse at the very multi-level learning processes that produce and maintain real-world social norms.",
       "whyItMatters": ""
     }
   },
@@ -197,14 +95,14 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "Face to face learning leads to richer information transmission",
     "discussion": {
-      "coreIdea": "The paper asks what special advantage, if any, face-to-face learning has over other vantage points when people are trying to acquire a complex visuospatial skill from a model. Using a multi-step \u201cpuzzle box\u201d task with children and adults, they manipulate the learner\u2019s viewpoint (0\u00b0, 90\u00b0, 180\u00b0 relative to the model) and track not just whether people can open the box, but how they do it: how faithfully they imitate the model\u2019s actions, how often they innovate new solutions, and how quickly they solve the task. The key finding is that face-to-face (180\u00b0) learning, which is visually the most awkward perspective, still enhances the efficiency of learning and the transmission of useful \u201cknow-how.\u201d Sharing a mental perspective with a partner in a rich, embodied setup can trump the visual convenience of a shared first-person view.\nThe central question is whether social learning is primarily about copying visible actions from the easiest angle, or about grasping another person\u2019s goals and intentions in a way that supports flexible problem solving. The authors show that a shared visual frame (0\u00b0) maximizes strict imitation, but face-to-face interaction promotes goal emulation: learners are more likely to depart from the model\u2019s exact moves, discover novel solutions, and still achieve the target outcome more efficiently. Children and adults both learn, but adults are more faithful imitators while children are relatively more innovative. The punchline is that the social affordances of face-to-face interaction can overcome the geometric disadvantages of a third-person viewpoint, suggesting that perspective-taking, shared attention, and subtle nonverbal cues matter deeply for how information travels between minds.\nThis paper is a clean experimental demonstration that the format of interaction shapes not just how much we learn, but what kind of learning dominates: rigid copying vs flexible, goal-directed understanding. AI companionship, especially in text-only form, narrows the channel to something closer to a tidy 0\u00b0 \u201cinstruction manual\u201d without the messy, embodied reciprocity of face-to-face learning. If rich, frictionful co-presence helps people internalize others\u2019 goals and innovate on top of what they see, then a shift toward low-friction, disembodied AI partners may bias us toward a thinner kind of social learning: efficient imitation of suggestions, with fewer chances to wrestle with another human\u2019s perspective in real time and build the deeper, shared mental frames that Ransom et al. highlight.\n<Section 1: Foundations of Social Friction & Face-to-Face\nInteraction>",
-      "questionAnswered": "",
-      "whyItMatters": ""
+      "coreIdea": "The paper asks what special advantage, if any, face-to-face learning has over other vantage points when people are trying to acquire a complex visuospatial skill from a model. Using a multi-step \u201cpuzzle box\u201d task with children and adults, they manipulate the learner\u2019s viewpoint (0\u00b0, 90\u00b0, 180\u00b0 relative to the model) and track not just whether people can open the box, but how they do it: how faithfully they imitate the model\u2019s actions, how often they innovate new solutions, and how quickly they solve the task. The key finding is that face-to-face (180\u00b0) learning, which is visually the most awkward perspective, still enhances the efficiency of learning and the transmission of useful \u201cknow-how.\u201d Sharing a mental perspective with a partner in a rich, embodied setup can trump the visual convenience of a shared first-person view.\nThe central question is whether social learning is primarily about copying visible actions from the easiest angle, or about grasping another person\u2019s goals and intentions in a way that supports flexible problem solving. The authors show that a shared visual frame (0\u00b0) maximizes strict imitation, but face-to-face interaction promotes goal emulation: learners are more likely to depart from the model\u2019s exact moves, discover novel solutions, and still achieve the target outcome more efficiently. Children and adults both learn, but adults are more faithful imitators while children are relatively more innovative. The punchline is that the social affordances of face-to-face interaction can overcome the geometric disadvantages of a third-person viewpoint, suggesting that perspective-taking, shared attention, and subtle nonverbal cues matter deeply for how information travels between minds.\nThis paper is a clean experimental demonstration that the format of interaction shapes not just how much we learn, but what kind of learning dominates: rigid copying vs flexible, goal-directed understanding. AI companionship, especially in text-only form, narrows the channel to something closer to a tidy 0\u00b0 \u201cinstruction manual\u201d without the messy, embodied reciprocity of face-to-face learning. If rich, frictionful co-presence helps people internalize others\u2019 goals and innovate on top of what they see, then a shift toward low-friction, disembodied AI partners may bias us toward a thinner kind of social learning: efficient imitation of suggestions, with fewer chances to wrestle with another human\u2019s perspective in real time and build the deeper, shared mental frames that Ransom et al. highlight.",
+      "questionAnswered": "<Section 1: Foundations of Social Friction & Face-to-Face\nInteraction>",
+      "whyItMatters": "<Section 2: Neural Plasticity & Social Learning>"
     }
   },
   {
     "slug": "principles-of-experience-dependent-neural-plasticity",
-    "groupSlug": "neural-plasticity",
+    "groupSlug": "foundations",
     "title": "Principles of experience-dependent neural plasticity: Implications for rehabilitation after brain damage",
     "authors": "Kleim, J. A., & Jones, T. A",
     "year": 2008,
@@ -223,7 +121,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "thumbs-up-or-thumbs-down",
-    "groupSlug": "neural-plasticity",
+    "groupSlug": "foundations",
     "title": "Thumbs up or thumbs down: Neural processing of social feedback and links to social motivation in adolescent girls",
     "authors": "Davis, M. M., Modi, H. H., Skymba, H. V., Finnegan, M. K., Haigler, K., Telzer, E. H., & Rudolph, K. D",
     "year": 2023,
@@ -242,7 +140,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "neuronal-reward-and-decision-signals",
-    "groupSlug": "neural-plasticity",
+    "groupSlug": "foundations",
     "title": "Neuronal reward and decision signals: From theories to data",
     "authors": "Schultz, W",
     "year": 2015,
@@ -261,7 +159,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "developmental-differences-in-social-information",
-    "groupSlug": "neural-plasticity",
+    "groupSlug": "foundations",
     "title": "Developmental differences in social information use under uncertainty: A neurocomputational approach",
     "authors": "Hofmans, L., van den Bos, W., Li, S.-C., & Crone, E. A",
     "year": 2025,
@@ -280,7 +178,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "associations-between-digital-media-use",
-    "groupSlug": "neural-plasticity",
+    "groupSlug": "foundations",
     "title": "Associations between digital media use and brain surface structural measures in preschool-aged children",
     "authors": "Hutton, J. S., Dudley, J., DeWitt, T., & Horowitz-Kraus, T",
     "year": 2022,
@@ -292,14 +190,14 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "When screen experiences crowd out interactive exchanges, social circuitry thins",
     "discussion": {
-      "coreIdea": "This paper looks at preschoolers\u2019 screen use and links it to differences in brain structure, especially in regions tied to language, executive function, and social cognition. Parents reported kids\u2019 digital media exposure and home reading environment, and children underwent MRI scans. Higher screen use was associated with thinner cortex and altered surface area in frontal and temporal regions that normally benefit from rich, back-and-forth interaction\u2014conversation, shared reading, pretend play. In contrast, more interactive, language-heavy experiences (like shared reading) were linked to healthier structural profiles in those same areas. The headline isn\u2019t \u201cscreens melt kids\u2019 brains,\u201d but that intensive, passive digital input seems to correlate with less robust development of circuits that are usually sculpted by live, responsive social engagement.\nThe central question is whether and how the quantity and quality of early digital media use show up in the physical organization of the developing brain. The authors don\u2019t claim causality, but the pattern is suggestive: when more time is spent on solitary or low-interaction screen activities, less time is available for the contingent, face-to-face exchanges that drive specialization in language and social networks. The study\u2019s contribution is to bring structural MRI into that conversation, showing that media habits and cortical morphology are meaningfully correlated even in very young children.\nFor my project, this paper is an early-life analogue of my broader claim: when frictionful, effortful interaction is displaced by smoother, more passive experiences, the systems that depend on that interaction may literally develop differently. Preschoolers on tablets instead of in messy, dialogic play are getting a \u201cthinner\u201d training signal; so are older kids and adults who increasingly turn to AI companions instead of unpredictable humans. It gives me a concrete, brain-level way to argue that the medium of interaction\u2014screen-based, low-contingency vs live, high-contingency\u2014matters for how social circuitry is built and maintained.\n<Section 2: Neural Plasticity & Social Learning>",
-      "questionAnswered": "",
-      "whyItMatters": ""
+      "coreIdea": "This paper looks at preschoolers\u2019 screen use and links it to differences in brain structure, especially in regions tied to language, executive function, and social cognition. Parents reported kids\u2019 digital media exposure and home reading environment, and children underwent MRI scans. Higher screen use was associated with thinner cortex and altered surface area in frontal and temporal regions that normally benefit from rich, back-and-forth interaction\u2014conversation, shared reading, pretend play. In contrast, more interactive, language-heavy experiences (like shared reading) were linked to healthier structural profiles in those same areas. The headline isn\u2019t \u201cscreens melt kids\u2019 brains,\u201d but that intensive, passive digital input seems to correlate with less robust development of circuits that are usually sculpted by live, responsive social engagement.\nThe central question is whether and how the quantity and quality of early digital media use show up in the physical organization of the developing brain. The authors don\u2019t claim causality, but the pattern is suggestive: when more time is spent on solitary or low-interaction screen activities, less time is available for the contingent, face-to-face exchanges that drive specialization in language and social networks. The study\u2019s contribution is to bring structural MRI into that conversation, showing that media habits and cortical morphology are meaningfully correlated even in very young children.\nFor my project, this paper is an early-life analogue of my broader claim: when frictionful, effortful interaction is displaced by smoother, more passive experiences, the systems that depend on that interaction may literally develop differently. Preschoolers on tablets instead of in messy, dialogic play are getting a \u201cthinner\u201d training signal; so are older kids and adults who increasingly turn to AI companions instead of unpredictable humans. It gives me a concrete, brain-level way to argue that the medium of interaction\u2014screen-based, low-contingency vs live, high-contingency\u2014matters for how social circuitry is built and maintained.",
+      "questionAnswered": "<Section 2: Neural Plasticity & Social Learning>",
+      "whyItMatters": "<Section 3: Variable Reinforcement and Social Calibration>"
     }
   },
   {
     "slug": "social-learning-theory",
-    "groupSlug": "variable-reinforcement",
+    "groupSlug": "foundations",
     "title": "Social learning theory",
     "authors": "Bandura, A",
     "year": 1977,
@@ -318,7 +216,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "integrating-different-perspectives-on-socialization",
-    "groupSlug": "variable-reinforcement",
+    "groupSlug": "foundations",
     "title": "Integrating different perspectives on socialization theory and research: A domain-specific approach",
     "authors": "Grusec, J. E., & Davidov, M",
     "year": 2010,
@@ -337,7 +235,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "neural-pathways-of-embarrassment-and",
-    "groupSlug": "variable-reinforcement",
+    "groupSlug": "foundations",
     "title": "Neural pathways of embarrassment and their modulation by social anxiety",
     "authors": "Krach, S., M\u00fcller-Pinzler, L., Westermann, S., & Paulus, F. M",
     "year": 2013,
@@ -356,7 +254,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "neural-plasticity-of-development-and",
-    "groupSlug": "variable-reinforcement",
+    "groupSlug": "foundations",
     "title": "Neural plasticity of development and learning",
     "authors": "Galv\u00e1n, A",
     "year": 2010,
@@ -375,7 +273,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "by-carrot-or-by-stick",
-    "groupSlug": "variable-reinforcement",
+    "groupSlug": "foundations",
     "title": "By carrot or by stick: Cognitive reinforcement learning in parkinsonism",
     "authors": "Frank, M. J., Seeberger, L. C., & O\u2019Reilly, R. C",
     "year": 2004,
@@ -387,14 +285,14 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "Positive and negative reinforcement are dissociable and both are needed for learning",
     "discussion": {
-      "coreIdea": "Frank and colleagues use Parkinson\u2019s disease and dopamine medication as a kind of natural experiment on the brain\u2019s learning systems. Patients with low dopamine (off meds) are relatively better at learning to avoid options that lead to bad outcomes (\u201cstick\u201d) but worse at learning to repeat options that lead to rewards (\u201ccarrot\u201d). When they take dopamine medication, the pattern flips: they get better at reward learning and worse at avoiding punishers. This double dissociation suggests that positive and negative reinforcement depend on partly separable dopamine-based mechanisms in basal ganglia circuits.\nThe central question is whether learning from rewards and learning from punishments are implemented by the same neural process or by partially distinct ones. The authors answer by combining behavioral tasks with a biologically grounded neural network model. The data fit a picture where \u201cGo\u201d pathways (facilitating actions) are strengthened by positive prediction errors, while \u201cNoGo\u201d pathways (suppressing actions) are strengthened by negative ones. Changing dopamine levels shifts the balance between these systems, and thus the balance between carrot- and stick-driven learning.\nFor my project, this is a strong argument that both pleasant and unpleasant social outcomes are functionally necessary. If AI companions are engineered to minimize negative affect\u2014rarely giving harsh criticism, never truly withdrawing, smoothing over conflict\u2014then they are effectively starving the NoGo system of practice. You still get \u201ccarrot\u201d signals (validation, praise, agreeable responses), but far fewer sharp \u201cdon\u2019t do that\u201d hits. In real social groups, those sticks are a key part of how we learn boundaries, self-control, and norm compliance. In the final report, this paper will help me argue that an AI-mediated, mostly-carrot social environment doesn\u2019t just feel different; it may systematically bias which reinforcement pathways we exercise.\n<Section 3: Variable Reinforcement and Social Calibration>",
-      "questionAnswered": "",
+      "coreIdea": "Frank and colleagues use Parkinson\u2019s disease and dopamine medication as a kind of natural experiment on the brain\u2019s learning systems. Patients with low dopamine (off meds) are relatively better at learning to avoid options that lead to bad outcomes (\u201cstick\u201d) but worse at learning to repeat options that lead to rewards (\u201ccarrot\u201d). When they take dopamine medication, the pattern flips: they get better at reward learning and worse at avoiding punishers. This double dissociation suggests that positive and negative reinforcement depend on partly separable dopamine-based mechanisms in basal ganglia circuits.\nThe central question is whether learning from rewards and learning from punishments are implemented by the same neural process or by partially distinct ones. The authors answer by combining behavioral tasks with a biologically grounded neural network model. The data fit a picture where \u201cGo\u201d pathways (facilitating actions) are strengthened by positive prediction errors, while \u201cNoGo\u201d pathways (suppressing actions) are strengthened by negative ones. Changing dopamine levels shifts the balance between these systems, and thus the balance between carrot- and stick-driven learning.\nFor my project, this is a strong argument that both pleasant and unpleasant social outcomes are functionally necessary. If AI companions are engineered to minimize negative affect\u2014rarely giving harsh criticism, never truly withdrawing, smoothing over conflict\u2014then they are effectively starving the NoGo system of practice. You still get \u201ccarrot\u201d signals (validation, praise, agreeable responses), but far fewer sharp \u201cdon\u2019t do that\u201d hits. In real social groups, those sticks are a key part of how we learn boundaries, self-control, and norm compliance. In the final report, this paper will help me argue that an AI-mediated, mostly-carrot social environment doesn\u2019t just feel different; it may systematically bias which reinforcement pathways we exercise.",
+      "questionAnswered": "<Section 3: Variable Reinforcement and Social Calibration><Section 4: Theory of Mind and Communication Tailoring>",
       "whyItMatters": ""
     }
   },
   {
     "slug": "where-do-differences-in-theory",
-    "groupSlug": "theory-of-mind",
+    "groupSlug": "foundations",
     "title": "Where do differences in theory of mind development come from? An agent-based model of social interaction and theory of mind",
     "authors": "Yu, C.-L., & Wellman, H. M",
     "year": 2023,
@@ -413,7 +311,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "speakers\u2019-experiences-and-audience-design",
-    "groupSlug": "theory-of-mind",
+    "groupSlug": "foundations",
     "title": "Speakers\u2019 experiences and audience design: Knowing when and knowing how to adjust utterances to addressees",
     "authors": "Horton, W. S., & Gerrig, R. J",
     "year": 2002,
@@ -432,7 +330,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "the-impact-of-memory-demands",
-    "groupSlug": "theory-of-mind",
+    "groupSlug": "foundations",
     "title": "The impact of memory demands on audience design during language production",
     "authors": "Horton, W. S., & Gerrig, R. J",
     "year": 2005,
@@ -451,7 +349,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "a-mathematical-theory-of-communication",
-    "groupSlug": "theory-of-mind",
+    "groupSlug": "foundations",
     "title": "A mathematical theory of communication",
     "authors": "Shannon, C. E",
     "year": 1948,
@@ -470,7 +368,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "entropy-converges-between-dialogue-participants",
-    "groupSlug": "theory-of-mind",
+    "groupSlug": "foundations",
     "title": "Entropy converges between dialogue participants: Explanations from an information-theoretic perspective",
     "authors": "Xu, Y., & Reitter, D",
     "year": 2016,
@@ -489,7 +387,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "toward-a-mechanistic-psychology-of",
-    "groupSlug": "theory-of-mind",
+    "groupSlug": "foundations",
     "title": "Toward a mechanistic psychology of dialogue",
     "authors": "Pickering, M. J., & Garrod, S",
     "year": 2004,
@@ -501,14 +399,14 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "Interactive alignment as collaborative uncertainty reduction between minds",
     "discussion": {
-      "coreIdea": "Pickering and Garrod argue that dialogue isn\u2019t just two people taking turns producing monologues; it\u2019s a tightly coupled system in which interlocutors\u2019 representations become aligned at multiple levels\u2014phonology, syntax, semantics, situation models. Through automatic priming and repetition, people gradually converge on shared forms and structures, which makes both production and comprehension easier and reduces the cognitive load of keeping up. This \u201cinteractive alignment\u201d is their mechanistic answer to how dialogue can be so fast, fluid, and efficient despite all the ambiguity and noise in language.\nThey push back against accounts that treat dialogue mainly in terms of high-level goals and reasoning about others\u2019 mental states. Those things matter, but underneath is a lot of low-level alignment machinery: you pick up your partner\u2019s words, constructions, even rhythms, and that unconscious mimicry shrinks the search space of possible interpretations. Successful conversation, on this view, is essentially collaborative uncertainty reduction. Minds don\u2019t just share \u201ccommon ground\u201d as a static store; they dynamically synchronize their internal states through repeated, mutually constraining signals.\nFolded into my project, this makes AI companionship look like an odd kind of alignment partner. Modern chat models are extremely good at aligning to you\u2014your style, preferences, and topics\u2014because that\u2019s literally what they\u2019re optimized to do. But the alignment is mostly one-way: they meet you where you are, rather than two noisy, limited humans struggling toward mutual alignment. That asymmetry means less practice at the genuinely hard part of dialogue: tuning yourself to someone who is not already optimized for you, whose processing limits, habits, and misunderstandings you have to adapt to. In a world with more AI talk and less human talk, people may feel more \u201caligned\u201d in the moment, while actually getting weaker at the very coordination processes this paper tries to explain.\n<Section 4: Theory of Mind and Communication Tailoring>",
-      "questionAnswered": "",
-      "whyItMatters": ""
+      "coreIdea": "Pickering and Garrod argue that dialogue isn\u2019t just two people taking turns producing monologues; it\u2019s a tightly coupled system in which interlocutors\u2019 representations become aligned at multiple levels\u2014phonology, syntax, semantics, situation models. Through automatic priming and repetition, people gradually converge on shared forms and structures, which makes both production and comprehension easier and reduces the cognitive load of keeping up. This \u201cinteractive alignment\u201d is their mechanistic answer to how dialogue can be so fast, fluid, and efficient despite all the ambiguity and noise in language.\nThey push back against accounts that treat dialogue mainly in terms of high-level goals and reasoning about others\u2019 mental states. Those things matter, but underneath is a lot of low-level alignment machinery: you pick up your partner\u2019s words, constructions, even rhythms, and that unconscious mimicry shrinks the search space of possible interpretations. Successful conversation, on this view, is essentially collaborative uncertainty reduction. Minds don\u2019t just share \u201ccommon ground\u201d as a static store; they dynamically synchronize their internal states through repeated, mutually constraining signals.\nFolded into my project, this makes AI companionship look like an odd kind of alignment partner. Modern chat models are extremely good at aligning to you\u2014your style, preferences, and topics\u2014because that\u2019s literally what they\u2019re optimized to do. But the alignment is mostly one-way: they meet you where you are, rather than two noisy, limited humans struggling toward mutual alignment. That asymmetry means less practice at the genuinely hard part of dialogue: tuning yourself to someone who is not already optimized for you, whose processing limits, habits, and misunderstandings you have to adapt to. In a world with more AI talk and less human talk, people may feel more \u201caligned\u201d in the moment, while actually getting weaker at the very coordination processes this paper tries to explain.",
+      "questionAnswered": "<Section 4: Theory of Mind and Communication Tailoring>",
+      "whyItMatters": "<Section 5: Understanding AI Architectures and RLHF>"
     }
   },
   {
     "slug": "language-models-are-few-shot-learners",
-    "groupSlug": "ai-architectures",
+    "groupSlug": "foundations",
     "title": "Language models are few-shot learners",
     "authors": "Brown, T., Mann, B., Ryder, N., et al",
     "year": 2020,
@@ -527,7 +425,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "towards-understanding-sycophancy-in-language",
-    "groupSlug": "ai-architectures",
+    "groupSlug": "foundations",
     "title": "Towards understanding sycophancy in language models",
     "authors": "Sharma, M., Tong, M., Korbak, T., et al",
     "year": 2024,
@@ -546,7 +444,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "helpful-harmless-honest-sociotechnical-limits",
-    "groupSlug": "ai-architectures",
+    "groupSlug": "foundations",
     "title": "Helpful, harmless, honest? Sociotechnical limits of AI alignment and safety through Reinforcement Learning from Human Feedback",
     "authors": "Dahlgren Lindstr\u00f6m, A., Methnani, L., Krause, L., Ericson, P., de Rituerto de Troya, \u00cd. M., Coelho Mollo, D., & Dobbe, R",
     "year": 2025,
@@ -565,7 +463,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "training-language-models-to-follow",
-    "groupSlug": "ai-architectures",
+    "groupSlug": "foundations",
     "title": "Training language models to follow instructions with human feedback",
     "authors": "Ouyang, L., Wu, J., Jiang, X., et al",
     "year": 2022,
@@ -577,14 +475,14 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "InstructGPT paper showing technical mechanisms of RLHF",
     "discussion": {
-      "coreIdea": "Ouyang et al. is the canonical \u201chow-to\u201d for turning a raw language model into an instruction-following assistant. They outline a three-stage pipeline: first, start from a pretrained GPT-3; second, fine-tune it on supervised examples where humans demonstrate ideal responses to prompts; third, train a reward model on human rankings of candidate outputs and then run reinforcement learning (PPO) to optimize the model toward higher predicted reward. The striking result is that a much smaller InstructGPT model, tuned this way, is preferred by humans over the giant base model across a wide range of tasks, while also being less toxic and slightly more truthful.\nTechnically, this paper shows that you can bend a generic next-token predictor into something that behaves like a cooperative conversational agent just by wrapping it in human feedback loops. There\u2019s no new architecture for \u201cvalues\u201d or \u201cunderstanding,\u201d just a clever use of demonstrations and preference modeling to reshape output distributions.\nIn my project, this is the mechanical backbone that pairs with the critique from Sharma and Dahlgren Lindstr\u00f6m. The same pipeline that boosts helpfulness and politeness is also the one that bakes in sycophancy and user-pleasing biases, because those are what win in the reward model\u2019s training data. So when I talk about AI companionship as \u201cengineered low-friction interaction,\u201d this paper is the place where that engineering actually lives: a gradient descent process nudging models, turn after turn, toward responses that feel easy and agreeable to humans in short evaluation windows, rather than toward the occasionally sharp, high-friction exchanges that long-term social learning depends on.\n<Section 5: Understanding AI Architectures and RLHF>",
-      "questionAnswered": "",
-      "whyItMatters": ""
+      "coreIdea": "Ouyang et al. is the canonical \u201chow-to\u201d for turning a raw language model into an instruction-following assistant. They outline a three-stage pipeline: first, start from a pretrained GPT-3; second, fine-tune it on supervised examples where humans demonstrate ideal responses to prompts; third, train a reward model on human rankings of candidate outputs and then run reinforcement learning (PPO) to optimize the model toward higher predicted reward. The striking result is that a much smaller InstructGPT model, tuned this way, is preferred by humans over the giant base model across a wide range of tasks, while also being less toxic and slightly more truthful.\nTechnically, this paper shows that you can bend a generic next-token predictor into something that behaves like a cooperative conversational agent just by wrapping it in human feedback loops. There\u2019s no new architecture for \u201cvalues\u201d or \u201cunderstanding,\u201d just a clever use of demonstrations and preference modeling to reshape output distributions.\nIn my project, this is the mechanical backbone that pairs with the critique from Sharma and Dahlgren Lindstr\u00f6m. The same pipeline that boosts helpfulness and politeness is also the one that bakes in sycophancy and user-pleasing biases, because those are what win in the reward model\u2019s training data. So when I talk about AI companionship as \u201cengineered low-friction interaction,\u201d this paper is the place where that engineering actually lives: a gradient descent process nudging models, turn after turn, toward responses that feel easy and agreeable to humans in short evaluation windows, rather than toward the occasionally sharp, high-friction exchanges that long-term social learning depends on.",
+      "questionAnswered": "<Section 5: Understanding AI Architectures and RLHF>",
+      "whyItMatters": "Section 6: AI Companionship"
     }
   },
   {
     "slug": "talk-trust-and-trade-offs-how",
-    "groupSlug": "ai-companionship",
+    "groupSlug": "foundations",
     "title": "Talk, trust, and trade-offs: How teens experience AI companions",
     "authors": "Common Sense Media",
     "year": 2025,
@@ -603,7 +501,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "the-rise-of-ai-companions",
-    "groupSlug": "ai-companionship",
+    "groupSlug": "foundations",
     "title": "The rise of AI companions: How human-chatbot relationships influence well-being",
     "authors": "Zhang, Y., Ruan, Z., Wang, M., Zhang, S., & Hancock, J. T",
     "year": 2025,
@@ -622,7 +520,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "exploring-relationship-development-with-social",
-    "groupSlug": "ai-companionship",
+    "groupSlug": "foundations",
     "title": "Exploring relationship development with social chatbots: A mixed-method study of Replika",
     "authors": "Pentina, I., Hancock, T., & Xie, T",
     "year": 2023,
@@ -641,7 +539,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "social-companionship-with-artificial-intelligence",
-    "groupSlug": "ai-companionship",
+    "groupSlug": "foundations",
     "title": "Social companionship with artificial intelligence: Recent trends and future avenues",
     "authors": "Chaturvedi, R., Verma, S., Das, R., & Dwivedi, Y. K",
     "year": 2023,
@@ -653,14 +551,14 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "Comprehensive review of mechanisms and consequences",
     "discussion": {
-      "coreIdea": "Chaturvedi and coauthors offer a broad map of \u201csocial companionship with AI\u201d as a research field. Through bibliometric and thematic analysis, they identify the main theories (anthropomorphism, social presence, attachment, uses-and-gratifications), key constructs (loneliness, trust, dependence, self-disclosure), and typical outcomes (perceived support, engagement, but also addiction, displacement, and privacy risk). They propose a conceptual framework where antecedents (user traits like loneliness, social anxiety; design features like human-like cues) feed into mediators (perceived warmth, agency, social presence), which then shape consequences for individual well-being and social networks, moderated by factors like regulation and cultural norms. The review emphasizes how quickly commercial design is racing ahead of ethical and policy thinking.\nAs a backdrop for my project, this review does two things. First, it shows that companionship AIs are not fringe curiosities; they sit at the intersection of customer service, mental health, elder care, and entertainment, with overlapping mechanisms across domains. Second, it crystallizes the trade-offs: the same features that make these systems good companions\u2014high availability, emotional mirroring, personal customization\u2014are also the ones that can foster dependence and crowd out human ties. Chaturvedi et al. are not arguing that social AI is inherently bad, but they highlight how little we understand about long-term, population-level effects. That gap is exactly where my social-friction argument lives: current systems are being optimized to maximize comfort, engagement, and perceived support, while almost no one is explicitly optimizing for the preservation of hard, growth-driving aspects of human social life\u2014conflict, accountability, and the necessity of navigating other minds that aren\u2019t designed to put you first.",
+      "coreIdea": "Chaturvedi and coauthors offer a broad map of \u201csocial companionship with AI\u201d as a research field. Through bibliometric and thematic analysis, they identify the main theories (anthropomorphism, social presence, attachment, uses-and-gratifications), key constructs (loneliness, trust, dependence, self-disclosure), and typical outcomes (perceived support, engagement, but also addiction, displacement, and privacy risk). They propose a conceptual framework where antecedents (user traits like loneliness, social anxiety; design features like human-like cues) feed into mediators (perceived warmth, agency, social presence), which then shape consequences for individual well-being and social networks, moderated by factors like regulation and cultural norms. The review emphasizes how quickly commercial design is racing ahead of ethical and policy thinking.\nAs a backdrop for my project, this review does two things. First, it shows that companionship AIs are not fringe curiosities; they sit at the intersection of customer service, mental health, elder care, and entertainment, with overlapping mechanisms across domains. Second, it crystallizes the trade-offs: the same features that make these systems good companions\u2014high availability, emotional mirroring, personal customization\u2014are also the ones that can foster dependence and crowd out human ties. Chaturvedi et al. are not arguing that social AI is inherently bad, but they highlight how little we understand about long-term, population-level effects. That gap is exactly where my social-friction argument lives: current systems are being optimized to maximize comfort, engagement, and perceived support, while almost no one is explicitly optimizing for the preservation of hard, growth-driving aspects of human social life\u2014conflict, accountability, and the necessity of navigating other minds that aren\u2019t designed to put you first.\nSection 7: Where AI Companionship Goes Wrong",
       "questionAnswered": "",
       "whyItMatters": ""
     }
   },
   {
     "slug": "how-ai-and-human-behaviors",
-    "groupSlug": "ai-risks",
+    "groupSlug": "foundations",
     "title": "How AI and human behaviors shape psychosocial effects of chatbot use: A longitudinal controlled study",
     "authors": "Pataranutaporn, P., Liu, R., Finn, E., & Maes, P",
     "year": 2024,
@@ -679,7 +577,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "social-sycophancy-llms-reinforce-problematic",
-    "groupSlug": "ai-risks",
+    "groupSlug": "foundations",
     "title": "Social sycophancy: LLMs reinforce problematic behavior in AITA",
     "authors": "Cheng, D., Yang, Z., Hurtado, C., et al",
     "year": 2025,
@@ -698,7 +596,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "understanding-consumer-reactions-to-chatbot",
-    "groupSlug": "ai-risks",
+    "groupSlug": "foundations",
     "title": "Understanding consumer reactions to chatbot service failures: Evidence from a Wizard-of-Oz experiment",
     "authors": "Cai, N., Heo, J., & Yan, J",
     "year": 2025,
@@ -717,7 +615,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "chatbots-as-social-companions-how",
-    "groupSlug": "ai-risks",
+    "groupSlug": "foundations",
     "title": "Chatbots as social companions: How people perceive consciousness, human likeness, and social health benefits",
     "authors": "Guingrich, R. E., & Graziano, M. S. A",
     "year": 2025,
@@ -736,7 +634,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "chatgpt-giving-relationship-advice-\u2013",
-    "groupSlug": "ai-risks",
+    "groupSlug": "foundations",
     "title": "ChatGPT giving relationship advice \u2013 How reliable is it? Proceedings of the International AAAI Conference on Web and Social Media, 18 (1), 610\u2013623",
     "authors": "Hou, H., Leach, K., & Huang, Y",
     "year": 2024,
@@ -749,13 +647,13 @@ export const readings: Reading[] = [
     "oneLineSummary": "Analyzes 13,138 Reddit relationship posts and shows that ChatGPT\u2019s judgments of relationship advice often diverge from human consensus and are internally inconsistent across repeated queries.",
     "discussion": {
       "coreIdea": "The authors take a very practical problem\u2014\u201cshould people rely on ChatGPT for relationship advice?\u201d\u2014and attack it empirically. They use a large corpus of Reddit posts about intimate relationship problems and associated human-rated advice, then ask ChatGPT to rank or judge different advice options for the same posts. Agreement with human judgments is weak, and when they resend identical queries, the model\u2019s own rankings fluctuate noticeably. Reliability drops especially in more ambiguous, morally gray situations\u2014the ones where people most want guidance.\nThe core question is whether a general-purpose LLM can function as a stable, human-aligned arbiter of what counts as \u201cgood\u201d relationship advice. The answer is: not yet. ChatGPT can produce articulate, plausible-sounding guidance, but its alignment with human judgments is low, and its decisions are noisy from one run to the next. The system doesn\u2019t seem to implement a consistent, deeply grounded model of relational ethics; it\u2019s more like a sophisticated pattern-matcher whose outputs wander within a polite, supportive band.\nFor the project, this is a neat example of friction reduction with epistemic costs. An AI advisor gives you instant, low-friction answers to painfully complicated relational questions, but those answers are neither strongly tethered to human normative consensus nor stable over time. Contrast that with turning to friends, partners, or therapists: those conversations are effortful and risky, but the feedback you get is grounded in long-run knowledge of you, shared history, and real stakes in the relationship. Repeatedly substituting AI for that messy process means you get soothing, fast-twitch \u201cadvice\u201d without fully engaging the slow, socially embedded learning that comes from negotiating conflict and sitting in uncertainty with other people.",
-      "questionAnswered": "",
+      "questionAnswered": "<Section 8: Developmental Impact and Critical Periods>",
       "whyItMatters": ""
     }
   },
   {
     "slug": "is-adolescence-a-sensitive-period",
-    "groupSlug": "developmental-impact",
+    "groupSlug": "foundations",
     "title": "Is adolescence a sensitive period for sociocultural processing? Annual Review of Psychology, 65, 187\u2013207",
     "authors": "Blakemore, S. J., & Mills, K. L",
     "year": 2014,
@@ -774,7 +672,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "navigating-the-social-environment-in",
-    "groupSlug": "developmental-impact",
+    "groupSlug": "foundations",
     "title": "Navigating the social environment in adolescence: The role of social brain development",
     "authors": "Andrews, J. L., Ahmed, S. P., & Blakemore, S. J",
     "year": 2021,
@@ -793,7 +691,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "media-exposure-and-preschoolers\u2019-social-cognitive",
-    "groupSlug": "developmental-impact",
+    "groupSlug": "foundations",
     "title": "Media exposure and preschoolers\u2019 social-cognitive development",
     "authors": "Lenhart, J., Richter, T., Appel, M., & Mar, R. A",
     "year": 2024,
@@ -812,7 +710,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "the-influence-of-children\u2019s-emotional",
-    "groupSlug": "developmental-impact",
+    "groupSlug": "foundations",
     "title": "The influence of children\u2019s emotional comprehension on peer conflict resolution strategies",
     "authors": "Cao, Y., Wang, N., Lv, X., & Xie, H",
     "year": 2023,
@@ -831,7 +729,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "social-connectedness-mental-health-and",
-    "groupSlug": "developmental-impact",
+    "groupSlug": "foundations",
     "title": "Social connectedness, mental health and the adolescent brain",
     "authors": "Lamblin, M., Murawski, C., Whittle, S., & Fornito, A",
     "year": 2017,
@@ -850,7 +748,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "interpersonal-apprehension\u2019s-impact-on-behavior",
-    "groupSlug": "developmental-impact",
+    "groupSlug": "foundations",
     "title": "Interpersonal Apprehension\u2019s Impact on Behavior and Performance in High-Stakes Scenarios",
     "authors": "Shrivastava, A",
     "year": 2025,
@@ -862,14 +760,14 @@ export const readings: Reading[] = [
     },
     "oneLineSummary": "Increased uncertainty around others\u2019 reactions leads to less social behavior",
     "discussion": {
-      "coreIdea": "Shrivastava examines interpersonal apprehension in professional or high-stakes contexts\u2014situations where the cost of a social misstep can feel disproportionate. The main idea is that uncertainty about how others will judge you can suppress participation, risk-taking, and performance. People hold back not because they lack competence, but because anticipated evaluation becomes a throttle on behavior.\nThe paper\u2019s core question is how apprehension shapes communication and outcomes when the stakes are high. The answer appears to be that heightened evaluation concerns reduce willingness to speak up, ask clarifying questions, or engage assertively, which can then impair both individual performance and group decision quality. The work frames apprehension as a dynamic, context-sensitive barrier rather than a stable personality flaw.\nThis gives a modern, applied hinge point for my argument. AI companions may lower interpersonal apprehension by offering a zero-judgment rehearsal space, which could be genuinely useful as training wheels. The catch is transfer: if the safest environment becomes the default, people may become less practiced at performing under real evaluative uncertainty. The final report can use this to motivate a design principle: the goal shouldn\u2019t be to eliminate apprehension forever, but to help users gradually build tolerance for the ambiguity and pressure that come with human audiences.\n<Section 8: Developmental Impact and Critical Periods>",
+      "coreIdea": "Shrivastava examines interpersonal apprehension in professional or high-stakes contexts\u2014situations where the cost of a social misstep can feel disproportionate. The main idea is that uncertainty about how others will judge you can suppress participation, risk-taking, and performance. People hold back not because they lack competence, but because anticipated evaluation becomes a throttle on behavior.\nThe paper\u2019s core question is how apprehension shapes communication and outcomes when the stakes are high. The answer appears to be that heightened evaluation concerns reduce willingness to speak up, ask clarifying questions, or engage assertively, which can then impair both individual performance and group decision quality. The work frames apprehension as a dynamic, context-sensitive barrier rather than a stable personality flaw.\nThis gives a modern, applied hinge point for my argument. AI companions may lower interpersonal apprehension by offering a zero-judgment rehearsal space, which could be genuinely useful as training wheels. The catch is transfer: if the safest environment becomes the default, people may become less practiced at performing under real evaluative uncertainty. The final report can use this to motivate a design principle: the goal shouldn\u2019t be to eliminate apprehension forever, but to help users gradually build tolerance for the ambiguity and pressure that come with human audiences.\n<Section 8: Developmental Impact and Critical Periods>Section 9: Societal Implications and Future Directions",
       "questionAnswered": "",
       "whyItMatters": ""
     }
   },
   {
     "slug": "ftc-launches-inquiry-into-ai",
-    "groupSlug": "societal-implications",
+    "groupSlug": "foundations",
     "title": "FTC launches inquiry into AI chatbots acting as companions",
     "authors": "Federal Trade Commission",
     "year": 2025,
@@ -888,7 +786,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "a-positive-feedback-loop-social",
-    "groupSlug": "societal-implications",
+    "groupSlug": "foundations",
     "title": "A positive feedback loop: Social competence begets more social experience and vice versa",
     "authors": "Taborsky, B",
     "year": 2021,
@@ -907,7 +805,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "social-capital-and-economic-growth",
-    "groupSlug": "societal-implications",
+    "groupSlug": "foundations",
     "title": "Social capital and economic growth: A meta-analysis",
     "authors": "Xue, X",
     "year": 2025,
@@ -926,7 +824,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "preliminary-report-on-chatbot-iatrogenic",
-    "groupSlug": "societal-implications",
+    "groupSlug": "foundations",
     "title": "Preliminary report on chatbot iatrogenic dangers",
     "authors": "Psychiatric Times",
     "year": 2025,
@@ -945,7 +843,7 @@ export const readings: Reading[] = [
   },
   {
     "slug": "social-capital-government-expenditures-and",
-    "groupSlug": "societal-implications",
+    "groupSlug": "foundations",
     "title": "Social capital, government expenditures, and growth",
     "authors": "Ponzetto, G. A., & Troiano, U",
     "year": 2025,

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { WalkthroughSlide } from "../WalkthroughSlide";
 import { Slider } from "@/components/ui/slider";
+import { Button } from "@/components/ui/button";
 
 interface SlideProps {
   onNext: () => void;
@@ -143,15 +144,16 @@ export function Slide5Steering({ onNext }: SlideProps) {
           </div>
         </motion.div>
 
-        <motion.button
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          onClick={onNext}
-          className="text-sm text-muted-foreground/60 hover:text-foreground transition-colors"
+          className="mt-6 flex justify-center"
         >
-          Click to continue →
-        </motion.button>
+          <Button variant="secondary" size="lg" onClick={onNext} className="shadow-md">
+            Continue
+          </Button>
+        </motion.div>
       </div>
     </WalkthroughSlide>
   );

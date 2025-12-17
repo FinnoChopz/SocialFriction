@@ -17,9 +17,9 @@ export function Footer() {
               <span className="font-semibold">Social Friction Lab</span>
             </div>
             <p className="text-sm text-muted-foreground max-w-md">
-              A Cornell final project exploring AI companionship, sycophancy, and the cost
-              of comfort. How do systems optimized for user satisfaction reshape social
-              learning and truth-seeking?
+              A research final project exploring AI companionship, sycophancy, and the cost of
+              comfort. How do systems optimized for user satisfaction reshape social learning
+              and truth-seeking?
             </p>
           </div>
 
@@ -76,9 +76,9 @@ export function Footer() {
         <Separator className="my-8" />
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted-foreground">
-          <p>Cornell Final Project, 2025</p>
+          <p>Research Final Project, 2025</p>
           <p className="mono-numbers">
-            Built with Next.js, Tailwind, and Framer Motion
+            Built with Next.js, Tailwind, and Framer Motion. Created by Finn McCooe; advised by Dr. Anthony Ong.
           </p>
         </div>
       </div>

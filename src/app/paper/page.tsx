@@ -239,7 +239,7 @@ export default function PaperPage() {
                 <hr />
 
                 <p className="text-sm text-muted-foreground italic">
-                  This paper was prepared for a Cornell final project on AI companionship and social learning. For the full reading list and interactive demonstrations, see the accompanying website.
+                  This paper was prepared for a research final project on AI companionship and social learning, created by Finn McCooe and advised by Dr. Anthony Ong. For the full reading list and interactive demonstrations, see the accompanying website.
                 </p>
               </motion.article>
             )}
@@ -256,7 +256,7 @@ export default function PaperPage() {
                 className="flex items-center justify-between p-4 bg-card/50 border border-border rounded-lg hover:bg-card/80 transition-colors group"
               >
                 <div>
-                  <div className="font-medium">44 Readings</div>
+                  <div className="font-medium">46 Readings</div>
                   <div className="text-sm text-muted-foreground">Source literature for this paper</div>
                 </div>
                 <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />

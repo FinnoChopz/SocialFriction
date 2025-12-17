@@ -66,27 +66,6 @@ export const readingGroups: ReadingGroup[] = [
   }
 ];
 
-// Helper functions for lookups used across the app
-export function getGroup(slug: string): ReadingGroup | undefined {
-  return readingGroups.find((g) => g.slug === slug);
-}
-
-export function getReadingsByGroup(groupSlug: string): Reading[] {
-  return readings.filter((r) => r.groupSlug === groupSlug);
-}
-
-export function getReading(slug: string): Reading | undefined {
-  return readings.find((r) => r.slug === slug);
-}
-
-export function getAllTags(): string[] {
-  const tagSet = new Set<string>();
-  readingGroups.forEach((g) => {
-    g.themeTags.forEach((tag) => tagSet.add(tag));
-  });
-  return Array.from(tagSet).sort();
-}
-
 export const readings: Reading[] = [
   {
     "slug": "on-face-work-an-analysis-of",

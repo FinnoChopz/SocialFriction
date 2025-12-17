@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { WalkthroughSlide } from "../WalkthroughSlide";
 import { NumberStream } from "@/components/shared/NumberStream";
+import { Button } from "@/components/ui/button";
 
 interface SlideProps {
   onNext: () => void;
@@ -52,14 +53,24 @@ export function Slide2Numbers({ onNext }: SlideProps) {
           </div>
         </motion.div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="text-sm text-muted-foreground/60"
+          className="mt-10 flex justify-center"
         >
-          Click to continue
-        </motion.p>
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onNext();
+            }}
+            className="shadow-md"
+          >
+            Continue
+          </Button>
+        </motion.div>
       </div>
     </WalkthroughSlide>
   );

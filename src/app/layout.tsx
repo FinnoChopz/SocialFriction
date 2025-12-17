@@ -16,9 +16,9 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: "Social Friction Lab | AI Companionship, Sycophancy, and the Cost of Comfort",
-  description: "A Cornell final project exploring how AI companions optimized for user comfort might reshape social learning, truth-seeking, and the role of friction in human interaction.",
+  description: "A research final project exploring how AI companions optimized for user comfort might reshape social learning, truth-seeking, and the role of friction in human interaction.",
   keywords: ["AI", "sycophancy", "social friction", "RLHF", "AI companions", "social learning"],
-  authors: [{ name: "Social Friction Lab" }],
+  authors: [{ name: "Finn McCooe" }],
   openGraph: {
     title: "Social Friction Lab",
     description: "AI companionship, sycophancy, and the cost of comfort.",

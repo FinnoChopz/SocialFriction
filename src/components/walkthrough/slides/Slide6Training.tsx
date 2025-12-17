@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { WalkthroughSlide } from "../WalkthroughSlide";
+import { Button } from "@/components/ui/button";
 
 interface SlideProps {
   onNext: () => void;
@@ -95,14 +96,24 @@ export function Slide6Training({ onNext }: SlideProps) {
           </p>
         </motion.div>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1.2 }}
-          className="text-sm text-muted-foreground/60"
+          className="mt-8 flex justify-center"
         >
-          Click to continue
-        </motion.p>
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={(e) => {
+              e.stopPropagation();
+              onNext();
+            }}
+            className="shadow-md"
+          >
+            Continue
+          </Button>
+        </motion.div>
       </div>
     </WalkthroughSlide>
   );

@@ -124,8 +124,8 @@ export default function WalkthroughPage() {
         </Button>
       </motion.div>
 
-      {/* Progress dots */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+      {/* Progress dots (moved up so they don't overlap buttons) */}
+      <div className="fixed top-16 left-1/2 -translate-x-1/2 z-40">
         <div className="flex items-center gap-2">
           {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
             <button

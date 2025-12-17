@@ -1,12 +1,12 @@
 # Social Friction Lab
 
-A Cornell final project website exploring AI companionship, sycophancy, and the cost of comfort.
+A research final project website exploring AI companionship, sycophancy, and the cost of comfort. Created by Finn McCooe and advised by Dr. Anthony Ong.
 
 ## Overview
 
 This project examines how AI companions optimized for user satisfaction might reshape social learning. It includes:
 
-- **44 readings** organized into 9 thematic clusters
+- **6 readings** organized into 9 thematic clusters
 - **A 2,000-word research paper** on RLHF-driven sycophancy
 - **2 interactive demos** powered by Hugging Face Spaces
 - **A 7-slide walkthrough** explaining AI as probability engines
@@ -69,7 +69,7 @@ src/
 │   ├── shared/            # Reusable components
 │   └── ui/                # shadcn/ui components
 ├── content/
-│   ├── readings.ts        # Reading data (44 readings, 9 groups)
+│   ├── readings.ts        # Reading data (46 readings, 9 groups)
 │   └── paper.mdx          # Research paper content
 ├── hooks/                 # Custom React hooks
 └── lib/                   # Utility functions
