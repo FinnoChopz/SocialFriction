@@ -7,6 +7,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Info, BookOpen, Code, Image as ImageIcon, Mail } from "lucide-react";
+import { AmbientBackground } from "@/components/AmbientBackground";
 
 export default function AboutPage() {
   return (
@@ -15,6 +16,7 @@ export default function AboutPage() {
       <main className="bg-background min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-16 overflow-hidden">
+          <AmbientBackground variant="paper" />
           <div className="absolute inset-0 grid-pattern opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
 

@@ -7,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
-import { ParticleCanvas } from "@/components/shared/ParticleCanvas";
 import { readingGroups } from "@/content/readings";
+import { AmbientBackground } from "@/components/AmbientBackground";
 import { ArrowRight, BookOpen, FileText, Play, RotateCcw } from "lucide-react";
 
 export default function HomePage() {
@@ -31,11 +31,8 @@ export default function HomePage() {
           className="snap-section relative min-h-screen flex items-center justify-center overflow-hidden"
         >
           {/* Background */}
-          <div className="absolute inset-0">
-            <ParticleCanvas />
-          </div>
-          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
-          <div className="absolute inset-0 grid-pattern opacity-20" />
+          <AmbientBackground variant="hero" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/80 via-background/65 to-background" />
 
           {/* Content */}
           <motion.div
@@ -111,7 +108,8 @@ export default function HomePage() {
 
         {/* Readings Section */}
         <section className="snap-section min-h-screen py-20 lg:py-32 relative">
-          <div className="absolute inset-0 grid-pattern opacity-10" />
+          <AmbientBackground variant="readings" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/50 to-background" />
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -140,7 +138,7 @@ export default function HomePage() {
                   className="snap-x-item flex-shrink-0 w-[300px] sm:w-[350px]"
                 >
                   <Link href={`/readings/${group.slug}`}>
-                    <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 shine-effect group">
+                  <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 shine-effect group hover:-translate-y-1 hover:shadow-[0_15px_45px_-25px_rgba(59,130,246,0.8)]">
                       <div className="flex items-start justify-between mb-4">
                         <span className="font-mono text-xs text-muted-foreground">
                           {String(index + 1).padStart(2, "0")}
@@ -181,8 +179,10 @@ export default function HomePage() {
         </section>
 
         {/* Paper Section */}
-        <section className="snap-section min-h-screen py-20 lg:py-32 relative bg-gradient-to-b from-transparent via-card/30 to-transparent">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="snap-section min-h-screen py-20 lg:py-32 relative overflow-hidden">
+          <AmbientBackground variant="paper" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/75 via-background/60 to-background" />
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -201,7 +201,7 @@ export default function HomePage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-card/50 border border-border rounded-2xl p-8 mb-8"
+              className="bg-card/50 border border-border rounded-2xl p-8 mb-8 hover:-translate-y-1 hover:shadow-[0_15px_40px_-24px_rgba(226,232,240,0.6)] transition-all duration-300"
             >
               <h3 className="text-xl font-semibold mb-6">Three core claims:</h3>
               <div className="space-y-6">
@@ -254,7 +254,8 @@ export default function HomePage() {
 
         {/* Demos Section */}
         <section className="snap-section min-h-screen py-20 lg:py-32 relative">
-          <div className="absolute inset-0 grid-pattern opacity-10" />
+          <AmbientBackground variant="demos" />
+          <div className="absolute inset-0 bg-gradient-to-b from-background/70 via-background/55 to-background" />
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
@@ -278,7 +279,7 @@ export default function HomePage() {
                 transition={{ duration: 0.4 }}
               >
                 <Link href="/demos/prompt-discovery">
-                  <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 group">
+                  <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_15px_45px_-25px_rgba(59,130,246,0.8)]">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center">
                         <span className="text-xl">🔍</span>
@@ -310,7 +311,7 @@ export default function HomePage() {
                 transition={{ duration: 0.4, delay: 0.1 }}
               >
                 <Link href="/demos/sycophancy-direction">
-                  <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 group">
+                  <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_15px_45px_-25px_rgba(192,132,252,0.8)]">
                     <div className="flex items-center gap-2 mb-4">
                       <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
                         <span className="text-xl">🎚️</span>

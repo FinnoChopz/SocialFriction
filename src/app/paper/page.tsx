@@ -7,6 +7,7 @@ import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { AmbientBackground } from "@/components/AmbientBackground";
 import { FileText, Download, BookOpen, ExternalLink, ChevronRight } from "lucide-react";
 
 export default function PaperPage() {
@@ -26,6 +27,7 @@ export default function PaperPage() {
       <main className="bg-background min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-12 overflow-hidden">
+          <AmbientBackground variant="paper" />
           <div className="absolute inset-0 grid-pattern opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
 
@@ -101,8 +103,10 @@ export default function PaperPage() {
         <Separator />
 
         {/* Paper Content */}
-        <section className="py-12">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative py-12 overflow-hidden">
+          <AmbientBackground variant="paper" className="opacity-80" />
+          <div className="absolute inset-0 bg-background/80" />
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             {viewMode === "pdf" && pdfExists ? (
               <motion.div
                 initial={{ opacity: 0 }}

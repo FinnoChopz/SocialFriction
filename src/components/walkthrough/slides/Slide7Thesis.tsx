@@ -18,7 +18,9 @@ export function Slide7Thesis({ onComplete }: SlideProps) {
           transition={{ delay: 0.2 }}
           className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 leading-tight"
         >
-          &quot;If we practice social life in a world without consequences, we may get worse at the real one.&quot;
+          &quot;Social learning takes friction.  Without it, society drifts: norms don’t form,
+social skills go unlearned, and our capacity for connection lessens.  
+&quot;
         </motion.h2>
 
         <motion.p

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Card } from "@/components/ui/card";
+import { AmbientBackground } from "@/components/AmbientBackground";
 import { ArrowRight, Play } from "lucide-react";
 
 const demos = [
@@ -47,6 +48,7 @@ export default function DemosPage() {
       <main className="bg-background min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-16 overflow-hidden">
+          <AmbientBackground variant="demos" />
           <div className="absolute inset-0 grid-pattern opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
 
@@ -73,8 +75,10 @@ export default function DemosPage() {
         </section>
 
         {/* Demos Grid */}
-        <section className="py-12">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="relative py-12 overflow-hidden">
+          <AmbientBackground variant="demos" />
+          <div className="absolute inset-0 bg-background/85" />
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="grid grid-cols-1 gap-8">
               {demos.map((demo, index) => (
                 <motion.div
@@ -84,7 +88,7 @@ export default function DemosPage() {
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   <Link href={`/demos/${demo.slug}`}>
-                    <Card className="p-8 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 group">
+                    <Card className="p-8 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 group hover:-translate-y-1 hover:shadow-[0_15px_45px_-25px_rgba(192,132,252,0.8)]">
                       <div className="flex flex-col md:flex-row md:items-start gap-6">
                         {/* Icon */}
                         <div

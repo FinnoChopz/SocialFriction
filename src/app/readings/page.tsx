@@ -8,6 +8,7 @@ import { Footer } from "@/components/layout/Footer";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { AmbientBackground } from "@/components/AmbientBackground";
 import { readingGroups, readings, getAllTags, getReadingsByGroup } from "@/content/readings";
 import { Search, ArrowRight, BookOpen } from "lucide-react";
 
@@ -62,6 +63,7 @@ export default function ReadingsPage() {
       <main className="bg-background min-h-screen pt-24">
         {/* Header */}
         <section className="relative py-16 overflow-hidden">
+          <AmbientBackground variant="readings" />
           <div className="absolute inset-0 grid-pattern opacity-20" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
 
@@ -139,7 +141,7 @@ export default function ReadingsPage() {
                     transition={{ duration: 0.4, delay: index * 0.05 }}
                   >
                     <Link href={`/readings/${group.slug}`}>
-                      <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 shine-effect group">
+                      <Card className="h-full p-6 bg-card/50 border-border hover:bg-card/80 transition-all duration-300 shine-effect group hover:-translate-y-1 hover:shadow-[0_15px_45px_-25px_rgba(125,211,252,0.8)]">
                         <div className="flex items-start justify-between mb-4">
                           <span className="font-mono text-xs text-muted-foreground">
                             {String(index + 1).padStart(2, "0")}
