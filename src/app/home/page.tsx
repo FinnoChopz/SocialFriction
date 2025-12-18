@@ -83,7 +83,7 @@ export default function HomePage() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-lg sm:text-xl text-muted-foreground mb-12 max-w-2xl mx-auto"
+              className="text-lg sm:text-xl text-foreground mb-12 max-w-2xl mx-auto"
             >
               AI companions feel social. Under the hood, they&apos;re probability engines trained
               to keep you comfortable. This project explores what that optimization does to
@@ -152,13 +152,13 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
             >
-              <div className="mb-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground/70 font-mono">
+              <div className="mb-3 text-[11px] uppercase tracking-[0.3em] text-foreground/70 font-mono">
                 Readings Clusters
               </div>
               <h2 className="text-4xl sm:text-5xl font-bold mb-4">
                 46 readings → 9 clusters
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-foreground max-w-2xl mx-auto">
                 Social friction, learning signals, and the design incentives shaping AI companions.
               </p>
             </motion.div>
@@ -177,7 +177,7 @@ export default function HomePage() {
                   <Link href={`/readings/${group.slug}`}>
                     <Card className="premium-card shine-effect h-full p-6 bg-card/50 border-border group">
                       <div className="flex items-start justify-between mb-4">
-                        <span className="font-mono text-xs text-muted-foreground">
+                        <span className="font-mono text-xs text-foreground">
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
@@ -234,7 +234,7 @@ export default function HomePage() {
                 Paper Module
               </div>
               <h2 className="text-4xl sm:text-5xl font-bold mb-4">The paper</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-foreground max-w-2xl mx-auto">
                 A 2,000-word argument: RLHF makes companions smoother—but smooth isn&apos;t always safe.
               </p>
             </motion.div>
@@ -310,11 +310,11 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               className="text-center mb-12"
             >
-              <div className="mb-3 text-[11px] uppercase tracking-[0.3em] text-muted-foreground/70 font-mono">
+              <div className="mb-3 text-[11px] uppercase tracking-[0.3em] text-foreground/70 font-mono">
                 Demo Modules
               </div>
               <h2 className="text-4xl sm:text-5xl font-bold mb-4">Interactive demos</h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-lg text-foreground max-w-2xl mx-auto">
                 See the concepts in action with these Hugging Face-powered tools.
               </p>
             </motion.div>

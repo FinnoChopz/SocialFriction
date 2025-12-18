@@ -76,11 +76,17 @@ export default function WelcomePage() {
           >
             <div className="inline-flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-white/20 to-white/5 border border-white/10 flex items-center justify-center">
-                <span className="text-xl font-bold text-white/10">SF</span>
+                <span className="text-xl font-bold text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]">
+                  SF
+                </span>
               </div>
               <div className="text-left">
-                <div className="font-semibold text-lg">Social Friction Lab</div>
-                <div className="text-xs text-muted-foreground">Research Final Project</div>
+                <div className="font-semibold text-lg text-white drop-shadow-[0_4px_14px_rgba(0,0,0,0.65)]">
+                  Social Friction Lab
+                </div>
+                <div className="text-xs text-white/70 drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)]">
+                  Research Final Project
+                </div>
               </div>
             </div>
           </motion.div>
@@ -90,7 +96,7 @@ export default function WelcomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 leading-tight text-white drop-shadow-[0_10px_28px_rgba(0,0,0,0.7)]"
           >
             When conversation gets frictionless, what do we lose?
           </motion.h1>
@@ -100,7 +106,7 @@ export default function WelcomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-lg sm:text-xl text-white/90 drop-shadow-[0_8px_22px_rgba(0,0,0,0.55)] mb-12 max-w-2xl mx-auto leading-relaxed"
+            className="text-lg sm:text-xl text-white/100 drop-shadow-[0_10px_26px_rgba(0,0,0,0.7)] mb-12 max-w-2xl mx-auto leading-relaxed"
           >
             AI companions feel social. Under the hood, they&apos;re probability engines trained to keep
             you comfortable. This project explores what that optimization does to truth, feedback,
@@ -136,7 +142,7 @@ export default function WelcomePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.7 }}
-            className="mt-8 text-sm text-muted-foreground/50"
+            className="mt-8 text-sm text-white/60 drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]"
           >
             Press <kbd className="px-1.5 py-0.5 bg-secondary rounded text-xs">Esc</kbd> to skip
           </motion.p>
@@ -149,7 +155,7 @@ export default function WelcomePage() {
           transition={{ delay: 1 }}
           className="absolute bottom-8 left-1/2 -translate-x-1/2"
         >
-          <p className="text-[10px] text-muted-foreground/40 italic">
+          <p className="text-[10px] text-white/45 italic drop-shadow-[0_2px_10px_rgba(0,0,0,0.65)]">
             Floating badges are illustrative
           </p>
         </motion.div>

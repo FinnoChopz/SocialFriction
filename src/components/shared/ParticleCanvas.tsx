@@ -181,7 +181,8 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
         count: 0,
       }));
 
-      particlesRef.current.forEach((p) => {
+      const particles = particlesRef.current;
+      particles.forEach((p) => {
         groupCenters[p.group].x += p.x;
         groupCenters[p.group].y += p.y;
         groupCenters[p.group].count++;
@@ -194,7 +195,43 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
         }
       });
 
-      particlesRef.current.forEach((p) => {
+      // Maintain a small minimum distance so clusters form structure instead of collapsing to a point.
+      const minGap = 7;
+      const repulsionStrength = 0.018;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const p1 = particles[i];
+          const p2 = particles[j];
+          const dx = p2.x - p1.x;
+          const dy = p2.y - p1.y;
+          const distSq = dx * dx + dy * dy;
+          const minDist = p1.radius + p2.radius + minGap;
+          const minDistSq = minDist * minDist;
+
+          if (distSq < minDistSq) {
+            const dist = Math.sqrt(distSq);
+            const isDegenerate = dist < 0.0001;
+            const angle = isDegenerate ? Math.random() * Math.PI * 2 : 0;
+            const nx = isDegenerate ? Math.cos(angle) : dx / dist;
+            const ny = isDegenerate ? Math.sin(angle) : dy / dist;
+            const overlap = (minDist - (isDegenerate ? 0 : dist)) / minDist;
+            const force = repulsionStrength * overlap * overlap;
+
+            p1.vx -= nx * force;
+            p1.vy -= ny * force;
+            p2.vx += nx * force;
+            p2.vy += ny * force;
+
+            const push = 0.12 * overlap;
+            p1.x -= nx * push;
+            p1.y -= ny * push;
+            p2.x += nx * push;
+            p2.y += ny * push;
+          }
+        }
+      }
+
+      particles.forEach((p) => {
         const center = groupCenters[p.group];
         const dx = center.x - p.x;
         const dy = center.y - p.y;
