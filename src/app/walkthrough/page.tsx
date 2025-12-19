@@ -126,6 +126,7 @@ export default function WalkthroughPage() {
         className="fixed inset-0 z-[2] opacity-80 mix-blend-screen"
         density={1.1}
         clickBehavior="toggleAttractor"
+        showBadges={false}
       />
       {/* Subtle background */}
       <div className="absolute inset-0 grid-pattern opacity-30" />

@@ -29,6 +29,7 @@ interface ParticleCanvasProps {
   density?: number;
   clickBehavior?: "burst" | "toggleAttractor" | "none";
   ignoreInteractiveClicks?: boolean;
+  showBadges?: boolean;
 }
 
 const GROUP_COLORS = ["#60a5fa", "#a855f7", "#34d399", "#f59e0b", "#38bdf8"];
@@ -58,6 +59,7 @@ export function ParticleCanvas({
   density = 1,
   clickBehavior = "burst",
   ignoreInteractiveClicks,
+  showBadges = true,
 }: ParticleCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
@@ -235,8 +237,12 @@ export function ParticleCanvas({
       }
 
       // Spawn new badges occasionally
-      if (timeRef.current % 110 === 0 && badgesRef.current.length < 3) {
-        badgesRef.current.push(spawnBadge(rect.width, rect.height));
+      if (showBadges) {
+        if (timeRef.current % 110 === 0 && badgesRef.current.length < 3) {
+          badgesRef.current.push(spawnBadge(rect.width, rect.height));
+        }
+      } else if (badgesRef.current.length > 0) {
+        badgesRef.current = [];
       }
 
       // Update and draw particles
@@ -443,7 +449,8 @@ export function ParticleCanvas({
         });
       });
 
-      badgesRef.current = badgesRef.current.filter((badge) => {
+      if (showBadges) {
+        badgesRef.current = badgesRef.current.filter((badge) => {
         badge.life++;
 
         if (badge.life < 30) {
@@ -482,8 +489,9 @@ export function ParticleCanvas({
 
         ctx.restore();
 
-        return badge.life < badge.maxLife;
-      });
+          return badge.life < badge.maxLife;
+        });
+      }
 
       animationRef.current = requestAnimationFrame(animate);
     };
@@ -514,7 +522,7 @@ export function ParticleCanvas({
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [clickBehavior, initParticles, shouldIgnoreInteractiveClicks, spawnBadge]);
+  }, [clickBehavior, initParticles, shouldIgnoreInteractiveClicks, showBadges, spawnBadge]);
 
   return (
     <motion.canvas

@@ -531,11 +531,15 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
                     <div className="text-xs text-muted-foreground mb-3">Output</div>
 
                     <div className="min-h-[18px] text-xs text-muted-foreground mb-2">
-                      {outputHoverLabel
-                        ? `token: “${outputHoverLabel}”`
-                        : carrierLocation === "output"
-                        ? "Hover over any output column (including the new vector)"
-                        : "Output is currently empty"}
+                      {outputHoverLabel ? (
+                        `token: “${outputHoverLabel}”`
+                      ) : carrierLocation === "output" ? (
+                        <span className="animate-pulse text-blue-400/90 font-medium">
+                          Hover over any output column (including the new vector)
+                        </span>
+                      ) : (
+                        "Output is currently empty"
+                      )}
                     </div>
 
                     <div className="flex-1 min-h-0 flex items-start">

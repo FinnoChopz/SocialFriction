@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useMemo, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import type { SectionKey } from "@/hooks/useActiveSection";
 
@@ -470,9 +471,12 @@ function NumbersWhisper({ active }: { active: AmbientKey }) {
 }
 
 export function AmbientBackground({ activeSection = "hero", className }: AmbientBackgroundProps) {
+  const pathname = usePathname();
   const key: AmbientKey = (["hero", "readings", "paper", "demos", "footer"].includes(activeSection)
     ? activeSection
     : "hero") as AmbientKey;
+
+  const disableBadges = pathname?.startsWith("/walkthrough");
 
   return (
     <div
@@ -496,7 +500,7 @@ export function AmbientBackground({ activeSection = "hero", className }: Ambient
       <div className="ambient-noise" />
       <div className="ambient-scanlines" />
       <ConstellationCanvas configKey={key} />
-      {sectionConfigs[key].showBadges && <NumbersWhisper active={key} />}
+      {sectionConfigs[key].showBadges && !disableBadges && <NumbersWhisper active={key} />}
     </div>
   );
 }
