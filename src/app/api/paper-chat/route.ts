@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 
 export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 type ClientMessage = { role: "user" | "assistant"; content: string };
 
@@ -11,18 +12,25 @@ const MAX_HISTORY_MESSAGES = 12;
 
 let cachedSystemPrompt: string | null = null;
 
-async function readProjectTextFile(relativePath: string) {
-  const fullPath = path.join(process.cwd(), relativePath);
-  return fs.readFile(fullPath, "utf8");
+async function safeReadTextFile(absolutePath: string) {
+  try {
+    return await fs.readFile(absolutePath, "utf8");
+  } catch {
+    return "";
+  }
 }
 
 async function getSystemPrompt() {
   if (cachedSystemPrompt) return cachedSystemPrompt;
 
+  const paperPath = path.join(process.cwd(), "src/content/paper.mdx");
+  const proposalPath = path.join(process.cwd(), "initialprompt.md");
+  const readmePath = path.join(process.cwd(), "README.md");
+
   const [paperMdx, projectProposal, readme] = await Promise.all([
-    readProjectTextFile("src/content/paper.mdx"),
-    readProjectTextFile("initialprompt.md"),
-    readProjectTextFile("README.md"),
+    safeReadTextFile(paperPath),
+    safeReadTextFile(proposalPath),
+    safeReadTextFile(readmePath),
   ]);
 
   cachedSystemPrompt = [
@@ -75,10 +83,13 @@ function sanitizeClientMessages(raw: unknown): ClientMessage[] {
 
 export async function POST(request: NextRequest) {
   try {
-    const apiKey = process.env.OPENAI_API_KEY;
+    const apiKey = process.env.OPENAI_API_KEY?.trim();
     if (!apiKey) {
       return NextResponse.json(
-        { error: "Missing OPENAI_API_KEY (set it in your environment)." },
+        {
+          error:
+            "Missing OPENAI_API_KEY. If deployed on Vercel, set it in Project Settings → Environment Variables (for the correct environment) and redeploy.",
+        },
         { status: 500 }
       );
     }

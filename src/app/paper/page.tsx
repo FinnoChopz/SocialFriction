@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Navigation } from "@/components/layout/Navigation";
@@ -29,20 +29,6 @@ const EXAMPLE_QUESTIONS = [
   "What does the paper mean by “friction” in social learning?",
   "What are the strongest + weakest parts of the argument?",
 ];
-
-function buildMailtoHref({
-  toEmail,
-  fromEmail,
-  message,
-}: {
-  toEmail: string;
-  fromEmail: string;
-  message: string;
-}) {
-  const subject = "Friction Project — Paper feedback";
-  const body = `Reply-to: ${fromEmail}\n\nFeedback:\n${message}`;
-  return `mailto:${toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-}
 
 export default function PaperPage() {
   const [pdfExists, setPdfExists] = useState<boolean | null>(null);
@@ -100,17 +86,51 @@ export default function PaperPage() {
   const [feedbackEmail, setFeedbackEmail] = useState("");
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackWasSubmitted, setFeedbackWasSubmitted] = useState(false);
+  const [feedbackIsSending, setFeedbackIsSending] = useState(false);
+  const [feedbackError, setFeedbackError] = useState<string | null>(null);
+  const [feedbackSuccess, setFeedbackSuccess] = useState(false);
+  const [feedbackHp, setFeedbackHp] = useState("");
 
-  const feedbackMailtoHref = useMemo(() => {
-    return buildMailtoHref({
-      toEmail: "fmccooe@gmail.com",
-      fromEmail: feedbackEmail.trim(),
-      message: feedbackText.trim(),
-    });
-  }, [feedbackEmail, feedbackText]);
+  const feedbackEmailIsValid =
+    feedbackEmail.trim().length === 0 || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(feedbackEmail.trim());
 
   const feedbackIsValid =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(feedbackEmail.trim()) && feedbackText.trim().length >= 10;
+    feedbackEmailIsValid && feedbackText.trim().length >= 10 && feedbackText.trim().length <= 6000;
+
+  async function submitFeedback() {
+    setFeedbackWasSubmitted(true);
+    setFeedbackError(null);
+    setFeedbackSuccess(false);
+    if (!feedbackIsValid || feedbackIsSending) return;
+
+    setFeedbackIsSending(true);
+    try {
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: feedbackEmail.trim() || undefined,
+          message: feedbackText.trim(),
+          page: "paper",
+          hp: feedbackHp,
+        }),
+      });
+
+      const data = (await response.json().catch(() => null)) as null | { ok?: boolean; error?: string };
+      if (!response.ok || !data?.ok) {
+        throw new Error(data?.error || `Request failed (${response.status})`);
+      }
+
+      setFeedbackSuccess(true);
+      setFeedbackText("");
+      setFeedbackHp("");
+      setFeedbackWasSubmitted(false);
+    } catch (error) {
+      setFeedbackError(error instanceof Error ? error.message : "Something went wrong.");
+    } finally {
+      setFeedbackIsSending(false);
+    }
+  }
 
   return (
     <>
@@ -154,15 +174,6 @@ export default function PaperPage() {
               </div>
 
               <div className="flex flex-wrap items-center gap-3">
-                <Button
-                  variant="secondary"
-                  className="gap-2"
-                  onClick={() => setIsFullscreenOpen(true)}
-                  disabled={pdfExists === false}
-                >
-                  <Maximize2 className="w-4 h-4" />
-                  Fullscreen
-                </Button>
                 <a href="/paper.pdf" target="_blank" rel="noreferrer">
                   <Button variant="outline" className="gap-2" disabled={pdfExists === false}>
                     <ExternalLink className="w-4 h-4" />
@@ -197,16 +208,6 @@ export default function PaperPage() {
                   <span className="text-sm text-muted-foreground">Full paper (embedded PDF)</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="gap-2"
-                    onClick={() => setIsFullscreenOpen(true)}
-                    disabled={pdfExists === false}
-                  >
-                    <Maximize2 className="w-4 h-4" />
-                    Expand
-                  </Button>
                   <a href="/paper.pdf" target="_blank" rel="noreferrer">
                     <Button variant="outline" size="sm" className="gap-2" disabled={pdfExists === false}>
                       <ExternalLink className="w-4 h-4" />
@@ -236,20 +237,6 @@ export default function PaperPage() {
             </div>
           </div>
         </section>
-
-        <Dialog open={isFullscreenOpen} onOpenChange={setIsFullscreenOpen}>
-          <DialogContent className="max-w-none w-[calc(100vw-1.5rem)] h-[calc(100vh-1.5rem)] sm:w-[calc(100vw-3rem)] sm:h-[calc(100vh-3rem)] p-3 sm:p-4">
-            <DialogHeader className="text-left">
-              <DialogTitle className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-muted-foreground" />
-                <span>Paper PDF</span>
-              </DialogTitle>
-            </DialogHeader>
-            <div className="h-full overflow-hidden rounded-lg border border-border bg-background/40">
-              <iframe src="/paper.pdf" title="Paper PDF (fullscreen)" className="w-full h-full border-0" />
-            </div>
-          </DialogContent>
-        </Dialog>
 
         <section className="py-12 border-t border-border/50">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -365,14 +352,12 @@ export default function PaperPage() {
                   className="space-y-3"
                   onSubmit={(e) => {
                     e.preventDefault();
-                    setFeedbackWasSubmitted(true);
-                    if (!feedbackIsValid) return;
-                    window.location.href = feedbackMailtoHref;
+                    void submitFeedback();
                   }}
                 >
                   <div>
                     <label className="text-xs text-muted-foreground" htmlFor="feedback-email">
-                      Your email (so the author can reply)
+                      Your email (optional, if you want a reply)
                     </label>
                     <Input
                       id="feedback-email"
@@ -382,7 +367,7 @@ export default function PaperPage() {
                       onChange={(e) => setFeedbackEmail(e.target.value)}
                       className="mt-1 bg-background/30"
                     />
-                    {feedbackWasSubmitted && feedbackEmail.trim().length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(feedbackEmail.trim()) && (
+                    {feedbackWasSubmitted && feedbackEmail.trim().length > 0 && !feedbackEmailIsValid && (
                       <div className="mt-1 text-xs text-red-300">Enter a valid email address.</div>
                     )}
                   </div>
@@ -403,18 +388,26 @@ export default function PaperPage() {
                     )}
                   </div>
 
+                  <input
+                    value={feedbackHp}
+                    onChange={(e) => setFeedbackHp(e.target.value)}
+                    className="hidden"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                  />
+
                   <div className="flex flex-wrap items-center gap-2">
-                    <Button type="submit" disabled={!feedbackIsValid} className="gap-2">
-                      <ExternalLink className="w-4 h-4" />
-                      Send feedback
+                    <Button type="submit" disabled={!feedbackIsValid || feedbackIsSending} className="gap-2">
+                      {feedbackIsSending ? "Sending…" : "Send feedback"}
                     </Button>
-                    <a href={feedbackMailtoHref} className="text-xs text-muted-foreground hover:text-foreground">
-                      Or open your email client manually
-                    </a>
+                    {feedbackSuccess && <span className="text-xs text-green-300">Sent — thank you.</span>}
                   </div>
 
+                  {feedbackError && <div className="text-xs text-red-300">{feedbackError}</div>}
+
                   <div className="text-xs text-muted-foreground">
-                    Submitting opens an email to <span className="font-mono">fmccooe@gmail.com</span>.
+                    This sends your note directly to the author. (No login required.)
                   </div>
                 </form>
               </div>

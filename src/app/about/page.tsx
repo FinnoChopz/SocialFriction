@@ -145,7 +145,7 @@ export default function AboutPage() {
                       <span className="font-medium">Walkthrough</span>
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      A 7-slide interactive introduction explaining what AI models are and how
+                      An 8-slide interactive introduction explaining what AI models are and how
                       training shapes their behavior.
                     </p>
                   </Card>

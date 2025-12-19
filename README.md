@@ -6,14 +6,14 @@ A research final project website exploring AI companionship, sycophancy, and the
 
 This project examines how AI companions optimized for user satisfaction might reshape social learning. It includes:
 
-- **6 readings** organized into 9 thematic clusters
+- **46 readings** organized into 9 thematic clusters
 - **A 2,000-word research paper** on RLHF-driven sycophancy
 - **2 interactive demos** powered by Hugging Face Spaces
-- **A 7-slide walkthrough** explaining AI as probability engines
+- **An 8-slide walkthrough** explaining how LLMs work (including token-by-token generation and probabilities)
 
 ## Tech Stack
 
-- **Framework:** Next.js 14 (App Router) + TypeScript
+- **Framework:** Next.js 16 (App Router) + TypeScript
 - **Styling:** Tailwind CSS v4
 - **Components:** shadcn/ui (Radix-based)
 - **Animation:** Framer Motion
@@ -53,7 +53,7 @@ src/
 ├── app/                    # Next.js App Router pages
 │   ├── page.tsx           # Welcome gate (/)
 │   ├── home/              # Main landing page (/home)
-│   ├── walkthrough/       # 7-slide walkthrough (/walkthrough)
+│   ├── walkthrough/       # 8-slide walkthrough (/walkthrough)
 │   ├── readings/          # Reading library (/readings)
 │   │   └── [groupSlug]/   # Group pages
 │   │       └── [readingSlug]/  # Individual reading pages
@@ -146,26 +146,34 @@ No environment variables required for basic deployment.
 Optional (only needed for the Paper Q&A box on `/paper`):
 
 - `OPENAI_API_KEY` – OpenAI API key used by `src/app/api/paper-chat/route.ts`
-- `OPENAI_PAPER_MODEL` – defaults to `gpt-5.2` (set this to a model you have access to)
+- `OPENAI_PAPER_MODEL` – defaults to `gpt-5.2-2025-12-11` (set this to a model you have access to)
+
+Optional (only needed for in-page feedback submission on `/paper`):
+
+- `RESEND_API_KEY` – if set, feedback is emailed via Resend
+- `FEEDBACK_TO_EMAIL` – defaults to `fmccooe@gmail.com`
+- `FEEDBACK_WEBHOOK_URL` – alternative delivery (Zapier/Slack/etc)
 
 For local development, create `.env.local`:
 
 ```bash
 OPENAI_API_KEY="..."
-OPENAI_PAPER_MODEL="gpt-5.2"
+OPENAI_PAPER_MODEL="gpt-5.2-2025-12-11"
 ```
 
 ## Features
 
 ### Walkthrough
 
-The 7-slide walkthrough introduces visitors to:
-1. AI as numbers (parameters)
-2. Tokenization and embeddings
-3. Probability distributions over outputs
-4. Representation steering
-5. RLHF and reward models
-6. The sycophancy problem
+The 8-slide walkthrough introduces visitors to:
+1. Models as numbers (weights)
+2. A toy weight matrix view
+3. Tokenization and embeddings
+4. Token-by-token generation (toy demo)
+5. Probabilities and sampling (toy demo)
+6. Post-training and reward models
+7. Steering / representation shaping (toy intuition)
+8. The thesis / why friction matters
 
 Progress is saved in localStorage so returning visitors skip to `/home`.
 
