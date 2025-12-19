@@ -100,7 +100,7 @@ export default function WalkthroughPage() {
   const renderSlide = () => {
     switch (currentSlide) {
       case 1:
-        return <Slide1Welcome onNext={handleNext} onSkip={handleSkip} />;
+        return <Slide1Welcome onNext={handleNext} />;
       case 2:
         return <Slide2Numbers onNext={handleNext} />;
       case 3:
@@ -110,9 +110,9 @@ export default function WalkthroughPage() {
       case 5:
         return <Slide4Probabilities onNext={handleNext} />;
       case 6:
-        return <Slide6Training onNext={handleNext} />;
-      case 7:
         return <Slide5Steering onNext={handleNext} />;
+      case 7:
+        return <Slide6Training onNext={handleNext} />;
       case 8:
         return <Slide7Thesis onComplete={handleComplete} />;
       default:

@@ -5,6 +5,7 @@ import { useMemo, useState } from "react";
 import { WalkthroughSlide } from "../WalkthroughSlide";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { TOY_JOKE_RATING_PROMPT } from "@/components/walkthrough/toyJokeRatingExample";
 
 interface SlideProps {
   onNext: () => void;
@@ -80,8 +81,7 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
     return `conic-gradient(${stops.join(", ")})`;
   }, [segments, totalProbability]);
 
-  const inputText =
-    'Rate this joke 1-10: "why did the chicken cross the road? To get to the other side."';
+  const inputText = TOY_JOKE_RATING_PROMPT;
 
   const pickWeightedIndex = () => {
     const r = Math.random() * totalProbability;

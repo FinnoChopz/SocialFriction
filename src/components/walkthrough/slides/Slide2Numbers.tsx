@@ -41,7 +41,7 @@ export function Slide2Numbers({ onNext }: SlideProps) {
 
           <div className="space-y-1">
             <p className="text-xs text-muted-foreground">
-              A model&apos;s paramaters/weights are stationary. They encode the model itself. In many ways, a model IS
+              A model&apos;s parameters/weights are stationary. They encode the model itself. In many ways, a model IS
               its parameters.
             </p>
             <p className="text-[11px] text-muted-foreground/70">This is a toy example weight matrix.</p>

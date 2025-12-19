@@ -23,6 +23,7 @@ type CarrierLocation = "input" | "weights" | "output";
 
 const INPUT_TOKEN_COUNT = TOY_JOKE_RATING_TOKENS.length;
 const OUTPUT_TOKEN_COUNT = 3;
+const FINAL_TOKENS = [...TOY_JOKE_RATING_TOKENS, ...TOY_RESPONSE_TOKENS.slice(0, OUTPUT_TOKEN_COUNT)];
 
 const WEIGHTS_DISPLAY = TOY_MODEL_WEIGHTS.slice(0, 24).map((row) => row.slice(0, 24));
 const FORMATTED_WEIGHTS = formatWeightMatrix(WEIGHTS_DISPLAY, 2);
@@ -392,12 +393,12 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
                       <div className="text-xs text-muted-foreground">all_tokens =</div>
                       <div className="min-h-[18px] text-xs text-muted-foreground text-right">
                         {hoveredFinalColumn != null
-                          ? `token: “${finalTokens[hoveredFinalColumn]?.text}”`
+                          ? `token: “${FINAL_TOKENS[hoveredFinalColumn]?.text}”`
                           : "Hover a column to reveal the token"}
                       </div>
                     </div>
                     <EmbeddingMatrix
-                      tokens={finalTokens}
+                      tokens={FINAL_TOKENS}
                       hoveredColumn={hoveredFinalColumn}
                       onHoverColumn={setHoveredFinalColumn}
                       delimiterIndex={INPUT_TOKEN_COUNT}
@@ -612,4 +613,3 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
     </WalkthroughSlide>
   );
 }
-  const finalTokens = [...TOY_JOKE_RATING_TOKENS, ...TOY_RESPONSE_TOKENS.slice(0, OUTPUT_TOKEN_COUNT)];

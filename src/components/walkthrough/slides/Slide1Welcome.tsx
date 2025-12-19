@@ -6,10 +6,9 @@ import { WalkthroughSlide } from "../WalkthroughSlide";
 
 interface SlideProps {
   onNext: () => void;
-  onSkip: () => void;
 }
 
-export function Slide1Welcome({ onNext, onSkip }: SlideProps) {
+export function Slide1Welcome({ onNext }: SlideProps) {
   return (
     <WalkthroughSlide>
       <div className="max-w-2xl mx-auto text-center">
@@ -51,9 +50,6 @@ export function Slide1Welcome({ onNext, onSkip }: SlideProps) {
             </div>
           </div>
           
-          <Button size="sm" variant="ghost" onClick={onSkip} className="text-muted-foreground">
-            Skip Entire Intro
-          </Button>
         </motion.div>
 
         <motion.p
