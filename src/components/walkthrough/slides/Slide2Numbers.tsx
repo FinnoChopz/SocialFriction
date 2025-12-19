@@ -60,7 +60,7 @@ export function Slide2Numbers({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-4xl sm:text-5xl font-bold mb-6"
+          className="text-3xl sm:text-4xl font-bold mb-6"
         >
           AI is all numbers.
         </motion.h2>
@@ -69,7 +69,7 @@ export function Slide2Numbers({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-lg text-muted-foreground mb-12 max-w-xl mx-auto"
+          className="text-base text-foreground/80 mb-12 max-w-xl mx-auto"
         >
           A model is a huge set of learned parameters—just values adjusted by training.
         </motion.p>

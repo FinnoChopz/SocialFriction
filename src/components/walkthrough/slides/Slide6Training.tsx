@@ -17,7 +17,7 @@ export function Slide6Training({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-4xl sm:text-5xl font-bold mb-6"
+          className="text-3xl sm:text-4xl font-bold mb-6"
         >
           Training often rewards &quot;user-pleasing.&quot;
         </motion.h2>
@@ -26,7 +26,7 @@ export function Slide6Training({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto"
+          className="text-base text-foreground/80 mb-10 max-w-2xl mx-auto"
         >
           During post training, models are made to generate multiple response to a given input. Humans then rank them
           from best to worst. Humans tend to prefer more agreeable responses over harsh or aggressive responses.

@@ -349,7 +349,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
         <motion.h2
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-3xl sm:text-4xl font-bold tracking-tight text-center"
+          className="text-2xl sm:text-3xl font-bold tracking-tight text-center"
         >
           The model generates one token at a time.
         </motion.h2>
@@ -358,7 +358,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="mt-4 text-sm sm:text-base text-muted-foreground max-w-5xl mx-auto text-center leading-relaxed"
+          className="mt-4 text-sm sm:text-base text-foreground/80 max-w-5xl mx-auto text-center leading-relaxed"
         >
           Once your query/question is in token form, the model processes it by adding one “response token” at a time.
           It takes in your list of tokens/words, then adds the token/word it thinks would be the best to the end of the list.

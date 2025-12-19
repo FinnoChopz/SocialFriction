@@ -118,7 +118,7 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-3xl sm:text-4xl font-bold tracking-tight text-center"
+          className="text-2xl sm:text-3xl font-bold tracking-tight text-center"
         >
           Zooming in, the model uses probability to generate/select the next token.
         </motion.h2>
@@ -127,7 +127,7 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-4 text-sm sm:text-base text-muted-foreground max-w-5xl mx-auto text-center leading-relaxed"
+          className="mt-4 text-sm sm:text-base text-foreground/80 max-w-5xl mx-auto text-center leading-relaxed"
         >
           It learns this during training. At response time, it randomly selects its next token, with some tokens being
           more likely than others. For example, the number &quot;7&quot; has a high likelihood for our given input. The

@@ -21,7 +21,7 @@ export function Slide3Tokens({ onNext }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-4xl sm:text-5xl font-bold mb-6"
+          className="text-3xl sm:text-4xl font-bold mb-6"
         >
           Your words get encoded.
         </motion.h2>
@@ -32,7 +32,7 @@ export function Slide3Tokens({ onNext }: SlideProps) {
           transition={{ delay: 0.4 }}
           className="mb-10 max-w-2xl mx-auto bg-background/80 backdrop-blur-sm p-6 rounded-xl border border-border/50 relative z-10 shadow-sm"
         >
-          <p className="text-lg text-foreground leading-relaxed">
+          <p className="text-base text-foreground leading-relaxed">
             Text is turned into things called “tokens”. A token is just a list, or string, of numbers, that the model can use to identify a word. For example, the token for the word “hello”, might be (0.278, -0.876, 0.982, -0.023, 0.172, 0.869, -0.012, 0.137).
             <br /><br />
             Each word has a unique list of numbers that identifies it--the token for the word “hi” would be different from the token for the word “hello”.

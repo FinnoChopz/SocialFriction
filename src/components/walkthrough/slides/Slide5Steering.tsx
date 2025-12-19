@@ -118,7 +118,7 @@ export function Slide5Steering({ onNext }: SlideProps) {
           <motion.h2
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-3xl sm:text-4xl font-bold mb-4"
+            className="text-2xl sm:text-3xl font-bold mb-4"
           >
             During training, the model updates its weights to try and optimize its reward.
           </motion.h2>
@@ -126,7 +126,7 @@ export function Slide5Steering({ onNext }: SlideProps) {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-lg text-foreground/90"
+            className="text-base text-foreground/80"
           >
             Use the slider at the bottom to update the weights, and find the weight configuration with the highest expected reward probability.
           </motion.p>

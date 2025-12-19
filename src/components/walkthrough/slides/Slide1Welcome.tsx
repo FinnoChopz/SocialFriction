@@ -17,7 +17,7 @@ export function Slide1Welcome({ onNext, onSkip }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="text-5xl sm:text-6xl font-bold mb-6"
+          className="text-4xl sm:text-5xl font-bold mb-6"
         >
           Welcome.
         </motion.h1>
@@ -26,7 +26,7 @@ export function Slide1Welcome({ onNext, onSkip }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-xl text-muted-foreground mb-12"
+          className="text-lg text-foreground/80 mb-12"
         >
           This is a brief tour of what an AI &quot;conversation&quot; actually is, under the hood.
         </motion.p>

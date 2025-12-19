@@ -50,7 +50,7 @@ export function Slide7Thesis({ onComplete }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="text-lg text-muted-foreground mb-12 max-w-2xl mx-auto mt-10"
+          className="text-base text-foreground/80 mb-12 max-w-2xl mx-auto mt-10"
         >
           This site collects 46 readings, a paper, and two demos showing how &quot;helpful&quot;
           optimization can become sycophancy—and why friction matters.

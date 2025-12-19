@@ -174,20 +174,20 @@ export default function WalkthroughPage() {
         </Button>
       </motion.div>
 
-      {/* Progress dots (moved up so they don't overlap buttons) */}
-      <div className="fixed top-16 left-1/2 -translate-x-1/2 z-40">
-        <div className="bg-background/85 backdrop-blur-md border border-border/60 rounded-full px-4 py-2 shadow-lg">
-          <div className="flex items-center gap-3">
+      {/* Progress dots */}
+      <div className="fixed top-8 left-1/2 -translate-x-1/2 z-40">
+        <div className="bg-background/85 backdrop-blur-md border border-border/60 rounded-full px-3 py-1.5 shadow-lg">
+          <div className="flex items-center gap-2">
           {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i + 1)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`h-2 rounded-full transition-all duration-300 ${
                 i + 1 === currentSlide
-                  ? "bg-foreground w-10"
+                  ? "bg-foreground w-6"
                   : i + 1 < currentSlide
-                  ? "bg-foreground/50"
-                  : "bg-foreground/20"
+                  ? "bg-foreground/50 w-2"
+                  : "bg-foreground/20 w-2"
               }`}
               aria-label={`Go to slide ${i + 1}`}
             />
@@ -196,23 +196,25 @@ export default function WalkthroughPage() {
         </div>
       </div>
 
-      {/* Disclaimer footer (fixed, low z-index so buttons overlay it) */}
-      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-10 max-w-[calc(100vw-2rem)] sm:max-w-md pointer-events-none text-center">
-        <div className="bg-background/60 backdrop-blur-sm border border-border/20 rounded-lg p-3 shadow-sm pointer-events-auto hover:bg-background/90 hover:border-border/50 transition-all duration-300">
-          <p className="text-[10px] text-muted-foreground/80 font-medium leading-tight mb-1">
-            Conceptual model. Simplifications apply.
-          </p>
-          {SLIDE_DISCLAIMERS[currentSlide] && (
-            <p className="text-[10px] text-muted-foreground/60 leading-tight">
-              {SLIDE_DISCLAIMERS[currentSlide]}
-            </p>
-          )}
-        </div>
-      </div>
-
       {/* Slide content */}
-      <div className="relative z-20">
-        <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
+      <div className="relative z-20 min-h-screen flex flex-col">
+        <div className="flex-1">
+          <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
+        </div>
+
+        {/* Disclaimer footer (in-flow) */}
+        <div className="w-full py-8 px-4 text-center z-10">
+          <div className="max-w-2xl mx-auto bg-background/40 backdrop-blur-sm border border-border/20 rounded-lg p-4">
+            <p className="text-xs text-foreground/70 font-medium mb-2">
+              Conceptual model. Simplifications apply.
+            </p>
+            {SLIDE_DISCLAIMERS[currentSlide] && (
+              <p className="text-xs text-foreground/60">
+                {SLIDE_DISCLAIMERS[currentSlide]}
+              </p>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
