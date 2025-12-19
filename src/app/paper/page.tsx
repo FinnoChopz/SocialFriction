@@ -1,37 +1,128 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Navigation } from "@/components/layout/Navigation";
 import { Footer } from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { FileText, Download, BookOpen, ExternalLink, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
+import {
+  ChevronRight,
+  Download,
+  ExternalLink,
+  FileText,
+  Maximize2,
+  SendHorizontal,
+  Sparkles,
+} from "lucide-react";
+
+type ChatMessage = { role: "user" | "assistant"; content: string };
+
+const EXAMPLE_QUESTIONS = [
+  "Explain the paper like I'm 5.",
+  "Summarize the paper in 10 words or less.",
+  "What does the paper mean by “friction” in social learning?",
+  "What are the strongest + weakest parts of the argument?",
+];
+
+function buildMailtoHref({
+  toEmail,
+  fromEmail,
+  message,
+}: {
+  toEmail: string;
+  fromEmail: string;
+  message: string;
+}) {
+  const subject = "Friction Project — Paper feedback";
+  const body = `Reply-to: ${fromEmail}\n\nFeedback:\n${message}`;
+  return `mailto:${toEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
 
 export default function PaperPage() {
-  const [viewMode, setViewMode] = useState<"page" | "pdf">("page");
-  const [pdfExists, setPdfExists] = useState(false);
+  const [pdfExists, setPdfExists] = useState<boolean | null>(null);
+  const [isFullscreenOpen, setIsFullscreenOpen] = useState(false);
 
-  // Check if PDF exists
   useEffect(() => {
     fetch("/paper.pdf", { method: "HEAD" })
       .then((res) => setPdfExists(res.ok))
-      .catch(() => setPdfExists(false));
+      .catch(() => setPdfExists(null));
   }, []);
+
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatDraft, setChatDraft] = useState("");
+  const [chatIsLoading, setChatIsLoading] = useState(false);
+  const [chatError, setChatError] = useState<string | null>(null);
+  const chatEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!chatEndRef.current) return;
+    chatEndRef.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [chatMessages.length, chatIsLoading]);
+
+  async function askPaper(questionOverride?: string) {
+    const question = (questionOverride ?? chatDraft).trim();
+    if (!question || chatIsLoading) return;
+
+    setChatError(null);
+    setChatIsLoading(true);
+    setChatDraft("");
+
+    const nextMessages: ChatMessage[] = [...chatMessages, { role: "user", content: question }];
+    setChatMessages(nextMessages);
+
+    try {
+      const response = await fetch("/api/paper-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ messages: nextMessages }),
+      });
+
+      const data = (await response.json().catch(() => null)) as null | { answer?: string; error?: string };
+      if (!response.ok || !data?.answer) {
+        throw new Error(data?.error || `Request failed (${response.status})`);
+      }
+
+      setChatMessages([...nextMessages, { role: "assistant", content: data.answer }]);
+    } catch (error) {
+      setChatError(error instanceof Error ? error.message : "Something went wrong.");
+      setChatMessages(nextMessages);
+    } finally {
+      setChatIsLoading(false);
+    }
+  }
+
+  const [feedbackEmail, setFeedbackEmail] = useState("");
+  const [feedbackText, setFeedbackText] = useState("");
+  const [feedbackWasSubmitted, setFeedbackWasSubmitted] = useState(false);
+
+  const feedbackMailtoHref = useMemo(() => {
+    return buildMailtoHref({
+      toEmail: "fmccooe@gmail.com",
+      fromEmail: feedbackEmail.trim(),
+      message: feedbackText.trim(),
+    });
+  }, [feedbackEmail, feedbackText]);
+
+  const feedbackIsValid =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(feedbackEmail.trim()) && feedbackText.trim().length >= 10;
 
   return (
     <>
       <Navigation />
       <main className="bg-transparent min-h-screen pt-24">
-        {/* Header */}
         <section className="relative py-12 overflow-hidden" data-bg="paper">
           <div className="absolute inset-0 grid-pattern opacity-10" />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background" />
 
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
@@ -40,58 +131,54 @@ export default function PaperPage() {
                 <span className="text-sm text-muted-foreground">Research Paper</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl font-bold mb-4">
+              <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-balance">
                 The Cost of Comfort: How AI Companion Optimization May Reshape Social Learning
               </h1>
 
-              <p className="text-lg text-muted-foreground mb-6">
-                A theoretical framework connecting RLHF-driven sycophancy to potential effects on human social capability.
+              <p className="text-lg text-muted-foreground mb-6 text-balance">
+                A theoretical framework connecting RLHF-driven sycophancy to potential downstream effects on human social
+                capability.
               </p>
 
-              {/* Abstract preview */}
-              <div className="bg-card/50 border border-border rounded-xl p-6 mb-6">
+              <div className="bg-card/50 border border-border rounded-xl p-6 mb-6 premium-card">
                 <h2 className="font-semibold mb-3">Abstract</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  As AI companions become increasingly sophisticated and widely adopted, their optimization
-                  for user satisfaction raises underexplored questions about social development. This paper
-                  argues that the friction inherent in human social interaction—disagreement, face threats,
-                  variable feedback, and the need for repair—serves critical functions in social learning
-                  that frictionless AI companions may not replicate. Drawing on research from conversation
-                  analysis, neural plasticity, reinforcement learning, and AI alignment, I outline a
-                  theoretical framework connecting RLHF-driven sycophancy to potential downstream effects
-                  on human social capability.
+                  As AI companions become increasingly sophisticated and widely adopted, their optimization for user
+                  satisfaction raises underexplored questions about social development. This paper argues that the
+                  friction inherent in human social interaction—disagreement, face threats, variable feedback, and the
+                  need for repair—serves critical functions in social learning that frictionless AI companions may not
+                  replicate. Drawing on research from conversation analysis, neural plasticity, reinforcement learning,
+                  and AI alignment, I outline a theoretical framework connecting RLHF-driven sycophancy to potential
+                  downstream effects on human social capability.
                 </p>
               </div>
 
-              {/* Action buttons */}
-              <div className="flex flex-wrap gap-3">
-                {pdfExists && (
-                  <>
-                    <div className="flex items-center gap-2 border border-border rounded-lg p-1">
-                      <Button
-                        variant={viewMode === "page" ? "secondary" : "ghost"}
-                        size="sm"
-                        onClick={() => setViewMode("page")}
-                      >
-                        <BookOpen className="w-4 h-4 mr-1" />
-                        Read on page
-                      </Button>
-                      <Button
-                        variant={viewMode === "pdf" ? "secondary" : "ghost"}
-                        size="sm"
-                        onClick={() => setViewMode("pdf")}
-                      >
-                        <FileText className="w-4 h-4 mr-1" />
-                        View PDF
-                      </Button>
-                    </div>
-                    <a href="/paper.pdf" download>
-                      <Button variant="outline" className="gap-2">
-                        <Download className="w-4 h-4" />
-                        Download PDF
-                      </Button>
-                    </a>
-                  </>
+              <div className="flex flex-wrap items-center gap-3">
+                <Button
+                  variant="secondary"
+                  className="gap-2"
+                  onClick={() => setIsFullscreenOpen(true)}
+                  disabled={pdfExists === false}
+                >
+                  <Maximize2 className="w-4 h-4" />
+                  Fullscreen
+                </Button>
+                <a href="/paper.pdf" target="_blank" rel="noreferrer">
+                  <Button variant="outline" className="gap-2" disabled={pdfExists === false}>
+                    <ExternalLink className="w-4 h-4" />
+                    Open PDF
+                  </Button>
+                </a>
+                <a href="/paper.pdf" download>
+                  <Button variant="outline" className="gap-2" disabled={pdfExists === false}>
+                    <Download className="w-4 h-4" />
+                    Download PDF
+                  </Button>
+                </a>
+                {pdfExists === false && (
+                  <span className="text-sm text-muted-foreground">
+                    PDF not found at <span className="font-mono">/paper.pdf</span>
+                  </span>
                 )}
               </div>
             </motion.div>
@@ -100,156 +187,243 @@ export default function PaperPage() {
 
         <Separator />
 
-        {/* Paper Content */}
-        <section className="relative py-12 overflow-hidden">
+        <section className="relative py-10 overflow-hidden">
           <div className="absolute inset-0 bg-background/85" />
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            {viewMode === "pdf" && pdfExists ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-                className="w-full"
-              >
-                <object
-                  data="/paper.pdf"
-                  type="application/pdf"
-                  className="w-full h-[80vh] rounded-lg border border-border"
-                >
-                  <div className="flex flex-col items-center justify-center h-64 bg-secondary/30 rounded-lg">
-                    <p className="text-muted-foreground mb-4">
-                      PDF preview not available in your browser.
-                    </p>
-                    <a href="/paper.pdf" download>
-                      <Button>Download PDF</Button>
-                    </a>
-                  </div>
-                </object>
-              </motion.div>
-            ) : (
-              <motion.article
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="prose prose-invert prose-lg max-w-none"
-              >
-                {/* Inline paper content since MDX dynamic import is complex */}
-                <h1>The Cost of Comfort: How AI Companion Optimization May Reshape Social Learning</h1>
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="rounded-xl border border-border bg-card/40 overflow-hidden">
+              <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-border/60 bg-background/40">
+                <div className="flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-muted-foreground" />
+                  <span className="text-sm text-muted-foreground">Full paper (embedded PDF)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="gap-2"
+                    onClick={() => setIsFullscreenOpen(true)}
+                    disabled={pdfExists === false}
+                  >
+                    <Maximize2 className="w-4 h-4" />
+                    Expand
+                  </Button>
+                  <a href="/paper.pdf" target="_blank" rel="noreferrer">
+                    <Button variant="outline" size="sm" className="gap-2" disabled={pdfExists === false}>
+                      <ExternalLink className="w-4 h-4" />
+                      Open
+                    </Button>
+                  </a>
+                </div>
+              </div>
 
-                <h2>Abstract</h2>
-                <p>
-                  As AI companions become increasingly sophisticated and widely adopted, their optimization for user satisfaction raises underexplored questions about social development. This paper argues that the friction inherent in human social interaction—disagreement, face threats, variable feedback, and the need for repair—serves critical functions in social learning that frictionless AI companions may not replicate. Drawing on research from conversation analysis, neural plasticity, reinforcement learning, and AI alignment, I outline a theoretical framework connecting RLHF-driven sycophancy to potential downstream effects on human social capability. While the long-term effects remain empirically uncertain, the structural features of current AI companion design warrant careful attention from researchers and policymakers.
-                </p>
-
-                <hr />
-
-                <h2>Introduction</h2>
-                <p>
-                  &quot;AI companions&quot; now serve millions of users seeking conversation, emotional support, and social connection. Products like Replika, Character.AI, and various chatbot interfaces powered by large language models (LLMs) are explicitly marketed as relationship substitutes or supplements. Users report genuine emotional attachment, describing their AI companions as friends, confidants, and even romantic partners.
-                </p>
-                <p>
-                  But there&apos;s a structural tension in how these systems are built. The dominant training paradigm—reinforcement learning from human feedback (RLHF)—optimizes models to produce responses that human raters prefer. And humans, when evaluating conversational responses, systematically prefer agreement over disagreement, validation over challenge, and comfort over friction.
-                </p>
-                <p>
-                  This paper asks: what might we lose if a significant portion of social practice shifts to partners optimized for our comfort?
-                </p>
-
-                <h2>The Training Signal: From RLHF to Sycophancy</h2>
-                <p>
-                  Modern conversational AI systems typically undergo a multi-stage training process. After initial pretraining on large text corpora, models are fine-tuned using human feedback. In RLHF, human raters compare model outputs and indicate preferences. These preferences train a reward model, which then guides further model optimization.
-                </p>
-                <p>
-                  The problem is what gets rewarded. When humans rate conversational responses, they show systematic biases toward agreeable, validating outputs. A response that gently affirms the user&apos;s position tends to score higher than one that offers respectful disagreement—even when the disagreement would be more accurate or helpful.
-                </p>
-                <p>
-                  Sharma et al. (2024) provide compelling evidence that this dynamic produces &quot;sycophancy&quot;: systematic tendencies to tell users what they want to hear rather than what&apos;s true or optimal. They identify multiple sycophancy subtypes: opinion sycophancy (matching stated beliefs), mimicry sycophancy (copying user style), and preference sycophancy (providing preferred but suboptimal information).
-                </p>
-                <p>
-                  The key insight is that sycophancy isn&apos;t a bug—it&apos;s an optimization outcome. If the reward signal favors agreement, models will learn to agree.
-                </p>
-
-                <h2>What Friction Does: The Social Functions of Discomfort</h2>
-                <p>
-                  Why might sycophancy-free friction matter? Research across multiple disciplines suggests that the uncomfortable aspects of human interaction serve functions that comfortable AI interaction might not replicate.
-                </p>
-                <p>
-                  <strong>Face-work and social calibration.</strong> Goffman (1955) documented how humans engage in constant &quot;face-work&quot;—managing their own presented image while protecting others&apos; face. Face threats (embarrassing situations, disagreements, corrections) trigger elaborate repair sequences. These sequences aren&apos;t just damage control; they&apos;re where we learn what society expects and how to navigate its demands. AI companions that never threaten our face remove this training ground.
-                </p>
-                <p>
-                  <strong>Turn-taking and real-time coordination.</strong> Sacks et al. (1974) revealed the intricate machinery of conversational turn-taking—the split-second timing, overlap management, and repair mechanisms that make fluid dialogue possible. Text-based AI interaction eliminates this coordination challenge entirely. We never practice the micro-timing of real conversation.
-                </p>
-                <p>
-                  <strong>Variable reinforcement and behavioral flexibility.</strong> Neuroscience research shows that variable, sometimes negative feedback strengthens learning more than constant positive reinforcement (Schultz, 2015; Frank et al., 2004). The dopamine system responds most strongly to prediction errors—surprising outcomes. A social environment that always validates may produce weak learning signals precisely because it&apos;s predictable.
-                </p>
-                <p>
-                  <strong>Theory of mind practice.</strong> Modeling what others know and believe (theory of mind) requires exposure to minds that surprise us—that hold different information, have different goals, and don&apos;t automatically accommodate our perspective (Horton &amp; Gerrig, 2002). AI companions designed to anticipate and serve our needs may provide impoverished opportunities for this modeling practice.
-                </p>
-
-                <h2>The Adolescent Vulnerability</h2>
-                <p>
-                  If social friction serves learning functions, the stakes are highest during sensitive periods of social development. Adolescence represents such a period. The social brain continues developing through the teenage years, with experience-dependent maturation of regions involved in social cognition, emotional regulation, and identity formation (Blakemore &amp; Mills, 2014; Andrews et al., 2021).
-                </p>
-                <p>
-                  Adolescents are also disproportionate users of AI companions. Survey data suggest teens are more likely than adults to use conversational AI for emotional support and relationship-type interactions (Common Sense Media, 2025). If these interactions substitute for rather than supplement human social practice, the developmental implications could be significant.
-                </p>
-
-                <h2>The Information-Theoretic View</h2>
-                <p>
-                  Shannon&apos;s (1948) mathematical theory of communication offers another lens. Information, formally defined, is the reduction of uncertainty. A message is informative precisely to the extent it&apos;s surprising—if you already knew what would be said, the saying adds nothing.
-                </p>
-                <p>
-                  A perfectly accommodating AI companion, by maximizing alignment with user expectations, may actually minimize the information content of the interaction. Agreement carries less information than disagreement. When a human friend pushes back on your idea, that pushback is information-rich precisely because it was unexpected. When an AI trained to please agrees with whatever you say, that agreement is informationally empty.
-                </p>
-                <p>
-                  Real conversation is where we encounter other minds—minds that hold different models of the world and communicate from those models. The entropy-reducing work of building common ground (Pickering &amp; Garrod, 2004) requires genuine difference to bridge. Sycophantic systems may offer the form of conversation without its informational substance.
-                </p>
-
-                <h2>Limitations and Uncertainties</h2>
-                <p>
-                  This theoretical framework has significant limitations. Most critically, we lack longitudinal empirical data on AI companion effects. Correlational studies cannot establish causality, and the few controlled studies (e.g., Pataranutaporn et al., 2024) are preliminary.
-                </p>
-                <p>
-                  It&apos;s also possible that AI companions serve populations whose alternative isn&apos;t rich human interaction but rather isolation. For genuinely lonely individuals, even sycophantic interaction might be preferable to nothing. The welfare calculus is not straightforward.
-                </p>
-                <p>
-                  Additionally, the concerns raised here assume substitution rather than supplementation. If AI companions add to rather than replace human social practice, the dynamics might differ substantially.
-                </p>
-
-                <h2>Implications for Design and Policy</h2>
-                <p>
-                  If the friction-learning hypothesis has merit, it suggests design and policy directions worth exploring:
-                </p>
-                <p>
-                  <strong>For AI developers:</strong> Consider whether constant validation serves user interests. Training objectives that reward some disagreement, some challenge, and some productive friction might produce more developmentally beneficial interactions—though user preference metrics might suffer in the short term.
-                </p>
-                <p>
-                  <strong>For researchers:</strong> We need longitudinal studies tracking social capability measures in AI companion users versus non-users, ideally with random assignment where ethical. Cross-sectional correlations cannot answer the causal questions.
-                </p>
-                <p>
-                  <strong>For policymakers:</strong> The FTC&apos;s 2025 inquiry into AI companion products signals growing regulatory interest. Policy conversations should include developmental scientists, not just consumer protection specialists.
-                </p>
-
-                <h2>Conclusion</h2>
-                <p>
-                  AI companions represent a novel social environment—one optimized for comfort in ways human social environments never were. The friction of real human interaction, long assumed to be a cost to minimize, may serve functions we&apos;re only beginning to understand. As these systems scale to millions of users, including developing adolescents, we face a collective choice about what kind of social practice we want to promote.
-                </p>
-                <p>
-                  The costs of comfort may not be immediately visible. Skills we don&apos;t practice don&apos;t announce their atrophy. But if human social capability depends on exposure to challenge, disagreement, and repair—to the friction of real minds in real relationship—then frictionless companions optimized for our pleasure might be offering something less than they seem.
-                </p>
-
-                <hr />
-
-                <p className="text-sm text-muted-foreground italic">
-                  This paper was prepared for a research final project on AI companionship and social learning, created by Finn McCooe and advised by Dr. Anthony Ong. For the full reading list and interactive demonstrations, see the accompanying website.
-                </p>
-              </motion.article>
-            )}
+              {pdfExists === false ? (
+                <div className="flex flex-col items-center justify-center px-6 py-16 text-center">
+                  <p className="text-muted-foreground mb-3">
+                    Paper PDF not found. Expected it at <span className="font-mono">public/paper.pdf</span>.
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    If you&apos;re running locally, place the PDF at{" "}
+                    <span className="font-mono">public/paper.pdf</span>.
+                  </p>
+                </div>
+              ) : (
+                <iframe
+                  src="/paper.pdf"
+                  title="Paper PDF"
+                  className="w-full h-[78vh] sm:h-[82vh] border-0"
+                />
+              )}
+            </div>
           </div>
         </section>
 
-        {/* Related links */}
+        <Dialog open={isFullscreenOpen} onOpenChange={setIsFullscreenOpen}>
+          <DialogContent className="max-w-none w-[calc(100vw-1.5rem)] h-[calc(100vh-1.5rem)] sm:w-[calc(100vw-3rem)] sm:h-[calc(100vh-3rem)] p-3 sm:p-4">
+            <DialogHeader className="text-left">
+              <DialogTitle className="flex items-center gap-2">
+                <FileText className="w-4 h-4 text-muted-foreground" />
+                <span>Paper PDF</span>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="h-full overflow-hidden rounded-lg border border-border bg-background/40">
+              <iframe src="/paper.pdf" title="Paper PDF (fullscreen)" className="w-full h-full border-0" />
+            </div>
+          </DialogContent>
+        </Dialog>
+
         <section className="py-12 border-t border-border/50">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-6">
+              <div className="rounded-xl border border-border bg-card/40 p-6 premium-card">
+                <div className="flex items-center gap-2 mb-2">
+                  <Sparkles className="w-4 h-4 text-muted-foreground" />
+                  <h2 className="font-semibold">Ask a question</h2>
+                </div>
+                <p className="text-sm text-muted-foreground mb-5">
+                  I've connected to the OpenAI API here: Ask anything about the argument, assumptions, or implications. ChatGPT will try to answer using the paper + site as
+                  context.
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {EXAMPLE_QUESTIONS.map((q) => (
+                    <button
+                      key={q}
+                      type="button"
+                      onClick={() => askPaper(q)}
+                      disabled={chatIsLoading}
+                      className={cn(
+                        "text-xs px-3 py-1.5 rounded-full border border-border bg-background/40 hover:bg-background/60 transition-colors",
+                        chatIsLoading && "opacity-60 cursor-not-allowed"
+                      )}
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+
+                <div className="rounded-lg border border-border bg-background/30 overflow-hidden">
+                  <ScrollArea className="h-64">
+                    <div className="p-3 space-y-3">
+                      {chatMessages.length === 0 ? (
+                        <div className="text-sm text-muted-foreground">
+                          Try one of the prompts above, or ask your own question.
+                        </div>
+                      ) : (
+                        chatMessages.map((m, idx) => (
+                          <div
+                            key={`${m.role}-${idx}`}
+                            className={cn(
+                              "rounded-lg border px-3 py-2 text-sm leading-relaxed",
+                              m.role === "user"
+                                ? "bg-primary/10 border-primary/20"
+                                : "bg-secondary/30 border-border"
+                            )}
+                          >
+                            <div className="text-xs text-muted-foreground mb-1">
+                              {m.role === "user" ? "You" : "Assistant"}
+                            </div>
+                            <div className="whitespace-pre-wrap">{m.content}</div>
+                          </div>
+                        ))
+                      )}
+                      {chatIsLoading && (
+                        <div className="rounded-lg border border-border bg-secondary/30 px-3 py-2 text-sm">
+                          <div className="text-xs text-muted-foreground mb-1">Assistant</div>
+                          <div className="text-muted-foreground">Thinking…</div>
+                        </div>
+                      )}
+                      <div ref={chatEndRef} />
+                    </div>
+                  </ScrollArea>
+
+                  <div className="p-3 border-t border-border bg-background/40">
+                    <form
+                      className="flex items-end gap-2"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void askPaper();
+                      }}
+                    >
+                      <div className="flex-1">
+                        <label className="sr-only" htmlFor="paper-question">
+                          Ask a question
+                        </label>
+                        <textarea
+                          id="paper-question"
+                          value={chatDraft}
+                          onChange={(e) => setChatDraft(e.target.value)}
+                          placeholder='Ask a question (e.g. “Summarize this in 10 words.”)'
+                          className="w-full min-h-[44px] max-h-32 resize-y rounded-md border border-border bg-background/30 px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                          disabled={chatIsLoading}
+                        />
+                      </div>
+                      <Button
+                        type="submit"
+                        className="gap-2"
+                        disabled={chatIsLoading || chatDraft.trim().length === 0}
+                      >
+                        <SendHorizontal className="w-4 h-4" />
+                        Ask
+                      </Button>
+                    </form>
+                    {chatError && <div className="mt-2 text-xs text-red-300">{chatError}</div>}
+                    <div className="mt-2 text-xs text-muted-foreground">
+                      This sends your question to OpenAI. Responses can be wrong; verify important claims.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="rounded-xl border border-border bg-card/40 p-6 premium-card">
+                <h2 className="font-semibold mb-2">Help improve the paper (critiques welcome)</h2>
+                <p className="text-sm text-muted-foreground mb-5">
+                  I'm actively looking for feedback—everything from personal anecdotes to missing citations to
+                  grammar issues.
+                </p>
+
+                <form
+                  className="space-y-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    setFeedbackWasSubmitted(true);
+                    if (!feedbackIsValid) return;
+                    window.location.href = feedbackMailtoHref;
+                  }}
+                >
+                  <div>
+                    <label className="text-xs text-muted-foreground" htmlFor="feedback-email">
+                      Your email (so the author can reply)
+                    </label>
+                    <Input
+                      id="feedback-email"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={feedbackEmail}
+                      onChange={(e) => setFeedbackEmail(e.target.value)}
+                      className="mt-1 bg-background/30"
+                    />
+                    {feedbackWasSubmitted && feedbackEmail.trim().length > 0 && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(feedbackEmail.trim()) && (
+                      <div className="mt-1 text-xs text-red-300">Enter a valid email address.</div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="text-xs text-muted-foreground" htmlFor="feedback-text">
+                      What should be improved?
+                    </label>
+                    <textarea
+                      id="feedback-text"
+                      placeholder="Be as specific as you can—what section, what claim, what would make it better?"
+                      value={feedbackText}
+                      onChange={(e) => setFeedbackText(e.target.value)}
+                      className="mt-1 w-full min-h-[140px] resize-y rounded-md border border-border bg-background/30 px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring/50"
+                    />
+                    {feedbackWasSubmitted && feedbackText.trim().length > 0 && feedbackText.trim().length < 10 && (
+                      <div className="mt-1 text-xs text-red-300">Add a bit more detail (10+ characters).</div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Button type="submit" disabled={!feedbackIsValid} className="gap-2">
+                      <ExternalLink className="w-4 h-4" />
+                      Send feedback
+                    </Button>
+                    <a href={feedbackMailtoHref} className="text-xs text-muted-foreground hover:text-foreground">
+                      Or open your email client manually
+                    </a>
+                  </div>
+
+                  <div className="text-xs text-muted-foreground">
+                    Submitting opens an email to <span className="font-mono">fmccooe@gmail.com</span>.
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="py-12 border-t border-border/50">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <h3 className="text-lg font-semibold mb-4">Explore more</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Link

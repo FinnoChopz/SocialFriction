@@ -30,7 +30,7 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
   const [pendingSelectionIndex, setPendingSelectionIndex] = useState<number | null>(null);
   const [isSpinning, setIsSpinning] = useState(false);
   const [wheelRotation, setWheelRotation] = useState(0);
-  const [outputs, setOutputs] = useState<string[]>([]);
+  const [output, setOutput] = useState<string | null>(null);
 
   const maxValue = Math.max(...ratingProbs.map((r) => r.value));
   const totalProbability = ratingProbs.reduce((sum, item) => sum + item.value, 0);
@@ -237,7 +237,7 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
 
                       const label = ratingProbs[chosenIndex].label;
                       const token = label === "All Other Tokens/Words" ? "The" : label;
-                      setOutputs((prev) => [...prev, token]);
+                      setOutput(token);
                     }}
                   >
                     <div className="absolute inset-6 rounded-full bg-background/70 border border-border" />
@@ -245,16 +245,32 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
                 </div>
               </div>
 
+              <div className="mt-5 flex flex-wrap justify-center gap-x-4 gap-y-2 text-[11px] text-muted-foreground">
+                {segments.map((seg) => (
+                  <div key={seg.label} className="inline-flex items-center gap-2">
+                    <span
+                      className="inline-block h-2.5 w-2.5 rounded-sm border border-border/60"
+                      style={{ backgroundColor: seg.color }}
+                      aria-hidden
+                    />
+                    <span className="font-mono">
+                      {seg.label === "All Other Tokens/Words" ? "All other" : seg.label}
+                    </span>
+                    <span className="font-mono text-foreground/70">({(seg.value * 100).toFixed(0)}%)</span>
+                  </div>
+                ))}
+              </div>
+
               <div className="mt-6 flex justify-center">
                 <Button variant="secondary" size="lg" onClick={spin} disabled={isSpinning} className="shadow-md">
-                  {isSpinning ? "Spinning…" : "Generate next token"}
+                  {isSpinning ? "Spinning…" : output ? "Ask Again" : "Ask"}
                 </Button>
               </div>
 
               <div className="mt-6 rounded-lg border bg-background/60 p-4">
                 <div className="text-xs text-muted-foreground">Output</div>
                 <div className="mt-2 font-mono text-xl text-foreground min-h-[28px]">
-                  {outputs.length ? outputs.join(" ") : "—"}
+                  {output ?? "—"}
                 </div>
               </div>
             </div>

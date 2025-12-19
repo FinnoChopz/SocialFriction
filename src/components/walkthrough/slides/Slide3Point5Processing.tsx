@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, LayoutGroup, motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { WalkthroughSlide } from "../WalkthroughSlide";
 import { Button } from "@/components/ui/button";
 import { NumberStream } from "@/components/shared/NumberStream";
@@ -37,6 +37,7 @@ function EmbeddingMatrix({
   onHoverColumn,
   delimiterIndex,
   highlightFromIndex,
+  autoScrollRight,
   className,
 }: {
   tokens: Array<Pick<ToyToken, "text" | "embedding">>;
@@ -44,10 +45,20 @@ function EmbeddingMatrix({
   onHoverColumn: (index: number | null) => void;
   delimiterIndex?: number;
   highlightFromIndex?: number;
+  autoScrollRight?: boolean;
   className?: string;
 }) {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!autoScrollRight) return;
+    const el = containerRef.current;
+    if (!el) return;
+    el.scrollLeft = el.scrollWidth;
+  }, [autoScrollRight, tokens.length, delimiterIndex, highlightFromIndex]);
+
   return (
-    <div className={cn("overflow-auto rounded-md border bg-muted/10", className)}>
+    <div ref={containerRef} className={cn("overflow-auto rounded-md border bg-muted/10", className)}>
       <div className="flex min-w-max items-stretch gap-px p-2">
         {tokens.flatMap((token, columnIndex) => {
           const isResponseColumn = highlightFromIndex != null && columnIndex >= highlightFromIndex;
@@ -163,6 +174,7 @@ function MatrixCarrier({
             onHoverColumn={onHoverMatrixColumn}
             delimiterIndex={delimiterIndex}
             highlightFromIndex={delimiterIndex}
+            autoScrollRight={delimiterIndex != null}
             className="max-h-[260px]"
           />
         </div>
@@ -346,7 +358,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
                   <div className="text-sm text-muted-foreground">
                     The model internally uses the whole sequence (prompt tokens + generated tokens) to decide what comes next.
                   </div>
-                  <div className="mt-2 text-sm text-muted-foreground">
+                  <div className="mt-2 text-sm text-foreground">
                     But in the final response, it returns only the new response tokens (highlighted).
                   </div>
                 </div>
@@ -367,6 +379,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
                       onHoverColumn={setHoveredFinalColumn}
                       delimiterIndex={INPUT_TOKEN_COUNT}
                       highlightFromIndex={INPUT_TOKEN_COUNT}
+                      autoScrollRight
                       className="max-h-[320px]"
                     />
                     <div className="mt-2 text-xs text-muted-foreground">

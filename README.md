@@ -143,6 +143,18 @@ vercel
 
 No environment variables required for basic deployment.
 
+Optional (only needed for the Paper Q&A box on `/paper`):
+
+- `OPENAI_API_KEY` – OpenAI API key used by `src/app/api/paper-chat/route.ts`
+- `OPENAI_PAPER_MODEL` – defaults to `gpt-5.2` (set this to a model you have access to)
+
+For local development, create `.env.local`:
+
+```bash
+OPENAI_API_KEY="..."
+OPENAI_PAPER_MODEL="gpt-5.2"
+```
+
 ## Features
 
 ### Walkthrough
