@@ -125,7 +125,7 @@ export default function WelcomePage() {
               onClick={() => router.push("/walkthrough")}
               className="min-w-[200px] text-lg py-6"
             >
-              Start the walkthrough
+              LLM walkthrough
             </Button>
             <Button
               size="lg"

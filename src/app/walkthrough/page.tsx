@@ -11,12 +11,24 @@ import { useWalkthroughStatus } from "@/hooks/useWalkthroughStatus";
 import { Slide1Welcome } from "@/components/walkthrough/slides/Slide1Welcome";
 import { Slide2Numbers } from "@/components/walkthrough/slides/Slide2Numbers";
 import { Slide3Tokens } from "@/components/walkthrough/slides/Slide3Tokens";
+import { Slide3Point5Processing } from "@/components/walkthrough/slides/Slide3Point5Processing";
 import { Slide4Probabilities } from "@/components/walkthrough/slides/Slide4Probabilities";
 import { Slide5Steering } from "@/components/walkthrough/slides/Slide5Steering";
 import { Slide6Training } from "@/components/walkthrough/slides/Slide6Training";
 import { Slide7Thesis } from "@/components/walkthrough/slides/Slide7Thesis";
 
-const TOTAL_SLIDES = 7;
+const TOTAL_SLIDES = 8;
+
+const SLIDE_DISCLAIMERS: Record<number, string> = {
+  1: "This framing is a high-level mental model; real LLM systems include many interacting components beyond what’s shown here.",
+  2: "Weights aren’t a single “matrix you can look at” in practice; they’re many large tensors spread across layers and model parts.",
+  3: "Tokens aren’t always whole words for modern tokenizers. They are often subwords, like -ing, or sh-. The general intuition still applies: the model turns your text into identifiable lists of numbers.",
+  4: "Models don’t literally multiply your whole token matrix by one big W; internally, many layer-by-layer transformations happen (attention, MLPs, residual streams, etc.).",
+  5: "The “probability wheel” is simplified: the real next-token distribution spans a huge vocabulary and is shaped by logits, temperature, and sampling rules.",
+  6: "Steering isn’t one knob; behavior depends on prompts, system messages, fine-tuning, decoding settings, and safety layers that interact in messy ways.",
+  7: "Post-training isn’t just “pick the nicer answer”: data, labeler guidelines, reward models, and policy optimization introduce many tradeoffs and side-effects.",
+  8: "This is a thesis-level argument, not a prediction; real social outcomes depend on incentives, product design, institutions, and culture.",
+};
 
 export default function WalkthroughPage() {
   const [currentSlide, setCurrentSlide] = useState(1);
@@ -48,8 +60,17 @@ export default function WalkthroughPage() {
   // Keyboard navigation
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
+      const dialogOpen = document.querySelector('[data-slot="dialog-content"][data-state="open"]');
+      if (dialogOpen) return;
+
       if (e.key === "Escape") {
         handleSkip();
+        return;
+      }
+
+      const target = e.target as HTMLElement | null;
+      if (target && target.closest('button, [role="button"], input, textarea, select, a')) {
+        return;
       } else if (e.key === "ArrowRight" || e.key === " ") {
         if (currentSlide < TOTAL_SLIDES) {
           handleNext();
@@ -72,12 +93,14 @@ export default function WalkthroughPage() {
       case 3:
         return <Slide3Tokens onNext={handleNext} />;
       case 4:
-        return <Slide4Probabilities onNext={handleNext} />;
+        return <Slide3Point5Processing onNext={handleNext} />;
       case 5:
-        return <Slide5Steering onNext={handleNext} />;
+        return <Slide4Probabilities onNext={handleNext} />;
       case 6:
         return <Slide6Training onNext={handleNext} />;
       case 7:
+        return <Slide5Steering onNext={handleNext} />;
+      case 8:
         return <Slide7Thesis onComplete={handleComplete} />;
       default:
         return null;
@@ -86,7 +109,11 @@ export default function WalkthroughPage() {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      <ParticleCanvas className="fixed inset-0 z-[2] opacity-80 mix-blend-screen" density={1.1} />
+      <ParticleCanvas
+        className="fixed inset-0 z-[2] opacity-80 mix-blend-screen"
+        density={1.1}
+        clickBehavior="toggleAttractor"
+      />
       {/* Subtle background */}
       <div className="absolute inset-0 grid-pattern opacity-30" />
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/50 to-background" />
@@ -150,11 +177,17 @@ export default function WalkthroughPage() {
       <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
 
       {/* Disclaimer footer */}
-      <div className="fixed bottom-20 left-0 right-0 text-center z-40">
-        <p className="text-[10px] text-muted-foreground/40 max-w-xl mx-auto px-4">
-          Illustrative simplifications: tokens aren&apos;t always whole words; modern models aren&apos;t
-          literally one giant list; visuals are schematic.
-        </p>
+      <div className="fixed bottom-8 left-4 right-4 z-40 flex justify-center pointer-events-none">
+        <div className="bg-background/90 backdrop-blur-md border border-border/50 rounded-lg p-4 max-w-2xl text-center shadow-lg pointer-events-auto">
+          <p className="text-xs text-muted-foreground font-medium mb-2">
+            This is a conceptual walkthrough, aimed at illustrating how LLMs work. There are many oversimplifications (e.g., temperature, top-k/top-p, system constraints).
+          </p>
+          {SLIDE_DISCLAIMERS[currentSlide] && (
+            <p className="text-[11px] text-muted-foreground/70 border-t border-border/50 pt-2 mt-2">
+              {SLIDE_DISCLAIMERS[currentSlide]}
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

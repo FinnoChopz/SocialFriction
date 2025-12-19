@@ -45,13 +45,13 @@ export function NumberStream({ className = "", count = 20 }: NumberStreamProps) 
   }, [count]);
 
   return (
-    <div className={`font-mono text-xs text-muted-foreground/50 overflow-hidden ${className}`}>
+    <div className={`font-mono text-xs text-muted-foreground/70 overflow-hidden ${className}`}>
       <AnimatePresence mode="popLayout">
         {numbers.map((n) => (
           <motion.span
             key={n.id}
             initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 0.5, y: 0 }}
+            animate={{ opacity: 0.7, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3 }}
             className="inline-block mx-1"
@@ -61,7 +61,7 @@ export function NumberStream({ className = "", count = 20 }: NumberStreamProps) 
           </motion.span>
         ))}
       </AnimatePresence>
-      <span className="text-muted-foreground/30"> ...</span>
+      <span className="text-muted-foreground/40"> ...</span>
     </div>
   );
 }

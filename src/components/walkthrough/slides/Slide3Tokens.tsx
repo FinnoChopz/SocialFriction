@@ -5,36 +5,11 @@ import { useState } from "react";
 import { WalkthroughSlide } from "../WalkthroughSlide";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
+import { formatToyEmbeddingInt, TOY_JOKE_RATING_TOKENS } from "@/components/walkthrough/toyJokeRatingExample";
 
 interface SlideProps {
   onNext: () => void;
 }
-
-const sampleTokens = [
-  { text: "Rate", id: 15860, embedding: [0.023, -0.187, 0.941, 0.002, -0.456, 0.112, -0.089, 0.334] },
-  { text: " this", id: 428, embedding: [-0.156, 0.234, 0.087, -0.912, 0.445, -0.067, 0.223, -0.189] },
-  { text: " joke", id: 8756, embedding: [0.445, -0.023, 0.156, 0.789, -0.234, 0.567, -0.012, 0.890] },
-  { text: " 1", id: 352, embedding: [-0.089, 0.445, -0.678, 0.123, 0.890, -0.345, 0.567, 0.012] },
-  { text: "–", id: 2013, embedding: [0.234, -0.567, 0.890, -0.123, 0.456, 0.078, -0.901, 0.345] },
-  { text: "10", id: 940, embedding: [-0.456, 0.789, 0.012, -0.345, 0.678, -0.901, 0.234, -0.567] },
-  { text: ":", id: 25, embedding: [0.112, -0.890, 0.345, 0.678, -0.012, 0.456, -0.789, 0.123] },
-  { text: ' "', id: 366, embedding: [-0.234, 0.567, -0.890, 0.123, -0.456, 0.789, 0.012, -0.345] },
-  { text: "why", id: 5765, embedding: [0.678, -0.012, 0.345, -0.678, 0.901, -0.234, 0.567, 0.890] },
-  { text: " did", id: 863, embedding: [-0.123, 0.456, -0.789, 0.012, -0.345, 0.678, -0.901, 0.234] },
-  { text: " the", id: 262, embedding: [0.345, -0.678, 0.901, -0.234, 0.567, -0.890, 0.123, -0.456] },
-  { text: " chicken", id: 31918, embedding: [-0.567, 0.890, -0.123, 0.456, -0.789, 0.012, -0.345, 0.678] },
-  { text: " cross", id: 14492, embedding: [0.789, -0.012, 0.345, -0.678, 0.901, -0.234, 0.567, -0.890] },
-  { text: " the", id: 262, embedding: [0.345, -0.678, 0.901, -0.234, 0.567, -0.890, 0.123, -0.456] },
-  { text: " road", id: 10283, embedding: [-0.890, 0.123, -0.456, 0.789, -0.012, 0.345, -0.678, 0.901] },
-  { text: "?", id: 30, embedding: [-0.890, 0.123, -0.456, 0.789, -0.012, 0.345, -0.678, 0.901] },
-  { text: " to", id: 281, embedding: [0.012, -0.345, 0.678, -0.901, 0.234, -0.567, 0.890, -0.123] },
-  { text: " get", id: 1234, embedding: [-0.234, 0.567, -0.890, 0.123, -0.456, 0.789, -0.012, 0.345] },
-  { text: " to", id: 281, embedding: [0.012, -0.345, 0.678, -0.901, 0.234, -0.567, 0.890, -0.123] },
-  { text: " the", id: 262, embedding: [0.345, -0.678, 0.901, -0.234, 0.567, -0.890, 0.123, -0.456] },
-  { text: " other", id: 9876, embedding: [0.456, -0.789, 0.012, -0.345, 0.678, -0.901, 0.234, -0.567] },
-  { text: " side", id: 5432, embedding: [0.156, 0.234, 0.087, -0.912, 0.445, -0.067, 0.223, -0.189] },
-  { text: '."', id: 777, embedding: [0.456, -0.789, 0.012, -0.345, 0.678, -0.901, 0.234, -0.567] },
-];
 
 export function Slide3Tokens({ onNext }: SlideProps) {
   const [hoveredToken, setHoveredToken] = useState<number | null>(null);
@@ -51,14 +26,20 @@ export function Slide3Tokens({ onNext }: SlideProps) {
           Your words get encoded.
         </motion.h2>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="text-lg text-muted-foreground mb-10 max-w-xl mx-auto"
+          className="mb-10 max-w-2xl mx-auto bg-background/80 backdrop-blur-sm p-6 rounded-xl border border-border/50 relative z-10 shadow-sm"
         >
-          Text is broken into tokens, and each token becomes a vector.
-        </motion.p>
+          <p className="text-lg text-foreground leading-relaxed">
+            Text is turned into things called “tokens”. A token is just a list, or string, of numbers, that the model can use to identify a word. For example, the token for the word “hello”, might be (0.278, -0.876, 0.982, -0.023, 0.172, 0.869, -0.012, 0.137).
+            <br /><br />
+            Each word has a unique list of numbers that identifies it--the token for the word “hi” would be different from the token for the word “hello”.
+            <br /><br />
+            This allows the model to process your text as numbers.
+          </p>
+        </motion.div>
 
         {/* Token hover interaction */}
         <motion.div
@@ -75,7 +56,7 @@ export function Slide3Tokens({ onNext }: SlideProps) {
           </div>
           <TooltipProvider delayDuration={0}>
             <div className="flex flex-wrap items-center gap-0.5 font-mono text-lg">
-              {sampleTokens.map((token, i) => (
+              {TOY_JOKE_RATING_TOKENS.map((token, i) => (
                 <Tooltip key={i}>
                   <TooltipTrigger asChild>
                     <motion.span
@@ -100,7 +81,7 @@ export function Slide3Tokens({ onNext }: SlideProps) {
                       <div>
                         <span className="text-xs text-muted-foreground">embedding (8-dim example):</span>
                         <div className="font-mono text-xs mt-1 text-blue-400">
-                          [{token.embedding.map(v => v.toFixed(3)).join(", ")}]
+                          [{token.embedding.map((v) => formatToyEmbeddingInt(v)).join(", ")}]
                         </div>
                       </div>
                     </div>

@@ -1,18 +1,55 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { WalkthroughSlide } from "../WalkthroughSlide";
 import { NumberStream } from "@/components/shared/NumberStream";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { formatWeightMatrix, TOY_MODEL_WEIGHTS } from "@/components/walkthrough/toyModelWeights";
 
 interface SlideProps {
   onNext: () => void;
 }
 
 export function Slide2Numbers({ onNext }: SlideProps) {
+  const [weightsOpen, setWeightsOpen] = useState(false);
+  const formattedWeights = weightsOpen ? formatWeightMatrix(TOY_MODEL_WEIGHTS, 2) : "";
+
   return (
     <WalkthroughSlide>
-      <div className="max-w-3xl mx-auto text-center cursor-pointer" onClick={onNext}>
+      <Dialog open={weightsOpen} onOpenChange={setWeightsOpen}>
+        <DialogContent
+          className="w-[92vw] sm:max-w-6xl h-[80vh] flex flex-col"
+          onKeyDown={(e) => {
+            if (e.key === "Escape" || e.key === "ArrowRight" || e.key === "ArrowLeft" || e.key === " ") {
+              e.stopPropagation();
+            }
+          }}
+        >
+          <DialogHeader>
+            <DialogTitle className="font-mono">model_weights =</DialogTitle>
+          </DialogHeader>
+
+          <div className="flex-1 min-h-0 overflow-hidden">
+            <div className="h-full overflow-auto rounded-md border bg-muted/20 p-4">
+              <pre className="font-mono text-[10px] sm:text-[11px] leading-snug text-foreground/90">
+                {formattedWeights}
+              </pre>
+            </div>
+          </div>
+
+          <p className="text-xs text-muted-foreground">This is a toy example weight matrix.</p>
+        </DialogContent>
+      </Dialog>
+
+      <div
+        className="max-w-3xl mx-auto text-center cursor-pointer"
+        onClick={() => {
+          if (weightsOpen) return;
+          onNext();
+        }}
+      >
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -36,7 +73,19 @@ export function Slide2Numbers({ onNext }: SlideProps) {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.6 }}
-          className="bg-card/50 border border-border rounded-xl p-8 mb-8"
+          className="bg-card/50 border border-border rounded-xl p-8 mb-8 cursor-zoom-in hover:bg-card/60 transition-colors"
+          role="button"
+          tabIndex={0}
+          onClick={(e) => {
+            e.stopPropagation();
+            setWeightsOpen(true);
+          }}
+          onKeyDown={(e) => {
+            if (e.key !== "Enter" && e.key !== " ") return;
+            e.preventDefault();
+            e.stopPropagation();
+            setWeightsOpen(true);
+          }}
         >
           <div className="font-mono text-sm text-muted-foreground mb-4">
             model_weights =

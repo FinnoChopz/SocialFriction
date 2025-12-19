@@ -15,7 +15,7 @@ const demos = [
     emoji: "🔍",
     shortDescription: "Watch the 'hidden instruction' of a model change ratings.",
     longDescription:
-      "This demo lets you explore how different prompting strategies shift model behavior. You'll see how the same model can produce wildly different responses based on subtle changes to the system prompt—revealing the 'persona' hiding in the weights.",
+      "This demo lets you explore how different prompting strategies shift model behavior. You'll see how the same model can produce meaningfully different responses based on subtle changes to the system prompt.",
     whatToTry: [
       "Compare base vs. prompted ratings for the same content",
       "Try prompts that encourage vs. discourage sycophancy",
@@ -109,22 +109,6 @@ export default function DemosPage() {
                           <p className="text-muted-foreground mb-4">
                             {demo.longDescription}
                           </p>
-
-                          {/* What to try */}
-                          <div className="mb-4">
-                            <h3 className="text-sm font-medium mb-2">What to try:</h3>
-                            <ul className="space-y-1">
-                              {demo.whatToTry.map((item, i) => (
-                                <li
-                                  key={i}
-                                  className="text-sm text-muted-foreground flex items-start gap-2"
-                                >
-                                  <span className="text-muted-foreground/50">•</span>
-                                  {item}
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
 
                           {/* What you'll feel */}
                           <div className="flex items-center gap-2">

@@ -27,6 +27,8 @@ interface FloatingBadge {
 interface ParticleCanvasProps {
   className?: string;
   density?: number;
+  clickBehavior?: "burst" | "toggleAttractor" | "none";
+  ignoreInteractiveClicks?: boolean;
 }
 
 const GROUP_COLORS = ["#60a5fa", "#a855f7", "#34d399", "#f59e0b", "#38bdf8"];
@@ -51,7 +53,12 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
-export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) {
+export function ParticleCanvas({
+  className,
+  density = 1,
+  clickBehavior = "burst",
+  ignoreInteractiveClicks,
+}: ParticleCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const particlesRef = useRef<Particle[]>([]);
   const badgesRef = useRef<FloatingBadge[]>([]);
@@ -59,7 +66,18 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
   const timeRef = useRef(0);
   const dprRef = useRef(1);
   const pointerRef = useRef({ x: 0, y: 0, active: false, lastMove: 0 });
-  const burstRef = useRef({ x: 0, y: 0, timeLeft: 0, duration: 900 });
+  const burstRef = useRef({
+    x: 0,
+    y: 0,
+    timeLeft: 0,
+    duration: 900,
+    power: 1,
+    falloffRadius: 240,
+  });
+  const attractorEnabledRef = useRef(true);
+  const structureRef = useRef(0);
+  const shouldIgnoreInteractiveClicks =
+    ignoreInteractiveClicks ?? clickBehavior === "toggleAttractor";
 
   const initParticles = useCallback(
     (width: number, height: number) => {
@@ -128,17 +146,64 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
     };
 
     const handleClick = (event: MouseEvent) => {
+      if (event.button !== 0) return;
+
+      const target = event.target;
+      const targetElement =
+        target instanceof Element
+          ? target
+          : (target as { parentElement?: Element | null })?.parentElement ?? null;
+      const isInteractive = targetElement
+        ? Boolean(
+            targetElement.closest(
+              'a,button,input,textarea,select,summary,[role="button"],[role="link"],[role="tab"],[data-particle-ignore-click]'
+            )
+          )
+        : false;
+      if (shouldIgnoreInteractiveClicks && isInteractive) return;
+
       const rect = canvas.getBoundingClientRect();
-      burstRef.current.x = event.clientX - rect.left;
-      burstRef.current.y = event.clientY - rect.top;
-      burstRef.current.timeLeft = burstRef.current.duration;
       pointerRef.current.active = true;
+      pointerRef.current.x = event.clientX - rect.left;
+      pointerRef.current.y = event.clientY - rect.top;
       pointerRef.current.lastMove = performance.now();
+
+      if (clickBehavior === "burst") {
+        burstRef.current.x = pointerRef.current.x;
+        burstRef.current.y = pointerRef.current.y;
+        burstRef.current.duration = 900;
+        burstRef.current.power = 1;
+        burstRef.current.falloffRadius = 240;
+        burstRef.current.timeLeft = burstRef.current.duration;
+        return;
+      }
+
+      if (clickBehavior === "toggleAttractor") {
+        const nextEnabled = !attractorEnabledRef.current;
+        attractorEnabledRef.current = nextEnabled;
+
+        burstRef.current.x = pointerRef.current.x;
+        burstRef.current.y = pointerRef.current.y;
+
+        if (!nextEnabled) {
+          burstRef.current.duration = 1100;
+          burstRef.current.power = 2.6;
+          burstRef.current.falloffRadius = 360;
+        } else {
+          burstRef.current.duration = 900;
+          burstRef.current.power = 1;
+          burstRef.current.falloffRadius = 240;
+        }
+
+        burstRef.current.timeLeft = burstRef.current.duration;
+      }
     };
 
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     window.addEventListener("mousemove", handlePointerMove, { passive: true });
-    window.addEventListener("click", handleClick);
+    if (clickBehavior !== "none") {
+      window.addEventListener("click", handleClick);
+    }
 
     const animate = () => {
       const rect = canvas.getBoundingClientRect();
@@ -195,6 +260,28 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
         }
       });
 
+      // Detect when clusters have coalesced into a stable structure so we can
+      // subtly boost color/edge visibility only after a threshold.
+      let spreadSum = 0;
+      particles.forEach((p) => {
+        const center = groupCenters[p.group];
+        const dx = p.x - center.x;
+        const dy = p.y - center.y;
+        spreadSum += Math.hypot(dx, dy);
+      });
+      const spreadAvg = spreadSum / Math.max(1, particles.length);
+      const minDim = Math.min(rect.width, rect.height);
+      const spreadLow = Math.max(34, minDim * 0.07);
+      const spreadHigh = Math.max(110, minDim * 0.2);
+      const spreadT = Math.min(1, Math.max(0, (spreadAvg - spreadLow) / (spreadHigh - spreadLow)));
+      const structureStrength = 1 - spreadT;
+      structureRef.current += (structureStrength - structureRef.current) * 0.03;
+      const boostT = Math.min(
+        1,
+        Math.max(0, (structureRef.current - 0.82) / (0.95 - 0.82))
+      );
+      const structureBoost = boostT * boostT * (3 - 2 * boostT);
+
       // Maintain a small minimum distance so clusters form structure instead of collapsing to a point.
       const minGap = 7;
       const repulsionStrength = 0.018;
@@ -245,7 +332,7 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
           p.vy -= (dy / dist) * separationStrength;
         }
 
-        if (pointerRef.current.active) {
+        if (attractorEnabledRef.current && pointerRef.current.active) {
           const pdx = pointerRef.current.x - p.x;
           const pdy = pointerRef.current.y - p.y;
           const pdist = Math.hypot(pdx, pdy) || 1;
@@ -262,8 +349,8 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
           const bdy = p.y - burstRef.current.y;
           const bdist = Math.hypot(bdx, bdy) || 1;
           const wave = burstRef.current.timeLeft / burstRef.current.duration;
-          const falloff = Math.exp(-bdist / 240);
-          const impulse = 0.85 * wave * falloff;
+          const falloff = Math.exp(-bdist / burstRef.current.falloffRadius);
+          const impulse = 0.85 * burstRef.current.power * wave * falloff;
           p.vx += (bdx / bdist) * impulse;
           p.vy += (bdy / bdist) * impulse;
         }
@@ -288,19 +375,28 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
 
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        const sparkle = Math.random() < 0.04;
-        const color = sparkle
-          ? hexToRgba(GROUP_COLORS[p.group], sparkleAlpha)
-          : `rgba(255, 255, 255, ${particleAlphaBase})`;
-        ctx.fillStyle = color;
-        ctx.fill();
+        const sparkle = Math.random() < 0.04 + structureBoost * 0.02;
+        if (sparkle) {
+          ctx.fillStyle = hexToRgba(GROUP_COLORS[p.group], Math.min(1, sparkleAlpha * (1 + structureBoost * 0.7)));
+          ctx.fill();
+        } else if (structureBoost > 0.001) {
+          const whiteAlpha = Math.min(1, particleAlphaBase * (1 - 0.35 * structureBoost) * (1 + structureBoost * 0.35));
+          const tintAlpha = Math.min(1, particleAlphaBase * 0.6 * structureBoost);
+          ctx.fillStyle = `rgba(255, 255, 255, ${whiteAlpha})`;
+          ctx.fill();
+          ctx.fillStyle = hexToRgba(GROUP_COLORS[p.group], tintAlpha);
+          ctx.fill();
+        } else {
+          ctx.fillStyle = `rgba(255, 255, 255, ${particleAlphaBase})`;
+          ctx.fill();
+        }
       });
 
       if (burstRef.current.timeLeft > 0) {
         burstRef.current.timeLeft = Math.max(0, burstRef.current.timeLeft - 16.67);
       }
 
-      if (pointerRef.current.active) {
+      if (attractorEnabledRef.current && pointerRef.current.active) {
         ctx.strokeStyle = `rgba(255,255,255,${0.14 + bondCycle * 0.08})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
@@ -331,12 +427,17 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            const alpha = connectionAlphaBase * (1 - dist / maxDistance);
-            const color = sameGroup
+            const baseAlpha = connectionAlphaBase * (1 - dist / maxDistance);
+            const alpha = Math.min(
+              1,
+              sameGroup
+                ? baseAlpha * (1 + structureBoost * 2.2)
+                : baseAlpha * 0.7 * (1 + structureBoost * 1.9)
+            );
+            ctx.strokeStyle = sameGroup
               ? hexToRgba(GROUP_COLORS[p1.group], alpha)
-              : `rgba(255, 255, 255, ${alpha * 0.7})`;
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 0.6 + bondCycle * 0.5;
+              : `rgba(255, 255, 255, ${alpha})`;
+            ctx.lineWidth = (0.6 + bondCycle * 0.5) * (1 + structureBoost * 0.85);
             ctx.stroke();
           }
         });
@@ -413,7 +514,7 @@ export function ParticleCanvas({ className, density = 1 }: ParticleCanvasProps) 
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [initParticles, spawnBadge]);
+  }, [clickBehavior, initParticles, shouldIgnoreInteractiveClicks, spawnBadge]);
 
   return (
     <motion.canvas

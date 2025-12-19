@@ -36,7 +36,11 @@ export default function HomePage() {
     <>
       <Navigation />
       <main className="bg-transparent">
-        <ParticleCanvas className="fixed inset-0 z-[2] opacity-75 mix-blend-screen" density={1.05} />
+        <ParticleCanvas
+          className="fixed inset-0 z-[2] opacity-75 mix-blend-screen"
+          density={1.05}
+          clickBehavior="toggleAttractor"
+        />
         {/* Section indicator */}
         <div className="fixed right-4 sm:right-6 top-1/2 -translate-y-1/2 z-40 hidden sm:flex flex-col gap-3 text-muted-foreground/50">
           {homeSections.map((section) => (
@@ -99,14 +103,10 @@ export default function HomePage() {
               <Link href="/walkthrough">
                 <Button size="lg" className="min-w-[200px] gap-2">
                   <Play className="w-4 h-4" />
-                  Start the walkthrough
+                  Start the AI/RLHF walkthrough
                 </Button>
               </Link>
-              <Link href="/readings">
-                <Button size="lg" variant="outline" className="min-w-[200px]">
-                  Skip to the portfolio
-                </Button>
-              </Link>
+              
             </motion.div>
           </motion.div>
 

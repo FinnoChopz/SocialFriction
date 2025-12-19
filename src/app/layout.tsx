@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { AmbientBackgroundRoot } from "@/components/AmbientBackgroundRoot";
+import { AmbientAudioProvider } from "@/components/layout/AmbientAudioProvider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -38,8 +39,10 @@ export default function RootLayout({
         className={`${inter.variable} ${jetbrainsMono.variable} font-sans antialiased bg-background text-foreground min-h-screen`}
       >
         <AmbientBackgroundRoot />
-        <div className="fixed inset-0 z-[1] bg-background/25 backdrop-blur-[2px] pointer-events-none" />
-        <div className="relative z-10">{children}</div>
+        <AmbientAudioProvider>
+          <div className="fixed inset-0 z-[1] bg-background/25 backdrop-blur-[2px] pointer-events-none" />
+          <div className="relative z-10">{children}</div>
+        </AmbientAudioProvider>
       </body>
     </html>
   );

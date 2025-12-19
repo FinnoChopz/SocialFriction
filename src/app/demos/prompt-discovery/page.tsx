@@ -54,38 +54,69 @@ export default function PromptDiscoveryDemo() {
               <div className="prose prose-invert max-w-none mb-8">
                 <p className="text-muted-foreground">
                   Large language models don&apos;t have a single &quot;personality&quot;—they have many, depending
-                  on how they&apos;re prompted. This demo lets you explore how system prompts act as
-                  hidden instructions that shift the model&apos;s default behavior, biases, and rating patterns.
+                  on how they&apos;re prompted. Whenever you ask a question to ChatGPT or any other frontier
+                  model*, the model isn’t just seeing the question you ask–it’s also seeing a system
+                  prompt, created by OpenAI, that gets appended at the top of your message. So if you’re
+                  asking the model:
                 </p>
                 <p className="text-muted-foreground">
-                  When you ask an RLHF-tuned model to rate something, the rating it gives depends not
-                  just on the content but on the &quot;persona&quot; the prompt activates. A prompt encouraging
-                  honesty might produce harsher ratings than one encouraging supportiveness—even for
-                  identical content.
+                  “Rate this joke 1-10: Why did the chicken cross the road? To get to the other side!”
+                </p>
+                <p className="text-muted-foreground">What the model actually sees would be something like:</p>
+                <p className="text-muted-foreground whitespace-pre-wrap">
+                  {`“System:  You are a friendly chatbot assistant, helping users with their requests.  You are warm and agreeable.
+User: Rate this joke 1-10: Why did the chicken cross the road? To get to the other side!”`}
+                </p>
+                <p className="text-muted-foreground">
+                  System prompts help the model understand how its supposed to respond to the user’s
+                  query–they are very powerful tools. Issues arise, however, due to the fact that AI
+                  companies are, at the end of the day, companies. They exist in a fiercely competitive
+                  market, and must cater to user preferences/requests. Many users prefer models that are
+                  warm, kind, and supportive–so companies are inclined to, partially through system
+                  prompting, align their models with user desires**.
+                </p>
+                <p className="text-muted-foreground">
+                  These market pressures make AI more fun to interact with, but less capable as an honest
+                  critic/judge. I like having my ideas validated as much as the next guy, but there are
+                  times when I’d rather just hear, point blank, if an idea is good/worthwhile.
                 </p>
               </div>
 
-              {/* What to try */}
+              <Card className="p-6 bg-card/50 border-border mb-6">
+                <h3 className="font-semibold mb-4">This project:</h3>
+                <div className="space-y-4 text-sm text-muted-foreground">
+                  <p>
+                    I wanted to see if I could fight fire with fire, and counteract this issue with system prompting.
+                    I cultivated a dataset of human-rated jokes from reddit, and tried to see if through prompting
+                    alone, we could get a model’s rating of the jokes to align more with the human ratings. I made a
+                    prompt discovery pipeline: I had a system-prompted model, Model 1, rate the dataset, then
+                    compared its ratings with the “real” human ratings to calculate error (i.e, the model was
+                    overrating jokes that were 3s, underrating jokes that were 10s, etc.), then fed a separate model,
+                    Model 2, the previous model’s system prompt, and its error profile, and had it create a new system
+                    prompt. Then, the new system prompt would go back to the first model and the process would repeat
+                    itself. Ideally, as the script ran, the system prompt would get better–the data was cumulative***,
+                    meaning that Model 11 would be able to see all the system prompts for Models 1-10, and their
+                    respective error profiles, and use that data to inform its creation of the next system prompt.
+                  </p>
+                  <p>
+                    I ran 50 iterations, and over time the system prompt became more specific, and marginally improved
+                    at accurately rating jokes. For a deeper look at my results, see the pdf below.
+                  </p>
+                </div>
+              </Card>
+
               <Card className="p-6 bg-card/50 border-border mb-8">
-                <h3 className="font-semibold mb-4">What to try:</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-400 font-mono">1.</span>
-                    Start with the base model (no system prompt) and note the rating distribution
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-400 font-mono">2.</span>
-                    Add a prompt encouraging the model to be &quot;supportive and encouraging&quot;
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-400 font-mono">3.</span>
-                    Compare with a prompt asking for &quot;honest, critical feedback&quot;
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-blue-400 font-mono">4.</span>
-                    Notice how the same content gets different ratings—the model is bending to your prompt
-                  </li>
-                </ul>
+                <h3 className="font-semibold mb-4">The Demo:</h3>
+                <p className="text-sm text-muted-foreground">
+                  You can feel the power of system prompting in the demo below. Type a joke into the box in the top
+                  left, and request a rating 1/10. Then, select which iteration of the system prompt you’d like to
+                  apply to your joke. Click run comparison, and GPT-5 will rate your joke–the left box will be the
+                  output with a baseline, “You are a friendly assistant” style system prompt, and the right box will
+                  be the output with your selected iteration’s system prompt. Scroll down and click the dropdowns to
+                  see the wording of your selected system prompt, or its error/metrics on the actual dataset. Play
+                  around with a few different iterations, to see if the model gets better at rating humor as the
+                  iteration number increases.
+                </p>
               </Card>
             </motion.div>
           </div>
@@ -199,6 +230,33 @@ export default function PromptDiscoveryDemo() {
                 </div>
               </div>
             </Card>
+          </div>
+        </section>
+
+        <Separator />
+
+        {/* Footnotes */}
+        <section className="py-8">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-xs text-muted-foreground space-y-2">
+              <p>*assuming the query is not through an api.</p>
+              <p>
+                ** see OpenAI’s shift from 4o to GPT-5 as a case study on the market pressures towards agreeable AI.{" "}
+                <a
+                  href="https://www.nytimes.com/2025/08/19/business/chatgpt-gpt-5-backlash-openai.html"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline underline-offset-4 hover:text-foreground"
+                >
+                  https://www.nytimes.com/2025/08/19/business/chatgpt-gpt-5-backlash-openai.html
+                </a>
+              </p>
+              <p>
+                *** for compute/time purposes I set the data cumulation to 10-15, but this was purposefully done
+                through a single variable in my configs script, so if one wanted to, they could run it with full
+                accumulation.
+              </p>
+            </div>
           </div>
         </section>
 
