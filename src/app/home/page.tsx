@@ -406,6 +406,19 @@ export default function HomePage() {
                   Take the walkthrough
                 </Button>
               </Link>
+
+              <div className="mt-24 border-t border-border/40 pt-12">
+                <Link href="/Starting_Over-6.pdf" target="_blank" rel="noopener noreferrer">
+                  <Button 
+                    variant="outline" 
+                    size="lg" 
+                    className="gap-2 font-medium border-primary/50 shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:border-primary transition-all duration-300"
+                  >
+                    <FileText className="w-5 h-5" />
+                    Original Project Proposal--Where It All Began
+                  </Button>
+                </Link>
+              </div>
             </motion.div>
           </div>
         </section>
