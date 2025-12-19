@@ -10,11 +10,17 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Slider } from "@/components/ui/slider";
-import { ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ArrowLeft, ExternalLink, Loader2, Maximize2 } from "lucide-react";
 
 export default function SycophancyDirectionDemo() {
   const [loaded, setLoaded] = useState(false);
-  const [showDemo, setShowDemo] = useState(false);
   const [toyAlpha, setToyAlpha] = useState([0]);
 
   // Toy visualization of sycophancy projection
@@ -75,39 +81,51 @@ export default function SycophancyDirectionDemo() {
               <div className="prose prose-invert max-w-none mb-8">
                 <p className="text-muted-foreground">
                   Research has shown that abstract concepts like &quot;sycophancy&quot; can be identified as
-                  <em>directions</em> in a model&apos;s representation space. By computing the average
-                  difference between sycophantic and neutral responses, we can find a &quot;sycophancy
-                  vector&quot; that encodes this trait.
+                  directions in a model&apos;s representation space. By computing the average difference between
+                  sycophantic and neutral responses, we can find a &quot;sycophancy vector&quot; that encodes this
+                  trait. We can add this vector as a hook during inference, to modify model response.
                 </p>
                 <p className="text-muted-foreground">
-                  This demo lets you move along that direction. Slide toward positive values to
-                  increase sycophancy (more flattery, more agreement); slide negative to decrease it
-                  (more honesty, more challenge). Watch how the same prompt produces radically
-                  different responses.
+                  Basically, picture the model as existing at different places on a map during next-token generation.
+                  There’s a direction in this map, say “North by North West”, that corresponds to more sycophantic
+                  responses. We know this because we asked the model to respond to similar prompts under two
+                  conditions: first you tell it it answer sycophantically, and then you ask it to answer normally.
+                  We observed that the sycophantic responses existed “North by North West” of the neutral responses
+                  on our map.
+                </p>
+                <p className="text-muted-foreground">
+                  Thus, when the model is generating a new response to a new prompt, we can interrupt it halfway
+                  through, and push it more “North by North West”, and then let it continue, and its output will be
+                  more sycophantic.
+                </p>
+                <p className="text-muted-foreground">
+                  Crucially, unlike in the previous demo, the prompt and system prompt are exactly the same. By
+                  applying our “direction” during inference, we are virtually changing the model’s weights–the model
+                  itself.
                 </p>
               </div>
 
               {/* What to try */}
               <Card className="p-6 bg-card/50 border-border mb-8">
-                <h3 className="font-semibold mb-4">What to try:</h3>
-                <ul className="space-y-2 text-sm text-muted-foreground">
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-400 font-mono">1.</span>
-                    Start at α=0 (neutral) and read the response
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-400 font-mono">2.</span>
-                    Move toward positive α and notice how flattery increases
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-400 font-mono">3.</span>
-                    Move toward negative α and see the model become more critical
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-purple-400 font-mono">4.</span>
-                    Try different prompts and see how the sycophancy direction affects each
-                  </li>
-                </ul>
+                <div className="space-y-4 text-sm text-muted-foreground">
+                  <p>
+                    This demo lets you experience the power of direction vectors (often called persona vectors) in
+                    real-time. I discovered two directions, one for sycophancy and one for criticism. There are
+                    sliders below that allow you to apply these directions (move the slider to the left to apply more
+                    heavily, at alpha = 0 it isn’t applied at all).
+                  </p>
+                  <div>
+                    <h3 className="font-semibold text-foreground mb-2">What to try:</h3>
+                    <ul className="space-y-1 list-disc pl-4">
+                      <li>Input an idea into the textbox and ask for feedback.</li>
+                      <li>Start with alpha at 0, and generate a response.</li>
+                      <li>
+                        Then play around with the sliders, to see how shifting just a few numbers in the model’s
+                        stream can drastically change its output.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </Card>
             </motion.div>
           </div>
@@ -118,58 +136,57 @@ export default function SycophancyDirectionDemo() {
         {/* Demo Section */}
         <section className="py-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            {!showDemo ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-20"
-              >
-                <p className="text-muted-foreground mb-6 text-center max-w-md">
-                  The demo loads from Hugging Face Spaces. It may take a moment to start if
-                  the Space has been idle.
+            <Dialog onOpenChange={(open) => { if (open) setLoaded(false); }}>
+              <div className="flex flex-col items-center justify-center py-20 bg-card/30 border border-border rounded-xl">
+                <div className="w-16 h-16 bg-purple-500/20 rounded-2xl flex items-center justify-center mb-6">
+                  <span className="text-4xl">🎚️</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Interactive Demo</h3>
+                <p className="text-muted-foreground mb-8 text-center max-w-md">
+                  Launch the interactive Hugging Face Space to try steering the model yourself.
                 </p>
-                <Button onClick={() => setShowDemo(true)} size="lg" className="gap-2">
-                  Load Demo
-                </Button>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="w-full"
-              >
-                {!loaded && (
-                  <div className="flex flex-col items-center justify-center py-20">
-                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-4" />
-                    <p className="text-sm text-muted-foreground">Loading Hugging Face Space...This model uses cloud NVIDIA chips, so it may take 2-3 minutes to warm up...</p>
-                  </div>
-                )}
-                <iframe
-                  src="https://theoretical-paladin-persona.hf.space/?__theme=dark"
-                  className={`w-full h-[700px] rounded-lg border border-border ${
-                    !loaded ? "hidden" : ""
-                  }`}
-                  onLoad={() => setLoaded(true)}
-                  title="Sycophancy Direction Demo"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                />
-                <div className="mt-4 flex items-center justify-between">
-                  <p className="text-xs text-muted-foreground">
-                    Having trouble? Try opening directly on Hugging Face.
-                  </p>
+                
+                <DialogTrigger asChild>
+                  <Button size="lg" className="gap-2">
+                    <Maximize2 className="w-4 h-4" />
+                    Launch Demo
+                  </Button>
+                </DialogTrigger>
+              </div>
+
+              <DialogContent className="sm:max-w-[90vw] w-full h-[90vh] p-0 bg-background/95 backdrop-blur-xl flex flex-col">
+                <div className="p-4 border-b border-border flex items-center justify-between shrink-0">
+                  <DialogTitle>Sycophancy Direction Demo</DialogTitle>
                   <a
                     href="https://huggingface.co/spaces/Theoretical-Paladin/Persona"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <ExternalLink className="w-3 h-3" />
-                      Open on HF
+                    <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                      <ExternalLink className="w-4 h-4" />
+                      Open on Hugging Face
                     </Button>
                   </a>
                 </div>
-              </motion.div>
-            )}
+                
+                <div className="relative w-full flex-1 min-h-0 bg-black/5">
+                  {!loaded && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-4" />
+                      <p className="text-sm text-muted-foreground">Loading Hugging Face Space...</p>
+                      <p className="text-xs text-muted-foreground mt-2">This model uses cloud NVIDIA chips, so it may take 2-3 minutes to warm up...</p>
+                    </div>
+                  )}
+                  <iframe
+                    src="https://theoretical-paladin-persona.hf.space/?__theme=dark"
+                    className={`w-full h-full border-0 ${!loaded ? "opacity-0" : "opacity-100"}`}
+                    onLoad={() => setLoaded(true)}
+                    title="Sycophancy Direction Demo"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </section>
 

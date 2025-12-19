@@ -9,11 +9,17 @@ import { WriteupEmbed } from "@/components/shared/WriteupEmbed";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { ArrowLeft, ExternalLink, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { ArrowLeft, ExternalLink, Loader2, Maximize2 } from "lucide-react";
 
 export default function PromptDiscoveryDemo() {
   const [loaded, setLoaded] = useState(false);
-  const [showDemo, setShowDemo] = useState(false);
 
   return (
     <>
@@ -127,58 +133,56 @@ User: Rate this joke 1-10: Why did the chicken cross the road? To get to the oth
         {/* Demo Section */}
         <section className="py-12">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            {!showDemo ? (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="flex flex-col items-center justify-center py-20"
-              >
-                <p className="text-muted-foreground mb-6 text-center max-w-md">
-                  The demo loads from Hugging Face Spaces. It may take a moment to start if
-                  the Space has been idle.
+            <Dialog onOpenChange={(open) => { if (open) setLoaded(false); }}>
+              <div className="flex flex-col items-center justify-center py-20 bg-card/30 border border-border rounded-xl">
+                <div className="w-16 h-16 bg-blue-500/20 rounded-2xl flex items-center justify-center mb-6">
+                  <span className="text-4xl">🔍</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">Interactive Demo</h3>
+                <p className="text-muted-foreground mb-8 text-center max-w-md">
+                  Launch the interactive Hugging Face Space to explore prompt discovery.
                 </p>
-                <Button onClick={() => setShowDemo(true)} size="lg" className="gap-2">
-                  Load Demo
-                </Button>
-              </motion.div>
-            ) : (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="w-full"
-              >
-                {!loaded && (
-                  <div className="flex flex-col items-center justify-center py-20">
-                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-4" />
-                    <p className="text-sm text-muted-foreground">Loading Hugging Face Space...</p>
-                  </div>
-                )}
-                <iframe
-                  src="https://theoretical-paladin-promptdiscover.hf.space/?__theme=dark"
-                  className={`w-full h-[700px] rounded-lg border border-border ${
-                    !loaded ? "hidden" : ""
-                  }`}
-                  onLoad={() => setLoaded(true)}
-                  title="Prompt Discovery Demo"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                />
-                <div className="mt-4 flex items-center justify-between">
-                  <p className="text-xs text-muted-foreground">
-                    Having trouble? Try opening directly on Hugging Face.
-                  </p>
+                
+                <DialogTrigger asChild>
+                  <Button size="lg" className="gap-2">
+                    <Maximize2 className="w-4 h-4" />
+                    Launch Demo
+                  </Button>
+                </DialogTrigger>
+              </div>
+
+              <DialogContent className="sm:max-w-[90vw] w-full h-[90vh] p-0 bg-background/95 backdrop-blur-xl flex flex-col">
+                <div className="p-4 border-b border-border flex items-center justify-between shrink-0">
+                  <DialogTitle>Prompt Discovery Demo</DialogTitle>
                   <a
                     href="https://huggingface.co/spaces/Theoretical-Paladin/PromptDiscover"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <Button variant="outline" size="sm" className="gap-2">
-                      <ExternalLink className="w-3 h-3" />
-                      Open on HF
+                    <Button variant="ghost" size="sm" className="gap-2 text-muted-foreground hover:text-foreground">
+                      <ExternalLink className="w-4 h-4" />
+                      Open on Hugging Face
                     </Button>
                   </a>
                 </div>
-              </motion.div>
-            )}
+                
+                <div className="relative w-full flex-1 min-h-0 bg-black/5">
+                  {!loaded && (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mb-4" />
+                      <p className="text-sm text-muted-foreground">Loading Hugging Face Space...</p>
+                    </div>
+                  )}
+                  <iframe
+                    src="https://theoretical-paladin-promptdiscover.hf.space/?__theme=dark"
+                    className={`w-full h-full border-0 ${!loaded ? "opacity-0" : "opacity-100"}`}
+                    onLoad={() => setLoaded(true)}
+                    title="Prompt Discovery Demo"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  />
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </section>
 
