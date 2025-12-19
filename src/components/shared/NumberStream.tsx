@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface NumberStreamProps {
@@ -9,7 +9,8 @@ interface NumberStreamProps {
 }
 
 export function NumberStream({ className = "", count = 20 }: NumberStreamProps) {
-  const [numbers, setNumbers] = useState<{ id: number; value: string; x: number }[]>([]);
+  const nextIdRef = useRef(0);
+  const [numbers, setNumbers] = useState<Array<{ id: number; value: string }>>([]);
 
   useEffect(() => {
     const generateNumber = () => {
@@ -23,10 +24,10 @@ export function NumberStream({ className = "", count = 20 }: NumberStreamProps) 
     };
 
     // Initialize numbers
-    const initial = Array.from({ length: count }, (_, i) => ({
-      id: i,
+    nextIdRef.current = 0;
+    const initial = Array.from({ length: count }, () => ({
+      id: nextIdRef.current++,
       value: generateNumber(),
-      x: Math.random() * 100,
     }));
     setNumbers(initial);
 
@@ -35,7 +36,7 @@ export function NumberStream({ className = "", count = 20 }: NumberStreamProps) 
       setNumbers((prev) =>
         prev.map((n) =>
           Math.random() > 0.7
-            ? { ...n, value: generateNumber(), id: Date.now() + Math.random() }
+            ? { ...n, value: generateNumber(), id: nextIdRef.current++ }
             : n
         )
       );

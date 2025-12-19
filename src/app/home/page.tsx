@@ -398,7 +398,7 @@ export default function HomePage() {
             >
               <h2 className="text-2xl font-semibold mb-4">New here?</h2>
               <p className="text-muted-foreground mb-6">
-                The 30-second walkthrough explains the core concepts interactively.
+                The walkthrough explains the core concepts of AI and sycophancy interactively.
               </p>
               <Link href="/walkthrough">
                 <Button variant="outline" className="gap-2">

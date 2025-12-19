@@ -105,11 +105,20 @@ export function Slide3Tokens({ onNext }: SlideProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="mt-6 inline-flex"
+          className="mt-6 inline-flex items-center gap-4"
         >
-          <Button variant="secondary" size="lg" onClick={onNext} className="shadow-md">
+          <Button 
+            variant="secondary" 
+            size="lg" 
+            onClick={onNext} 
+            className="shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] transition-shadow duration-500"
+          >
             Continue
           </Button>
+          <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+            <span>←</span>
+            <span>Click to proceed</span>
+          </div>
         </motion.div>
       </div>
     </WalkthroughSlide>

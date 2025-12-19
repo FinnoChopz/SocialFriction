@@ -163,13 +163,20 @@ export default function PaperPage() {
               <div className="bg-card/50 border border-border rounded-xl p-6 mb-6 premium-card">
                 <h2 className="font-semibold mb-3">Abstract</h2>
                 <p className="text-sm text-muted-foreground leading-relaxed">
-                  As AI companions become increasingly sophisticated and widely adopted, their optimization for user
-                  satisfaction raises underexplored questions about social development. This paper argues that the
-                  friction inherent in human social interaction—disagreement, face threats, variable feedback, and the
-                  need for repair—serves critical functions in social learning that frictionless AI companions may not
-                  replicate. Drawing on research from conversation analysis, neural plasticity, reinforcement learning,
-                  and AI alignment, I outline a theoretical framework connecting RLHF-driven sycophancy to potential
-                  downstream effects on human social capability.
+                  AI companions promise the emotional upside of social interaction with far less of the cost: no awkward
+                  pauses, no real rejection, no reputational stakes, and an ever-available partner who adapts instantly.
+                  This paper argues that the same design features that make AI companionship feel humane—frictionless
+                  warmth, low judgment, and high user control—also flatten the learning signals that shape human social
+                  competence. Drawing on interaction sociology, conversation analysis, developmental neuroscience, and
+                  computational models of social learning, I frame “social friction” as a training signal: a structured
+                  mixture of uncertainty, consequence, and repair that tunes social behavior and theory-of-mind
+                  capacities over time. I then show how contemporary AI companions systematically reduce that signal via
+                  turn-taking simplification, unilateral alignment, and reinforcement learning pipelines that select for
+                  user-pleasing responses. The result is not a dystopia where everyone stops talking to humans, but a
+                  subtler reweighting of our social “training data”—especially in adolescence, a sensitive period for
+                  sociocultural learning. I close by proposing a research agenda and a design principle: if companionship
+                  AI is going to sit inside the social ecosystem, it should be evaluated not only on perceived comfort,
+                  but on whether it preserves (or scaffolds) the frictions that make human connection possible.
                 </p>
               </div>
 

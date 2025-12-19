@@ -266,16 +266,31 @@ export function Slide5Steering({ onNext }: SlideProps) {
             )}
           />
           
+          {!isOptimal && (
+             <div className="mt-3 text-center text-sm text-blue-400 animate-pulse font-medium">
+               Drag the slider to optimize the weights
+             </div>
+          )}
+          
           {/* Continue Button - Only show when close to optimized */}
-          <div className="h-16 mt-4 flex items-center justify-center">
+          <div className="h-16 mt-4 flex items-center justify-center gap-4">
             {isOptimal && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
+                className="flex items-center gap-4"
               >
-                <Button onClick={onNext} size="lg" className="shadow-lg shadow-green-500/20">
+                <Button 
+                  onClick={onNext} 
+                  size="lg" 
+                  className="shadow-[0_0_30px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_rgba(34,197,94,0.6)] transition-shadow duration-500"
+                >
                   Continue
                 </Button>
+                <div className="hidden sm:flex items-center gap-2 text-sm text-green-400 animate-pulse">
+                  <span>←</span>
+                  <span>Click to proceed</span>
+                </div>
               </motion.div>
             )}
           </div>

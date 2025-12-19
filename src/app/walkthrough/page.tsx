@@ -35,6 +35,10 @@ export default function WalkthroughPage() {
   const router = useRouter();
   const { markCompleted } = useWalkthroughStatus();
 
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  }, [currentSlide]);
+
   const handleNext = useCallback(() => {
     if (currentSlide < TOTAL_SLIDES) {
       setCurrentSlide((prev) => prev + 1);
@@ -51,6 +55,15 @@ export default function WalkthroughPage() {
     markCompleted();
     router.push("/home");
   }, [markCompleted, router]);
+
+  const handleSkipSlide = useCallback(() => {
+    if (currentSlide < TOTAL_SLIDES) {
+      setCurrentSlide((prev) => prev + 1);
+      return;
+    }
+    markCompleted();
+    router.push("/home");
+  }, [currentSlide, markCompleted, router]);
 
   const handleComplete = useCallback(() => {
     markCompleted();
@@ -108,7 +121,7 @@ export default function WalkthroughPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-x-hidden">
       <ParticleCanvas
         className="fixed inset-0 z-[2] opacity-80 mix-blend-screen"
         density={1.1}
@@ -141,7 +154,7 @@ export default function WalkthroughPage() {
       <motion.div
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        className="fixed top-6 right-6 z-50"
+        className="fixed top-6 right-6 z-50 flex flex-col items-end gap-1"
       >
         <Button
           variant="ghost"
@@ -149,20 +162,29 @@ export default function WalkthroughPage() {
           onClick={handleSkip}
           className="text-muted-foreground hover:text-foreground"
         >
-          Skip
+          Skip Entire Intro
+        </Button>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleSkipSlide}
+          className="h-7 px-3 text-xs text-muted-foreground/80 hover:text-foreground"
+        >
+          Skip Slide
         </Button>
       </motion.div>
 
       {/* Progress dots (moved up so they don't overlap buttons) */}
       <div className="fixed top-16 left-1/2 -translate-x-1/2 z-40">
-        <div className="flex items-center gap-2">
+        <div className="bg-background/85 backdrop-blur-md border border-border/60 rounded-full px-4 py-2 shadow-lg">
+          <div className="flex items-center gap-3">
           {Array.from({ length: TOTAL_SLIDES }).map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrentSlide(i + 1)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              className={`w-3 h-3 rounded-full transition-all duration-300 ${
                 i + 1 === currentSlide
-                  ? "bg-foreground w-6"
+                  ? "bg-foreground w-10"
                   : i + 1 < currentSlide
                   ? "bg-foreground/50"
                   : "bg-foreground/20"
@@ -171,23 +193,26 @@ export default function WalkthroughPage() {
             />
           ))}
         </div>
+        </div>
       </div>
 
-      {/* Slide content */}
-      <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
-
-      {/* Disclaimer footer */}
-      <div className="fixed bottom-8 left-4 right-4 z-40 flex justify-center pointer-events-none">
-        <div className="bg-background/90 backdrop-blur-md border border-border/50 rounded-lg p-4 max-w-2xl text-center shadow-lg pointer-events-auto">
-          <p className="text-xs text-muted-foreground font-medium mb-2">
-            This is a conceptual walkthrough, aimed at illustrating how LLMs work. There are many oversimplifications (e.g., temperature, top-k/top-p, system constraints).
+      {/* Disclaimer footer (fixed, low z-index so buttons overlay it) */}
+      <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-10 max-w-[calc(100vw-2rem)] sm:max-w-md pointer-events-none text-center">
+        <div className="bg-background/60 backdrop-blur-sm border border-border/20 rounded-lg p-3 shadow-sm pointer-events-auto hover:bg-background/90 hover:border-border/50 transition-all duration-300">
+          <p className="text-[10px] text-muted-foreground/80 font-medium leading-tight mb-1">
+            Conceptual model. Simplifications apply.
           </p>
           {SLIDE_DISCLAIMERS[currentSlide] && (
-            <p className="text-[11px] text-muted-foreground/70 border-t border-border/50 pt-2 mt-2">
+            <p className="text-[10px] text-muted-foreground/60 leading-tight">
               {SLIDE_DISCLAIMERS[currentSlide]}
             </p>
           )}
         </div>
+      </div>
+
+      {/* Slide content */}
+      <div className="relative z-20">
+        <AnimatePresence mode="wait">{renderSlide()}</AnimatePresence>
       </div>
     </div>
   );

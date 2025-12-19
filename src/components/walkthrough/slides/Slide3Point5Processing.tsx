@@ -150,6 +150,7 @@ function EmbeddingVector({
 function MatrixCarrier({
   tokens,
   pendingToken,
+  pendingGlowNonce = 0,
   delimiterIndex,
   hoveredMatrixColumn,
   onHoverMatrixColumn,
@@ -158,6 +159,7 @@ function MatrixCarrier({
 }: {
   tokens: Array<Pick<ToyToken, "text" | "embedding">>;
   pendingToken: { text: string; embedding: readonly number[] } | null;
+  pendingGlowNonce?: number;
   delimiterIndex?: number;
   hoveredMatrixColumn: number | null;
   onHoverMatrixColumn: (index: number | null) => void;
@@ -190,7 +192,25 @@ function MatrixCarrier({
               className="flex items-center gap-3 shrink-0"
             >
               <span className="font-mono text-xl text-muted-foreground">,</span>
-              <EmbeddingVector token={pendingToken} hovered={hoveredPending} onHover={onHoverPending} />
+              <motion.div
+                key={`pending-glow-${pendingToken.text}-${pendingGlowNonce}`}
+                initial={{ boxShadow: "0 0 0px rgba(34,197,94,0)" }}
+                animate={
+                  pendingGlowNonce > 0
+                    ? {
+                        boxShadow: [
+                          "0 0 0px rgba(34,197,94,0)",
+                          "0 0 26px rgba(34,197,94,0.35)",
+                          "0 0 10px rgba(34,197,94,0.18)",
+                        ],
+                      }
+                    : { boxShadow: "0 0 0px rgba(34,197,94,0)" }
+                }
+                transition={{ duration: 1.1, times: [0, 0.35, 1] }}
+                className="rounded-md"
+              >
+                <EmbeddingVector token={pendingToken} hovered={hoveredPending} onHover={onHoverPending} />
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -203,6 +223,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
   const [carrierLocation, setCarrierLocation] = useState<CarrierLocation>("input");
   const [isStreaming, setIsStreaming] = useState(false);
   const [isBusy, setIsBusy] = useState(false);
+  const [pendingGlowNonce, setPendingGlowNonce] = useState(0);
 
   const [appendedCount, setAppendedCount] = useState(0);
   const [pendingTokenIndex, setPendingTokenIndex] = useState<number | null>(null);
@@ -294,6 +315,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
 
       setPendingTokenIndex(nextIndex);
       setCarrierLocation("output");
+      setPendingGlowNonce((n) => n + 1);
       await sleep(550);
 
       setIsBusy(false);
@@ -315,6 +337,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
     // Emit output (matrix + new response vector)
     setPendingTokenIndex(nextIndex);
     setCarrierLocation("output");
+    setPendingGlowNonce((n) => n + 1);
     await sleep(550);
 
     setIsBusy(false);
@@ -521,6 +544,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
                           <MatrixCarrier
                             tokens={combinedTokens}
                             pendingToken={pendingToken}
+                            pendingGlowNonce={pendingGlowNonce}
                             delimiterIndex={delimiterIndex}
                             hoveredMatrixColumn={hoveredOutputColumn}
                             onHoverMatrixColumn={setHoveredOutputColumn}
@@ -553,12 +577,15 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
           </AnimatePresence>
         </LayoutGroup>
 
-        <div className="mt-8 flex items-center justify-center gap-3">
+        <div className="mt-8 flex items-center justify-center gap-4">
           <Button
             size="lg"
             onClick={handleGenerate}
             disabled={isBusy}
-            className={cn("shadow-md", isBusy && "opacity-80")}
+            className={cn(
+              "shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] transition-shadow duration-500",
+              isBusy && "opacity-80 shadow-none"
+            )}
           >
             {finalMode
               ? "Continue"
@@ -570,6 +597,12 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
               ? "Append token & continue"
               : "Generate / process"}
           </Button>
+          {!isBusy && (
+            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+              <span>←</span>
+              <span>Click to proceed</span>
+            </div>
+          )}
         </div>
       </div>
     </WalkthroughSlide>

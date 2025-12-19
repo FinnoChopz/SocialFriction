@@ -60,10 +60,21 @@ export function Slide7Thesis({ onComplete }: SlideProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
+          className="flex flex-col items-center gap-4"
         >
-          <Button size="lg" onClick={onComplete} className="text-lg px-8 py-6">
-            Enter the project
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button 
+              size="lg" 
+              onClick={onComplete} 
+              className="text-lg px-8 py-6 shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] transition-shadow duration-500"
+            >
+              Enter the project
+            </Button>
+            <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+              <span>←</span>
+              <span>Click to finish</span>
+            </div>
+          </div>
         </motion.div>
 
         {/* Visual flourish */}

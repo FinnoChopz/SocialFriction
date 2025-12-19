@@ -39,7 +39,13 @@ export function Slide2Numbers({ onNext }: SlideProps) {
             </div>
           </div>
 
-          <p className="text-xs text-muted-foreground">This is a toy example weight matrix.</p>
+          <div className="space-y-1">
+            <p className="text-xs text-muted-foreground">
+              A model&apos;s paramaters/weights are stationary. They encode the model itself. In many ways, a model IS
+              its parameters.
+            </p>
+            <p className="text-[11px] text-muted-foreground/70">This is a toy example weight matrix.</p>
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -106,7 +112,7 @@ export function Slide2Numbers({ onNext }: SlideProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
-          className="mt-10 flex justify-center"
+          className="mt-10 flex justify-center items-center gap-4"
         >
           <Button
             variant="secondary"
@@ -115,10 +121,14 @@ export function Slide2Numbers({ onNext }: SlideProps) {
               e.stopPropagation();
               onNext();
             }}
-            className="shadow-md"
+            className="shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:shadow-[0_0_40px_rgba(255,255,255,0.5)] transition-shadow duration-500"
           >
             Continue
           </Button>
+          <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+            <span>←</span>
+            <span>Click to proceed</span>
+          </div>
         </motion.div>
       </div>
     </WalkthroughSlide>

@@ -261,10 +261,22 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
                 ))}
               </div>
 
-              <div className="mt-6 flex justify-center">
-                <Button variant="secondary" size="lg" onClick={spin} disabled={isSpinning} className="shadow-md">
+              <div className="mt-6 flex items-center justify-center gap-4">
+                <Button 
+                  variant="secondary" 
+                  size="lg" 
+                  onClick={spin} 
+                  disabled={isSpinning} 
+                  className="shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)] transition-shadow duration-300"
+                >
                   {isSpinning ? "Spinning…" : output ? "Ask Again" : "Ask"}
                 </Button>
+                {!isSpinning && !output && (
+                  <div className="hidden sm:flex items-center gap-2 text-xs text-blue-400 animate-pulse">
+                    <span>←</span>
+                    <span>Click to generate token</span>
+                  </div>
+                )}
               </div>
 
               <div className="mt-6 rounded-lg border bg-background/60 p-4">
@@ -281,7 +293,7 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 1 }}
-          className="mt-8 flex justify-center"
+          className="mt-8 flex items-center justify-center gap-4"
         >
           <Button
             variant="secondary"
@@ -289,10 +301,14 @@ export function Slide4Probabilities({ onNext }: SlideProps) {
             onClick={(e) => {
               onNext();
             }}
-            className="shadow-md"
+            className="shadow-[0_0_30px_rgba(255,255,255,0.2)] hover:shadow-[0_0_40px_rgba(255,255,255,0.4)] transition-shadow duration-500"
           >
             Continue
           </Button>
+          <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
+            <span>←</span>
+            <span>Click to proceed</span>
+          </div>
         </motion.div>
       </div>
     </WalkthroughSlide>
