@@ -128,7 +128,7 @@ export function Slide5Steering({ onNext }: SlideProps) {
             transition={{ delay: 0.2 }}
             className="text-base text-foreground/80"
           >
-            Use the slider at the bottom to update the weights, and find the weight configuration with the highest expected reward probability.
+            To continue, use the slider at the bottom to update the weights, and find the weight configuration with the highest expected reward probability.
           </motion.p>
         </div>
 

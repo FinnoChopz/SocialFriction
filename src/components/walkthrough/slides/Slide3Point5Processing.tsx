@@ -238,6 +238,8 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
 
   const pendingToken = pendingTokenIndex != null ? TOY_RESPONSE_TOKENS[pendingTokenIndex] : null;
   const stopReady = pendingToken?.text === "STOP";
+  const showAppendHint =
+    !isBusy && !finalMode && !stopReady && carrierLocation === "output" && pendingToken != null;
 
   const delimiterIndex = appendedCount > 0 ? INPUT_TOKEN_COUNT : undefined;
 
@@ -582,7 +584,7 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
           </AnimatePresence>
         </LayoutGroup>
 
-        <div className="mt-8 flex items-center justify-center gap-4">
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-4 text-center sm:text-left">
           <Button
             size="lg"
             onClick={handleGenerate}
@@ -602,6 +604,12 @@ export function Slide3Point5Processing({ onNext }: SlideProps) {
               ? "Append token & continue"
               : "Generate / process"}
           </Button>
+          {showAppendHint && (
+            <div className="max-w-[320px] text-xs text-muted-foreground leading-relaxed">
+              Keep appending tokens until the model outputs a STOP token. Like all other tokens, the
+              model learns during training when it should STOP, and return its response.
+            </div>
+          )}
           {!isBusy && (
             <div className="hidden sm:flex items-center gap-2 text-sm text-muted-foreground animate-pulse">
               <span>←</span>
